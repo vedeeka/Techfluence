@@ -107,7 +107,7 @@ class InventoryHomePage extends StatelessWidget {
               height: 500,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/hero_illustration.png'),
+                  image: AssetImage('assets/images/heroimg.png'),
                   fit: BoxFit.contain,
                 ),
               ),
