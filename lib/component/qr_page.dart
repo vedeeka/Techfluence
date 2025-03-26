@@ -131,29 +131,51 @@ class _MachineryQRDetailPageState extends State<MachineryQRDetailPage> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
+
+
+
+  Widget buildDetailRow({
+  required String label, 
+  required String value, 
+  TextStyle? labelStyle, 
+  TextStyle? valueStyle,
+  EdgeInsets? padding,
+  CrossAxisAlignment? crossAxisAlignment,
+}) {
+  return Padding(
+    padding: padding ?? const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 1,
+          child: Text(
             label,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
+            style: labelStyle ?? TextStyle(
+              fontWeight: FontWeight.w600,
               color: Colors.black87,
+              fontSize: 16.0,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
-          Text(
+        ),
+        Expanded(
+          flex: 1,
+          child: Text(
             value,
-            style: const TextStyle(
+            textAlign: TextAlign.right,
+            style: valueStyle ?? TextStyle(
               color: Colors.black54,
+              fontSize: 16.0,
             ),
+            overflow: TextOverflow.ellipsis,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 
   String _generateQRData() {
     return '''
