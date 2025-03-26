@@ -23,11 +23,15 @@ class HeroWidget extends StatelessWidget {
           ),
         ),
         Center(
-          child: Image.network(
-            'https://via.placeholder.com/150',
-            width: 100,
-            height: 100,
-          ),
+child: Container(
+  decoration: BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('assets/images/heroimg.jpg'),
+      fit: BoxFit.cover,
+    ),
+  ),
+),
+
         ),
       
        
