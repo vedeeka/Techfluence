@@ -6,7 +6,7 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
      
-        appBar:  buildAppBar(),
+        appBar:  buildAppBar(context),
       
       body: Center(
         child: InventoryHomePage(),
