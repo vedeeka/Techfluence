@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
 
+class MachineryQRDetailPage extends StatefulWidget {
+  final Machinery machinery;
+
+  const MachineryQRDetailPage({Key? key, required this.machinery}) : super(key: key);
+
+  @override
+  _MachineryQRDetailPageState createState() => _MachineryQRDetailPageState();
+}
+
 class Machinery {
   final String id;
   final String name;
   final String model;
   final String serialNumber;
   final DateTime purchaseDate;
-  final double purchasePrice;
-  final String manufacturer;
-  final String department;
-  final String maintenanceStatus;
-  final String condition;
+  final String location;
+  final String status;
 
   Machinery({
     required this.id,
@@ -20,115 +26,106 @@ class Machinery {
     required this.model,
     required this.serialNumber,
     required this.purchaseDate,
-    required this.purchasePrice,
-    required this.manufacturer,
-    required this.department,
-    required this.maintenanceStatus,
-    required this.condition,
+    required this.location,
+    required this.status,
   });
 }
 
-class MachineryQRReportPage extends StatefulWidget {
-  const MachineryQRReportPage({Key? key}) : super(key: key);
-
-  @override
-  _MachineryQRReportPageState createState() => _MachineryQRReportPageState();
-}
-
-class _MachineryQRReportPageState extends State<MachineryQRReportPage> {
-  final List<Machinery> machineryList = [
-    Machinery(
-      id: 'M001',
-      name: 'CNC Milling Machine',
-      model: 'XR-500',
-      serialNumber: 'SN-2023-0001',
-      purchaseDate: DateTime(2023, 5, 15),
-      purchasePrice: 75000.00,
-      manufacturer: 'TechCNC Industries',
-      department: 'Production',
-      maintenanceStatus: 'Pending Maintenance',
-      condition: 'Good',
-    ),
-    Machinery(
-      id: 'M002',
-      name: 'Lathe Machine',
-      model: 'TL-300',
-      serialNumber: 'SN-2023-0002',
-      purchaseDate: DateTime(2023, 3, 10),
-      purchasePrice: 45000.00,
-      manufacturer: 'Precision Turnings',
-      department: 'Fabrication',
-      maintenanceStatus: 'Up to Date',
-      condition: 'Excellent',
-    ),
-  ];
-
+class _MachineryQRDetailPageState extends State<MachineryQRDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Machinery Inventory Report'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.print),
-            onPressed: _generatePrintableReport,
-          ),
-        ],
+        title: Text('Machinery QR Details: ${widget.machinery.name}'),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: machineryList.length,
-        itemBuilder: (context, index) {
-          return _buildMachineryReportCard(machineryList[index]);
-        },
-      ),
-    );
-  }
-
-  Widget _buildMachineryReportCard(Machinery machinery) {
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // QR Code
-            QrImageView(
-              data: _generateQRData(machinery),
-              version: QrVersions.auto,
-              size: 120.0,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-            const SizedBox(width: 20),
-            // Machinery Details
-            Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    machinery.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  // Large QR Code
+         Card(
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      // Large QR Code with decorative background
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.blue.shade50,
+                              Colors.blue.shade100,
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(16),
+                        child: QrImageView(
+                          data: _generateQRData(),
+                          version: QrVersions.auto,
+                          size: 250.0,
+                          gapless: false,
+                          embeddedImage: const AssetImage('assets/logo.png'),
+                          embeddedImageStyle: const QrEmbeddedImageStyle(
+                            size: Size(50, 50),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  _buildDetailRow('Model', machinery.model),
-                  _buildDetailRow('Serial Number', machinery.serialNumber),
+                ),
+              ),
+
+                  const SizedBox(height: 20),
+                  
+                  // Machinery Details
+                  _buildDetailRow('Machine ID', widget.machinery.id),
+                  _buildDetailRow('Name', widget.machinery.name),
+                  _buildDetailRow('Model', widget.machinery.model),
+                  _buildDetailRow('Serial Number', widget.machinery.serialNumber),
                   _buildDetailRow('Purchase Date', 
-                    DateFormat('dd MMM yyyy').format(machinery.purchaseDate)
+                    DateFormat('dd MMM yyyy').format(widget.machinery.purchaseDate)
                   ),
-                  _buildDetailRow('Purchase Price', 
-                    '\$${machinery.purchasePrice.toStringAsFixed(2)}'
+                  _buildDetailRow('Location', widget.machinery.location),
+                  _buildDetailRow('Status', widget.machinery.status),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // Action Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.print),
+                        label: const Text('Print QR'),
+                        onPressed: _printQRCode,
+                      ),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.share),
+                        label: const Text('Share'),
+                        onPressed: _shareQRCode,
+                      ),
+                    ],
                   ),
-                  _buildDetailRow('Department', machinery.department),
-                  _buildDetailRow('Maintenance Status', machinery.maintenanceStatus),
-                  _buildDetailRow('Condition', machinery.condition),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -136,11 +133,12 @@ class _MachineryQRReportPageState extends State<MachineryQRReportPage> {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            '$label: ',
+            label,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -148,34 +146,176 @@ class _MachineryQRReportPageState extends State<MachineryQRReportPage> {
           ),
           Text(
             value,
-            style: const TextStyle(color: Colors.black54),
+            style: const TextStyle(
+              color: Colors.black54,
+            ),
           ),
         ],
       ),
     );
   }
 
-  String _generateQRData(Machinery machinery) {
+  String _generateQRData() {
     return '''
-Machinery Inventory Report
-------------------------
-ID: ${machinery.id}
-Name: ${machinery.name}
-Model: ${machinery.model}
-Serial Number: ${machinery.serialNumber}
-Purchase Date: ${DateFormat('dd MMM yyyy').format(machinery.purchaseDate)}
-Purchase Price: \$${machinery.purchasePrice.toStringAsFixed(2)}
-Manufacturer: ${machinery.manufacturer}
-Department: ${machinery.department}
-Maintenance Status: ${machinery.maintenanceStatus}
-Condition: ${machinery.condition}
+Machinery Details
+-----------------
+ID: ${widget.machinery.id}
+Name: ${widget.machinery.name}
+Model: ${widget.machinery.model}
+Serial Number: ${widget.machinery.serialNumber}
+Purchase Date: ${DateFormat('dd MMM yyyy').format(widget.machinery.purchaseDate)}
+Location: ${widget.machinery.location}
+Status: ${widget.machinery.status}
 ''';
   }
 
-  void _generatePrintableReport() {
-    // TODO: Implement report generation logic
+  void _printQRCode() {
+    // TODO: Implement QR Code printing logic
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Generating Printable Report...')),
+      const SnackBar(content: Text('Printing QR Code...')),
     );
   }
+
+  void _shareQRCode() {
+    // TODO: Implement QR Code sharing logic
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Sharing QR Code...')),
+    );
+  }
+}
+
+// Example usage in a list or another page
+class MachineryListPage extends StatelessWidget {
+  final List<Machinery> machineryList = [
+    Machinery(
+      id: 'M001',
+      name: 'CNC Milling Machine',
+      model: 'XR-500',
+      serialNumber: 'SN-2023-0001',
+      purchaseDate: DateTime(2023, 5, 15),
+      location: 'Production Hall A',
+      status: 'Operational',
+    ),
+    // Add more machinery items
+  ];
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Machinery Inventory'),
+      // Optional: Add actions or leading widget if needed
+    ),
+    body: RefreshIndicator(
+      onRefresh: _refreshMachineryList,
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        itemCount: machineryList.length,
+        itemBuilder: (context, index) {
+          final machinery = machineryList[index];
+          return _buildMachineryCard(machinery, context);
+        },
+      ),
+    ),
+    // Optional: Add a floating action button to add new machinery
+    floatingActionButton: FloatingActionButton(
+      onPressed: _addNewMachinery,
+      child: const Icon(Icons.add),
+    ),
+  );
+}
+
+// Extracted card widget for better readability and maintainability
+Widget _buildMachineryCard(Machinery machinery, BuildContext context) {
+  return Card(
+    elevation: 2,
+    margin: const EdgeInsets.symmetric(vertical: 8),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MachineryQRDetailPage(machinery: machinery),
+          ),
+        );
+      },
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        leading: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(
+            Icons.construction,
+            color: Colors.blue,
+            size: 32,
+          ),
+        ),
+        title: Text(
+          machinery.name,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              'Model: ${machinery.model}',
+              style: TextStyle(
+                color: Colors.grey.shade700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(
+                  Icons.qr_code,
+                  size: 16,
+                  color: Colors.grey.shade600,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  'Tap to view QR details',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        trailing: const Icon(
+          Icons.chevron_right,
+          color: Colors.blue,
+        ),
+      ),
+    ),
+  );
+}
+
+// Placeholder methods for potential future implementation
+Future<void> _refreshMachineryList() async {
+  // Implement logic to refresh the machinery list
+  // For example, fetch updated data from an API
+  await Future.delayed(const Duration(seconds: 2));
+  // setState() to update the list
+}
+
+void _addNewMachinery() {
+  // Implement navigation to add new machinery page
+  // Navigator.push(...);
+}
 }
