@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'component/dashboard.dart';
 import 'component/homepage.dart';
+import 'component/qr_page.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  Homepage(),
+      home:  MachineryQRReportPage(),
     );
   }
 }
