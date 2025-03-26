@@ -16,14 +16,7 @@ class HeroWidget extends StatelessWidget {
     return GridView.count(
       crossAxisCount: 2,
       children: [
-        Center(
-          child: Image.network(
-            'https://via.placeholder.com/150',
-            width: 100,
-            height: 100,
-          ),
-        ),
-        Center(
+          Center(
           child: Text(
             'This is a text',
             style: Theme.of(context).textTheme.headlineSmall,
@@ -36,12 +29,9 @@ class HeroWidget extends StatelessWidget {
             height: 100,
           ),
         ),
-        Center(
-          child: Text(
-            'Another text',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        ),
+      
+       
+        
       ],
     );
   }
