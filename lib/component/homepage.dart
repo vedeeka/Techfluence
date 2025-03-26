@@ -1,0 +1,408 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'dart:math';
+
+// Enhanced Theme and Design Constants
+class AppTheme {
+  // Modern, professional color palette
+  static const Color primaryColor = Color(0xFF1A73E8); // Google Blue
+  static const Color secondaryColor = Color(0xFF34A853); // Google Green
+  static const Color backgroundColor = Color(0xFFF5F5F5);
+  static const Color surfaceColor = Colors.white;
+  static const Color textColor = Color(0xFF202124);
+  
+  static ThemeData get lightTheme {
+    return ThemeData(
+      primaryColor: primaryColor,
+      scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: AppBarTheme(
+        color: surfaceColor,
+        elevation: 1,
+        centerTitle: false,
+        iconTheme: IconThemeData(color: primaryColor),
+        titleTextStyle: TextStyle(
+          color: textColor,
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      cardTheme: CardTheme(
+        color: surfaceColor,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: Colors.grey.shade200, width: 1),
+        ),
+      ),
+      textTheme: TextTheme(
+        headlineMedium: TextStyle(
+          color: textColor,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+        titleLarge: TextStyle(
+          color: textColor,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyLarge: TextStyle(
+          color: textColor.withOpacity(0.8),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 3,
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: primaryColor, width: 2),
+        ),
+      ),
+    );
+  }
+}
+
+// Advanced Responsive Dashboard
+class ResponsiveDashboardScreen extends StatefulWidget {
+  @override
+  _ResponsiveDashboardScreenState createState() => _ResponsiveDashboardScreenState();
+}
+
+class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
+  bool _isCompactMode = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _isCompactMode = constraints.maxWidth < 800;
+        
+        return Scaffold(
+          body: Row(
+            children: [
+              // Sidebar Navigation
+              if (!_isCompactMode)
+                _buildSidebar(),
+              
+              // Main Content Area
+              Expanded(
+                child: _buildMainContent(),
+              ),
+            ],
+          ),
+          bottomNavigationBar: _isCompactMode 
+            ? _buildMobileNavigation() 
+            : null,
+        );
+      },
+    );
+  }
+
+  Widget _buildSidebar() {
+    return Container(
+      width: 250,
+      color: AppTheme.surfaceColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Equipment Hub',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
+          _buildSidebarItem(Icons.schedule, 'Maintenance'),
+          _buildSidebarItem(Icons.analytics, 'Analytics'),
+          _buildSidebarItem(Icons.person, 'Profile'),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton.icon(
+              onPressed: () {},
+              icon: Icon(Icons.add),
+              label: Text('Add Equipment'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+    return ListTile(
+      leading: Icon(
+        icon, 
+        color: isActive ? AppTheme.primaryColor : Colors.grey,
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isActive ? AppTheme.primaryColor : Colors.grey[700],
+          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      onTap: () {},
+      selected: isActive,
+    );
+  }
+
+  Widget _buildMobileNavigation() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.white,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: AppTheme.primaryColor,
+      unselectedItemColor: Colors.grey,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.dashboard_outlined),
+          activeIcon: Icon(Icons.dashboard),
+          label: 'Dashboard',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.schedule_outlined),
+          activeIcon: Icon(Icons.schedule),
+          label: 'Schedule',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.analytics_outlined),
+          activeIcon: Icon(Icons.analytics),
+          label: 'Analytics',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMainContent() {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Equipment Dashboard'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_outlined),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: Icon(Icons.account_circle_outlined),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildStatusOverview(),
+              SizedBox(height: 16),
+              _buildEquipmentList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusOverview() {
+    return Row(
+      children: [
+        Expanded(
+          child: _StatusCard(
+            title: 'Total Equipment',
+            value: '124',
+            color: AppTheme.primaryColor,
+            icon: Icons.devices,
+          ),
+        ),
+        Expanded(
+          child: _StatusCard(
+            title: 'Maintenance Due',
+            value: '12',
+            color: Colors.orange,
+            icon: Icons.build_circle,
+          ),
+        ),
+        Expanded(
+          child: _StatusCard(
+            title: 'Critical Assets',
+            value: '3',
+            color: Colors.red,
+            icon: Icons.warning_amber_rounded,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEquipmentList() {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Equipment List',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.add),
+                  label: Text('Add New'),
+                ),
+              ],
+            ),
+          ),
+          ...List.generate(
+            3, 
+            (index) => _buildEquipmentRow(
+              name: 'Industrial Compressor X${200 + index}',
+              status: 'Operational',
+              lastMaintenance: '2 weeks ago',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEquipmentRow({
+    required String name, 
+    required String status, 
+    required String lastMaintenance,
+  }) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+        child: Icon(Icons.precision_manufacturing, color: AppTheme.primaryColor),
+      ),
+      title: Text(
+        name,
+        style: TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        'Last Maintenance: $lastMaintenance',
+        style: TextStyle(color: Colors.grey),
+      ),
+      trailing: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: status == 'Operational' 
+            ? AppTheme.secondaryColor.withOpacity(0.1) 
+            : Colors.red.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          status,
+          style: TextStyle(
+            color: status == 'Operational' 
+              ? AppTheme.secondaryColor 
+              : Colors.red,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      onTap: () {},
+    );
+  }
+}
+
+// Status Card Widget
+class _StatusCard extends StatelessWidget {
+  final String title;
+  final String value;
+  final Color color;
+  final IconData icon;
+
+  const _StatusCard({
+    required this.title,
+    required this.value,
+    required this.color,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.all(8),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(icon, color: color, size: 36),
+                Icon(Icons.more_vert, color: Colors.grey),
+              ],
+            ),
+            SizedBox(height: 16),
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(
+                color: color,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Main Application
+class EquipmentMaintenanceApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Equipment Maintenance Hub',
+      theme: AppTheme.lightTheme,
+      home: ResponsiveDashboardScreen(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+void main() {
+  runApp(EquipmentMaintenanceApp());
+}
