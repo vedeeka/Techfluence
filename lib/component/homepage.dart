@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techfluence/component/navbar.dart';
+import 'package:techfluence/component/hero.dart';
 class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -7,8 +8,8 @@ class Homepage extends StatelessWidget {
      
         appBar:  CustomNavbar(),
       
-      body: const Center(
-        child: Text('Welcome to Equipment Maintenance App'),
+      body: Center(
+        child: HeroWidget(),
       ),
     );
   }
