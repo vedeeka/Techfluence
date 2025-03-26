@@ -170,14 +170,14 @@ Status: ${widget.machinery.status}
   }
 
   void _printQRCode() {
-    // TODO: Implement QR Code printing logic
+   
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Printing QR Code...')),
     );
   }
 
   void _shareQRCode() {
-    // TODO: Implement QR Code sharing logic
+ 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Sharing QR Code...')),
     );
