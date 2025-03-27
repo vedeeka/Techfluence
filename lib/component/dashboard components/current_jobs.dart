@@ -1,60 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
-
-Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
-  return ListTile(
-    leading: Icon(
-      icon,
-      color: isActive ? Colors.lightBlueAccent : Colors.grey,
-    ),
-    title: Text(
-      label,
-      style: TextStyle(
-        color: isActive ? Colors.blue : Colors.grey[700],
-        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-      ),
-    ),
-    onTap: () {},
-    selected: isActive,
-  );
-}
-
-Widget _buildSidebar(BuildContext context) {
-  return Container(
-    width: 250,
-    color: Colors.white,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(
-            'Equipment Hub',
-            style: TextStyle(
-              color: Colors.blue,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
-        _buildSidebarItem(Icons.schedule, 'Maintenance'),
-        _buildSidebarItem(Icons.analytics, 'Analytics'),
-        _buildSidebarItem(Icons.person, 'Profile'),
-        const Spacer(),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.add),
-            label: const Text('Add Equipment'),
-          ),
-        ),
-      ],
-    ),
-  );
-}
+void main() => runApp(const MyApp());
 
 class _StatusCard extends StatefulWidget {
   final String title;
@@ -115,7 +61,7 @@ class _StatusCardState extends State<_StatusCard> {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -124,41 +70,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MachineryListPage(),
     );
   }
-}
-
-Widget _buildStatusOverview() {
-  return const Row(
-    children: [
-      Expanded(
-        child: _StatusCard(
-          title: 'Total Equipment',
-          value: '124',
-          color: Colors.blue,
-          icon: Icons.devices,
-        ),
-      ),
-      Expanded(
-        child: _StatusCard(
-          title: 'Maintenance Due',
-          value: '12',
-          color: Colors.orange,
-          icon: Icons.build_circle,
-        ),
-      ),
-      Expanded(
-        child: _StatusCard(
-          title: 'Critical Assets',
-          value: '3',
-          color: Colors.red,
-          icon: Icons.warning_amber_rounded,
-        ),
-      ),
-    ],
-  );
 }
 
 class Machinery {
@@ -176,6 +91,8 @@ class Machinery {
 }
 
 class MachineryListPage extends StatefulWidget {
+  const MachineryListPage({super.key});
+
   @override
   State<MachineryListPage> createState() => _MachineryListPageState();
 }
@@ -200,7 +117,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Machinery List'),
+        title: const Text('Machinery List'),
       ),
       body: ListView.builder(
         itemCount: _machineryList.length,
@@ -236,8 +153,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
 class MachineryDetailPage extends StatefulWidget {
   final Machinery machinery;
 
-  const MachineryDetailPage({Key? key, required this.machinery})
-      : super(key: key);
+  const MachineryDetailPage({super.key, required this.machinery});
 
   @override
   State<MachineryDetailPage> createState() => _MachineryDetailPageState();

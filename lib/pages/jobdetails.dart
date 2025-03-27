@@ -14,7 +14,10 @@ class _JobDetailsState extends State<JobDetails> {
       appBar: AppBar(
         title: const Text('Job name'),
       ),
-      body: Padding(padding:EdgeInsets.all(14),child:Text('Job description'),),
+      body: const Padding(
+        padding: EdgeInsets.all(14),
+        child: Text('Job description'),
+      ),
     );
   }
 }

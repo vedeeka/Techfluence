@@ -142,7 +142,8 @@ class _AddJobPopUpState extends State<AddJobPopUp> {
         .set({
       'name': name.text.trim(),
       'description': des.text.trim(),
-      'date': DateTime.now()
+      'date': DateTime.now(),
+      'status': 'upcoming'
     });
   }
 

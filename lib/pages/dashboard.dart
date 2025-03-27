@@ -4,18 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
 
-List<Map<String, dynamic>> inventoryItems = [], jobList = [];
 class EquipmentCard extends StatefulWidget {
   final String name;
   final double width;
   final int input;
+  final List<Map<String, dynamic>> items;
 
   const EquipmentCard({
     required this.name,
     required this.width,
     required this.input,
-    Key? key,
-  }) : super(key: key);
+    required this.items,
+    super.key,
+  });
 
   @override
   State<EquipmentCard> createState() => _EquipmentCardState();
@@ -71,27 +72,27 @@ class _EquipmentCardState extends State<EquipmentCard> {
             ),
             if (widget.input == 1)
               ...List.generate(
-                inventoryItems.isEmpty
+                widget.items.isEmpty
                     ? 0
-                    : inventoryItems.length > 3
+                    : widget.items.length > 3
                         ? 3
-                        : inventoryItems.length,
+                        : widget.items.length,
                 (index) => _buildEquipmentRow(
-                  name: inventoryItems[index]['name'],
-                  status: inventoryItems[index]['status'],
+                  name: widget.items[index]['name'],
+                  status: widget.items[index]['status'],
                   lastMaintenance: '2 weeks ago',
                 ),
               ),
             if (widget.input == 2)
               ...List.generate(
-                jobList.isEmpty
+                widget.items.isEmpty
                     ? 0
-                    : jobList.length > 3
+                    : widget.items.length > 3
                         ? 3
-                        : jobList.length,
+                        : widget.items.length,
                 (index) => _buildEquipmentRow(
-                  name: jobList[index]['name'],
-                  status: 'ongoing',
+                  name: widget.items[index]['name'],
+                  status: widget.items[index]['status'],
                   lastMaintenance: '2 weeks ago',
                 ),
               ),
@@ -101,45 +102,46 @@ class _EquipmentCardState extends State<EquipmentCard> {
     );
   }
 }
+
 int page = 0;
 Widget _buildEquipmentRow({
-    required String name,
-    required String status,
-    required String lastMaintenance,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child: const Icon(Icons.precision_manufacturing,
-            color: AppTheme.primaryColor),
+  required String name,
+  required String status,
+  required String lastMaintenance,
+}) {
+  return ListTile(
+    leading: CircleAvatar(
+      backgroundColor: AppTheme.primaryColor.withAlpha(25),
+      child: const Icon(Icons.precision_manufacturing,
+          color: AppTheme.primaryColor),
+    ),
+    title: Text(
+      name,
+      style: const TextStyle(fontWeight: FontWeight.w600),
+    ),
+    subtitle: Text(
+      'Last Maintenance: $lastMaintenance',
+      style: const TextStyle(color: Colors.grey),
+    ),
+    trailing: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: status == 'available'
+            ? AppTheme.secondaryColor.withAlpha(25)
+            : Colors.red.withAlpha(25),
+        borderRadius: BorderRadius.circular(12),
       ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        'Last Maintenance: $lastMaintenance',
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: status == 'available'
-              ? AppTheme.secondaryColor.withAlpha(25)
-              : Colors.red.withAlpha(25),
-          borderRadius: BorderRadius.circular(12),
+      child: Text(
+        status,
+        style: TextStyle(
+          color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
+          fontWeight: FontWeight.w600,
         ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
       ),
-      onTap: () {},
-    );
-  }
+    ),
+    onTap: () {},
+  );
+}
 
 class StatusOverview extends StatefulWidget {
   const StatusOverview({super.key});
@@ -182,74 +184,72 @@ class _StatusOverviewState extends State<StatusOverview> {
   }
 }
 
+class MobileNavigation extends StatefulWidget {
+  const MobileNavigation({super.key});
 
-  class MobileNavigation extends StatefulWidget {
-    const MobileNavigation({super.key});
+  @override
+  State<MobileNavigation> createState() => _MobileNavigationState();
+}
 
-    @override
-    State<MobileNavigation> createState() => _MobileNavigationState();
-  }
+class _MobileNavigationState extends State<MobileNavigation> {
+  int _currentIndex = 0;
 
-  class _MobileNavigationState extends State<MobileNavigation> {
-    int _currentIndex = 0;
-
-    @override
-    Widget build(BuildContext context) {
-      return BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        backgroundColor: Colors.white,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.schedule_outlined),
-            activeIcon: Icon(Icons.schedule),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            activeIcon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      );
-    }
-  }
-
- Widget _buildSidebarItem(IconData icon, String label,
-      {bool isActive = false}) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isActive ? AppTheme.primaryColor : Colors.grey,
-      ),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: isActive ? AppTheme.primaryColor : Colors.grey[700],
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      backgroundColor: Colors.white,
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: AppTheme.primaryColor,
+      unselectedItemColor: Colors.grey,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.dashboard_outlined),
+          activeIcon: Icon(Icons.dashboard),
+          label: 'Dashboard',
         ),
-      ),
-      onTap: () {},
-      selected: isActive,
+        BottomNavigationBarItem(
+          icon: Icon(Icons.schedule_outlined),
+          activeIcon: Icon(Icons.schedule),
+          label: 'Schedule',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.analytics_outlined),
+          activeIcon: Icon(Icons.analytics),
+          label: 'Analytics',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ],
     );
   }
+}
+
+Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+  return ListTile(
+    leading: Icon(
+      icon,
+      color: isActive ? AppTheme.primaryColor : Colors.grey,
+    ),
+    title: Text(
+      label,
+      style: TextStyle(
+        color: isActive ? AppTheme.primaryColor : Colors.grey[700],
+        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+      ),
+    ),
+    onTap: () {},
+    selected: isActive,
+  );
+}
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -341,6 +341,7 @@ class ResponsiveDashboardScreen extends StatefulWidget {
 
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
+  List<Map<String, dynamic>> inventoryItems = [], jobList = [];
 
   void loadData() async {
     inventoryItems.clear();
@@ -498,7 +499,10 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                         children: [
                           const StatusOverview(),
                           const SizedBox(height: 16),
-                          const BuildEquipmentList()
+                          BuildEquipmentList(
+                            items: inventoryItems,
+                            jobs: jobList,
+                          )
                         ],
                       ),
                     ),
@@ -507,19 +511,17 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: _isCompactMode ? MobileNavigation() : null,
+          bottomNavigationBar: _isCompactMode ? const MobileNavigation() : null,
         );
       },
     );
   }
-
-
-
-  
 }
 
 class BuildEquipmentList extends StatefulWidget {
-  const BuildEquipmentList({super.key});
+  final List<Map<String, dynamic>> items, jobs;
+  const BuildEquipmentList(
+      {super.key, required this.items, required this.jobs});
 
   @override
   State<BuildEquipmentList> createState() => _BuildEquipmentListState();
@@ -547,11 +549,13 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   name: "Current Job List",
                   width: cardWidth,
                   input: 2,
+                  items: widget.jobs,
                 ),
                 EquipmentCard(
                   name: "Maintenance Machine List",
                   width: cardWidth,
                   input: 3,
+                  items: widget.items,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -564,12 +568,13 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   name: "Idle Machines",
                   width: cardWidth,
                   input: 1,
+                  items: widget.items,
                 ),
                 EquipmentCard(
                   name: "New Arrivals",
                   width: cardWidth,
                   input: 4,
-                
+                  items: widget.jobs,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -579,10 +584,6 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
       ),
     );
   }
-
- 
-
-  
 }
 
 // Status Card Widget
