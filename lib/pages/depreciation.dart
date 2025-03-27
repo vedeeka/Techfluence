@@ -158,23 +158,32 @@ class DepreciationPage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildSummaryCard(
-                          title: 'Total Assets',
-                          value: '54',
-                          icon: Icons.inventory,
-                          color: Colors.blue[100]!,
+                        SizedBox(
+                          width: 400,
+                          child: _buildSummaryCard(
+                            title: 'Total Assets',
+                            value: '54',
+                            icon: Icons.inventory,
+                            color: Colors.blue[100]!,
+                          ),
                         ),
-                        _buildSummaryCard(
-                          title: 'Total Depreciation',
-                          value: '\$124,500',
-                          icon: Icons.trending_down,
-                          color: Colors.green[100]!,
+                        SizedBox(
+                          width: 400,
+                          child: _buildSummaryCard(
+                            title: 'Total Depreciation',
+                            value: '\$124,500',
+                            icon: Icons.trending_down,
+                            color: Colors.green[100]!,
+                          ),
                         ),
-                        _buildSummaryCard(
-                          title: 'Asset Value',
-                          value: '\$456,200',
-                          icon: Icons.monetization_on,
-                          color: Colors.orange[100]!,
+                        SizedBox(
+                          width: 400,
+                          child: _buildSummaryCard(
+                            title: 'Asset Value',
+                            value: '\$456,200',
+                            icon: Icons.monetization_on,
+                            color: Colors.orange[100]!,
+                          ),
                         ),
                       ],
                     ),
@@ -187,7 +196,7 @@ class DepreciationPage extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             const Text(
                               'Recent Depreciation Entries',
