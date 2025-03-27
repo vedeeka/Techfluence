@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
@@ -179,7 +180,6 @@ class MachineryProductGridPage extends StatelessWidget {
     }
   }
 }
-
 class MachineryDetailPage extends StatelessWidget {
   final Map<String, dynamic> machinery;
 
@@ -223,7 +223,81 @@ class MachineryDetailPage extends StatelessWidget {
     );
   }
 
+  // Helper method to create consistent navigation items
+  Widget _buildNavItem({
+    required IconData icon,
+    required String title,
+    bool isSelected = false,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isSelected ? Colors.blue : Colors.grey[600],
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.blue : Colors.grey[800],
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      selectedColor: Colors.blue,
+      onTap: onTap,
+    );
+  }
+
+  // Specification Table (assumed implementation)
   Widget _buildSpecificationTable() {
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Table(
+          columnWidths: {
+            0: FlexColumnWidth(1),
+            1: FlexColumnWidth(2),
+          },
+          children: [
+            _buildTableRow('Status', machinery.status),
+            _buildTableRow('Model', machinery.model),
+            _buildTableRow('Price', '\$${machinery.price.toStringAsFixed(2)}'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to create table rows
+  TableRow _buildTableRow(String label, String value) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            value,
+            style: TextStyle(
+              color: Colors.grey[800],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+  Widget _buildSpecificationTable(Machinery machinery) {
     return Card(
       elevation: 4,
       child: Padding(
@@ -252,7 +326,7 @@ class MachineryDetailPage extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class Machinery {
   final String id,
