@@ -133,11 +133,26 @@ class AddJobPopUp extends StatefulWidget {
 
 class _AddJobPopUpState extends State<AddJobPopUp> {
   final name = TextEditingController(), des = TextEditingController();
+  void addJob() async {
+    await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('jobs')
+        .doc()
+        .set({
+      'name': name.text.trim(),
+      'description': des.text.trim(),
+      'date': DateTime.now(),
+      'status': 'upcoming'
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Add Job'),
       content: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -151,7 +166,12 @@ class _AddJobPopUpState extends State<AddJobPopUp> {
               lineNo: 2,
             ),
           ),
-          MyButton(f: () {}, text: "Add New Job")
+          MyButton(
+              f: () {
+                addJob();
+                Navigator.pop(context);
+              },
+              text: "Add New Job")
         ],
       ),
     );

@@ -150,7 +150,7 @@ Widget _buildStartFreeTrialButton(
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => AuthChecker()),
+        MaterialPageRoute(builder: (context) => const AuthChecker()),
       );
     },
     style: ElevatedButton.styleFrom(
