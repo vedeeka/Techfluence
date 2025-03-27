@@ -466,18 +466,15 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
-<<<<<<< HEAD
-        scrollDirection: Axis.horizontal, // Enables scrolling if needed
-=======
+
         scrollDirection: Axis.horizontal,
         // Enables scrolling if needed
->>>>>>> d86e675ceb861772a633e8479948af8c58b472f8
+
         child: Column(
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-<<<<<<< HEAD
                 _buildEquipmentCard("Current Job List", cardWidth, false, context, 1),
                 _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context, 2),
                 const SizedBox(width: 16),
@@ -493,115 +490,6 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
               ],
             ),
           ],
-=======
-                _buildEquipmentCard("Current Job List", cardWidth),
-                _buildEquipmentCard("Maintenance Machine List", cardWidth),
-                const SizedBox(width: 16),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildEquipmentCard("Idle Machines", cardWidth),
-                _buildEquipmentCard("New Arrivals", cardWidth),
-                const SizedBox(width: 16),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEquipmentCard(String name, double width) {
-    return SizedBox(
-      width: width,
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  TextButton.icon(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return const AddInventoryPopUp();
-                        },
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                      color: Colors.black,
-                    ),
-                    label: const Text(
-                      'Add New',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ...List.generate(
-              3,
-              (index) => _buildEquipmentRow(
-                name: 'Industrial Compressor X${200 + index}',
-                status: 'Operational',
-                lastMaintenance: '2 weeks ago',
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEquipmentRow({
-    required String name,
-    required String status,
-    required String lastMaintenance,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child: const Icon(Icons.precision_manufacturing,
-            color: AppTheme.primaryColor),
-      ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        'Last Maintenance: $lastMaintenance',
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: status == 'Operational'
-              ? AppTheme.secondaryColor.withAlpha(25)
-              : Colors.red.withAlpha(25),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color:
-                status == 'Operational' ? AppTheme.secondaryColor : Colors.red,
-            fontWeight: FontWeight.w600,
-          ),
->>>>>>> d86e675ceb861772a633e8479948af8c58b472f8
         ),
       ),
     );
