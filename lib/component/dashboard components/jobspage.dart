@@ -5,7 +5,6 @@ import 'package:techfluence/pages/jobdetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
-
 Widget _buildStatusChip(String status) {
   Color chipColor;
   switch (status.toLowerCase()) {
@@ -227,55 +226,61 @@ class JobsPage extends StatelessWidget {
                           );
                         },
                         child: ListTile(
-  contentPadding: EdgeInsets.zero,
-  title: Card(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            job['name'],
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            job['description'],
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Colors.grey[700],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              _buildStatusChip(job['status']),
-              const SizedBox(width: 8),
-              Text(
-                job['date'] is Timestamp
-                  ? DateFormat('MM/dd/yyyy').format((job['date'] as Timestamp).toDate())
-                  : job['date'].toString(),
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-              IconButton(
-    onPressed: () {},
-    icon: const Icon(Icons.delete),
-  )
-            ],
-          ),
-        ],
-      ),
-    ),
-  ),
-),
+                          contentPadding: EdgeInsets.zero,
+                          title: Card(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    job['name'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    job['description'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      _buildStatusChip(job['status']),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        job['date'] is Timestamp
+                                            ? DateFormat('MM/dd/yyyy').format(
+                                                (job['date'] as Timestamp)
+                                                    .toDate())
+                                            : job['date'].toString(),
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          print('deletion of job and items available');
+                                        },
+                                        icon: const Icon(Icons.delete),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   );

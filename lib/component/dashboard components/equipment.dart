@@ -1,145 +1,124 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/dashboard.dart';
+
+Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+  return ListTile(
+    leading: Icon(
+      icon,
+      color: isActive ? AppTheme.primaryColor : Colors.grey,
+    ),
+    title: Text(
+      label,
+      style: TextStyle(
+        color: isActive ? AppTheme.primaryColor : Colors.grey[700],
+        fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+      ),
+    ),
+    onTap: () {},
+    selected: isActive,
+  );
+}
 
 class MachineryProductGridPage extends StatelessWidget {
+  const MachineryProductGridPage({super.key});
 
-
-  
-  final List<Machinery> machineryList = [
-    Machinery(
-      id: 'M001',
-      jobName: 'CNC Milling Machine',
-      model: 'XR-500',
-      serialNumber: 'SN-2023-0001',
-      purchaseDate: DateTime(2023, 5, 15),
-      location: 'Production Hall A',
-      status: 'Operational',
-      price: 45000.00,
-      description: 'High-precision CNC milling machine.',
-      imageUrl: 'assets/images/heroimg.png',
-    ),
-    Machinery(
-      id: 'M001',
-      jobName: 'CNC Milling Machine',
-      model: 'XR-500',
-      serialNumber: 'SN-2023-0001',
-      purchaseDate: DateTime(2023, 5, 15),
-      location: 'Production Hall A',
-      status: 'Operational',
-      price: 45000.00,
-      description: 'High-precision CNC milling machine.',
-      imageUrl: 'assets/images/heroimg.png',
-    ),
-    Machinery(
-      id: 'M001',
-      jobName: 'CNC Milling Machine',
-      model: 'XR-500',
-      serialNumber: 'SN-2023-0001',
-      purchaseDate: DateTime(2023, 5, 15),
-      location: 'Production Hall A',
-      status: 'Operational',
-      price: 45000.00,
-      description: 'High-precision CNC milling machine.',
-      imageUrl: 'assets/images/heroimg.png',
-    ),
-    // Add other machinery items here...
-  ];
-
-  MachineryProductGridPage({super.key});
-  final TextEditingController searchController = TextEditingController();
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-               
-                    title: Row(
-                      
-                      children: [
-                        
-                        const Text("Dashboard"),
-                        const SizedBox(width: 20),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 1",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 2",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 3",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 4",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 5",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                      ],
-                    ),
-                    shadowColor: Colors.black,
-                    elevation: 1,
-                    actions: [
-                      Container(
-                        height: double.infinity,
-                        width: 350,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Center(
-                          child: TextField(
-                            controller: searchController,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              hintText: "Search",
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(CupertinoIcons.bell_fill),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.help),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.settings),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.person),
-                      ),
-                    ],
-                  ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3,
-          crossAxisSpacing: 12,
-          mainAxisSpacing: 3,
+      appBar: AppBar(title: const Text('Machinery Marketplace'), actions: [
+        Row(
+          children: [
+            const SizedBox(width: 20),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 1", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 2", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 3", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 4", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 5", style: TextStyle(color: Colors.black)),
+            ),
+          ],
         ),
-        itemCount: machineryList.length,
-        itemBuilder: (context, index) =>
-            _buildProductCard(context, machineryList[index]),
+        SizedBox(
+          width: MediaQuery.of(context).size.width / 1.8,
+        ),
+      ]),
+      body: Row(
+        children: [
+          Container(
+            color: Colors.white,
+            width: MediaQuery.of(context).size.width / 5.1,
+            child: Column(
+              children: [
+                _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
+                _buildSidebarItem(Icons.schedule, 'Maintenance'),
+                _buildSidebarItem(Icons.analytics, 'Analytics'),
+                _buildSidebarItem(Icons.person, 'Profile'),
+              ],
+            ),
+          ),
+          SizedBox(
+              width: MediaQuery.of(context).size.width * 4 / 5.1,
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection(backendBaseString)
+                      .doc(globalEmail)
+                      .collection('inventory')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    var docs = snapshot.data!.docs;
+                    if (docs.isEmpty) {
+                      return const Center(
+                        child: Text("No Items"),
+                      );
+                    }
+                    return GridView.builder(
+                        padding: const EdgeInsets.all(8),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2.6,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 3,
+                        ),
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          Map<String, dynamic> m = docs[index].data();
+                          m['id'] = docs[index].id;
+                          return _buildProductCard(context, m);
+                        });
+                  })),
+        ],
       ),
     );
   }
 
-  Widget _buildProductCard(BuildContext context, Machinery machinery) {
+  Widget _buildProductCard(
+      BuildContext context, Map<String, dynamic> machinery) {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
@@ -152,39 +131,31 @@ class MachineryProductGridPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.asset(machinery.imageUrl,
-                  height: 80, width: double.infinity, fit: BoxFit.cover),
-            ),
+            const ClipRRect(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                child: Icon(Icons.image)),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(machinery.jobName,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text(machinery.model,
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-                  Text('\$${machinery.price.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18)),
+                  Text(
+                    machinery['name'],
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                   Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(machinery.status).withAlpha(55),
+                      color: _getStatusColor(machinery['status']).withAlpha(55),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(machinery.status,
+                    child: Text(machinery['status'],
                         style: TextStyle(
-                            color: _getStatusColor(machinery.status),
+                            color: _getStatusColor(machinery['status']),
                             fontWeight: FontWeight.bold,
                             fontSize: 12)),
                   ),
@@ -208,8 +179,9 @@ class MachineryProductGridPage extends StatelessWidget {
     }
   }
 }
+
 class MachineryDetailPage extends StatelessWidget {
-  final Machinery machinery;
+  final Map<String, dynamic> machinery;
 
   const MachineryDetailPage({super.key, required this.machinery});
 
@@ -240,35 +212,35 @@ class MachineryDetailPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      _buildNavItem(
-                        icon: Icons.dashboard,
-                        title: 'Dashboard',
-                        isSelected: true,
-                        onTap: () {},
-                      ),
-                      _buildNavItem(
-                        icon: Icons.list,
-                        title: 'Machinery List',
-                        onTap: () {},
-                      ),
-                      _buildNavItem(
-                        icon: Icons.add_circle_outline,
-                        title: 'Add Machinery',
-                        onTap: () {},
-                      ),
-                      _buildNavItem(
-                        icon: Icons.settings,
-                        title: 'Settings',
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
-                ),
+
+                // Expanded(
+                //   child: ListView(
+                //     padding: EdgeInsets.zero,
+                //     children: [
+                //       _buildNavItem(
+                //         icon: Icons.dashboard,
+                //         title: 'Dashboard',
+                //         isSelected: true,
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.list,
+                //         title: 'Machinery List',
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.add_circle_outline,
+                //         title: 'Add Machinery',
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.settings,
+                //         title: 'Settings',
+                //         onTap: () {},
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -277,52 +249,30 @@ class MachineryDetailPage extends StatelessWidget {
           Expanded(
             child: Scaffold(
               appBar: AppBar(
-                title: Text(machinery.jobName),
+                title: Text(machinery['name']),
                 elevation: 1,
               ),
               body: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      machinery.imageUrl,
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+                    const Text('image'),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            machinery.jobName,
+                            machinery['name'],
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey[800],
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Model: ${machinery.model}',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '\$${machinery.price.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                            ),
-                          ),
                           const SizedBox(height: 12),
                           Text(
-                            machinery.description,
+                            machinery['description'],
                             style: TextStyle(
                               color: Colors.grey[800],
                               fontSize: 16,
@@ -333,8 +283,10 @@ class MachineryDetailPage extends StatelessWidget {
                           _buildSpecificationTable(),
                           const SizedBox(height: 16),
                           ElevatedButton(
-                            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Request for quote sent')),
+                            onPressed: () =>
+                                ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Request for quote sent')),
                             ),
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size(double.infinity, 50),
@@ -357,29 +309,6 @@ class MachineryDetailPage extends StatelessWidget {
   }
 
   // Helper method to create consistent navigation items
-  Widget _buildNavItem({
-    required IconData icon,
-    required String title,
-    bool isSelected = false,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? Colors.blue : Colors.grey[600],
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? Colors.blue : Colors.grey[800],
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      selected: isSelected,
-      selectedColor: Colors.blue,
-      onTap: onTap,
-    );
-  }
 
   // Specification Table (assumed implementation)
   Widget _buildSpecificationTable() {
@@ -393,9 +322,7 @@ class MachineryDetailPage extends StatelessWidget {
             1: FlexColumnWidth(2),
           },
           children: [
-            _buildTableRow('Status', machinery.status),
-            _buildTableRow('Model', machinery.model),
-            _buildTableRow('Price', '\$${machinery.price.toStringAsFixed(2)}'),
+            _buildTableRow('Status', machinery['status']),
           ],
         ),
       ),
@@ -407,7 +334,7 @@ class MachineryDetailPage extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
             style: TextStyle(
@@ -428,65 +355,4 @@ class MachineryDetailPage extends StatelessWidget {
       ],
     );
   }
-}
-
-  Widget _buildSpecificationTable(Machinery machinery) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Specifications',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildSpecRow('Serial Number', machinery.serialNumber),
-            _buildSpecRow('Location', machinery.location),
-            _buildSpecRow('Purchase Date',
-                DateFormat('dd MMM yyyy').format(machinery.purchaseDate)),
-            _buildSpecRow('Status', machinery.status),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpecRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(value, style: TextStyle(color: Colors.grey[800])),
-        ],
-      ),
-    );
-  }
-
-
-class Machinery {
-  final String id,
-      jobName,
-      model,
-      serialNumber,
-      location,
-      status,
-      description,
-      imageUrl;
-  final DateTime purchaseDate;
-  final double price;
-
-  Machinery({
-    required this.id,
-    required this.jobName,
-    required this.model,
-    required this.serialNumber,
-    required this.purchaseDate,
-    required this.location,
-    required this.status,
-    required this.price,
-    required this.description,
-    required this.imageUrl,
-  });
 }

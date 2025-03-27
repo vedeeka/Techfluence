@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
+import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
 import 'package:techfluence/pages/depreciation.dart';
+
 class EquipmentCard extends StatefulWidget {
   final String name;
   final double width;
@@ -52,9 +54,12 @@ class _EquipmentCardState extends State<EquipmentCard> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return widget.input % 2 == 1
-                                    ? const MachineryListPage()
-                                    : const JobsPage();
+                                if (widget.input == 1) {
+                                  return const MachineryProductGridPage();
+                                } else if (widget.input == 3) {
+                                  return const MachineryListPage();
+                                }
+                                return const JobsPage();
                               },
                             ),
                           );
@@ -184,74 +189,74 @@ class _StatusOverviewState extends State<StatusOverview> {
       children: [
         Expanded(
           child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-          builder: (context) => const ResponsiveDashboardScreen(),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResponsiveDashboardScreen(),
+                ),
+              );
+            },
+            child: _StatusCard(
+              title: 'Total Equipment',
+              value: widget.totalEquipments.toString(),
+              color: AppTheme.primaryColor,
+              icon: Icons.devices,
             ),
-          );
-        },
-        child: _StatusCard(
-          title: 'Total Equipment',
-          value: widget.totalEquipments.toString(),
-          color: AppTheme.primaryColor,
-          icon: Icons.devices,
-        ),
           ),
         ),
         Expanded(
           child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-          builder: (context) => const ResponsiveDashboardScreen(),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResponsiveDashboardScreen(),
+                ),
+              );
+            },
+            child: _StatusCard(
+              title: 'Maintenance Due',
+              value: widget.maintenance.toString(),
+              color: Colors.orange,
+              icon: Icons.build_circle,
             ),
-          );
-        },
-        child: _StatusCard(
-          title: 'Maintenance Due',
-          value: widget.maintenance.toString(),
-          color: Colors.orange,
-          icon: Icons.build_circle,
-        ),
           ),
         ),
         Expanded(
           child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-          builder: (context) => const ResponsiveDashboardScreen(),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ResponsiveDashboardScreen(),
+                ),
+              );
+            },
+            child: _StatusCard(
+              title: 'Critical Assets',
+              value: widget.critical.toString(),
+              color: Colors.red,
+              icon: Icons.warning_amber_rounded,
             ),
-          );
-        },
-        child: _StatusCard(
-          title: 'Critical Assets',
-          value: widget.critical.toString(),
-          color: Colors.red,
-          icon: Icons.warning_amber_rounded,
-        ),
           ),
         ),
         Expanded(
           child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-          builder: (context) => const DepreciationPage(),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DepreciationPage(),
+                ),
+              );
+            },
+            child: _StatusCard(
+              title: 'depretiation',
+              value: widget.critical.toString(),
+              color: Colors.red,
+              icon: Icons.warning_amber_rounded,
             ),
-          );
-        },
-        child: _StatusCard(
-          title: 'depretiation',
-          value: widget.critical.toString(),
-          color: Colors.red,
-          icon: Icons.warning_amber_rounded,
-        ),
           ),
         ),
       ],
