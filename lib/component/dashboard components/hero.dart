@@ -44,7 +44,9 @@ class InventoryHomePage extends StatelessWidget {
       color: Colors.white,
       padding: EdgeInsets.symmetric(
           vertical: isMobile ? 40 : 80, horizontal: isMobile ? 20 : 20),
-      child: isMobile ? _buildMobileHeroContent(context) : _buildDesktopHeroContent(context),
+      child: isMobile
+          ? _buildMobileHeroContent(context)
+          : _buildDesktopHeroContent(context),
     );
   }
 
@@ -72,7 +74,7 @@ class InventoryHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildHeroTextColumn(isMobile: true,context: context),
+        _buildHeroTextColumn(isMobile: true, context: context),
         const SizedBox(height: 20),
         Container(
           height: 250,
@@ -87,7 +89,8 @@ class InventoryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroTextColumn({bool isMobile = false, required BuildContext context}) {
+  Widget _buildHeroTextColumn(
+      {bool isMobile = false, required BuildContext context}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -117,7 +120,7 @@ class InventoryHomePage extends StatelessWidget {
         isMobile
             ? Column(
                 children: [
-                  _buildStartFreeTrialButton(isMobile: true,context: context),
+                  _buildStartFreeTrialButton(isMobile: true, context: context),
                   const SizedBox(height: 10),
                   _buildWatchDemoButton(isMobile: true),
                 ],
@@ -134,13 +137,14 @@ class InventoryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildStartFreeTrialButton({bool isMobile = false, required BuildContext context}) {
+  Widget _buildStartFreeTrialButton(
+      {bool isMobile = false, required BuildContext context}) {
     return ElevatedButton(
       onPressed: () {
-         Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => AuthChecker()),
-                              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AuthChecker()),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFFC9F7F7),
@@ -308,12 +312,7 @@ class InventoryHomePage extends StatelessWidget {
               children: [
                 Container(
                   height: 300,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/benefits_illustration.png'),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+                  decoration: const BoxDecoration(),
                 ),
                 const SizedBox(height: 20),
                 _buildMobileBenefitsContent(),
@@ -324,12 +323,7 @@ class InventoryHomePage extends StatelessWidget {
                 Expanded(
                   child: Container(
                     height: 500,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/benefits_illustration.png'),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+                    decoration: const BoxDecoration(),
                   ),
                 ),
                 Expanded(

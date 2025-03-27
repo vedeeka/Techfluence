@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
+
+List<Map<String, dynamic>> inventoryItems = [], jobList = [];
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -92,6 +96,38 @@ class ResponsiveDashboardScreen extends StatefulWidget {
 
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
+
+  void loadData() async {
+    var docs = await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('inventory')
+        .get()
+        .then((onValue) {
+      return onValue.docs;
+    });
+    for (var d in docs) {
+      inventoryItems.add(d.data());
+    }
+    var docs2 = await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('jobs')
+        .get()
+        .then((onValue) {
+      return onValue.docs;
+    });
+    for (var d in docs2) {
+      jobList.add(d.data());
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -324,37 +360,54 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-         // Enables scrolling if needed
+        // Enables scrolling if needed
         child: Column(
-          
           children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEquipmentCard("Current Job List", cardWidth, false, context),
-            _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context),
-           
-            const SizedBox(width: 16),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-        
-            _buildEquipmentCard("Idle Machines", cardWidth, false, context),
-            _buildEquipmentCard("New Arrivals", cardWidth, false, context),
-            const SizedBox(width: 16),
-          ],
-        ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEquipmentCard(
+                  "Current Job List",
+                  cardWidth,
+                  context,
+                  0,
+                ),
+                _buildEquipmentCard(
+                  "Maintenance Machine List",
+                  cardWidth,
+                  context,
+                  0,
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEquipmentCard(
+                  "Idle Machines",
+                  cardWidth,
+                  context,
+                  1,
+                ),
+                _buildEquipmentCard(
+                  "New Arrivals",
+                  cardWidth,
+                  context,
+                  0,
+                ),
+                const SizedBox(width: 16),
+              ],
+            ),
           ],
         ),
       ),
     );
-    
   }
 
-  Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context) {
+  Widget _buildEquipmentCard(
+      String name, double width, BuildContext context, int input) {
     return StatefulBuilder(
       builder: (context, setState) {
         return SizedBox(
@@ -377,20 +430,13 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                         children: [
                           TextButton.icon(
                             onPressed: () {
-                              setState(() {
-                                viewAll = !viewAll; // Toggle the viewAll state
-                              });
-                            },
-                            icon: Icon(viewAll
-                                ? Icons.expand_less
-                                : Icons.expand_more), // Change icon dynamically
-                            label: Text(viewAll
-                                ? 'View Less'
-                                : 'View All'), // Change label dynamically
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              showDialog(context: context, builder: (context){return const AddInventoryPopUp();});
+                              if (input == 1) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const AddInventoryPopUp();
+                                    });
+                              }
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('Add New'),
@@ -400,14 +446,24 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     ],
                   ),
                 ),
-                ...List.generate(
-                  viewAll ? 5 : 3,
-                  (index) => _buildEquipmentRow(
-                    name: 'Industrial Compressor X${200 + index}',
-                    status: 'Operational',
-                    lastMaintenance: '2 weeks ago',
+                if (input == 1)
+                  ...List.generate(
+                    inventoryItems.isEmpty ? 0 : 3,
+                    (index) => _buildEquipmentRow(
+                      name: inventoryItems[index]['name'],
+                      status: inventoryItems[index]['status'],
+                      lastMaintenance: '2 weeks ago',
+                    ),
                   ),
-                ),
+                if (input == 2)
+                  ...List.generate(
+                    jobList.isEmpty ? 0 : 3,
+                    (index) => _buildEquipmentRow(
+                      name: jobList[index]['name'],
+                      status: jobList[index]['status'],
+                      lastMaintenance: '2 weeks ago',
+                    ),
+                  ),
               ],
             ),
           ),
@@ -438,7 +494,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: status == 'Operational'
+          color: status == 'available'
               ? AppTheme.secondaryColor.withAlpha(25)
               : Colors.red.withAlpha(25),
           borderRadius: BorderRadius.circular(12),
@@ -446,8 +502,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
         child: Text(
           status,
           style: TextStyle(
-            color:
-                status == 'Operational' ? AppTheme.secondaryColor : Colors.red,
+            color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -524,8 +579,4 @@ class EquipmentMaintenanceApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
-}
-
-void main() {
-  runApp(const EquipmentMaintenanceApp());
 }
