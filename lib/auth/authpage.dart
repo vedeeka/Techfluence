@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/auth/loginpage.dart';
+import 'package:techfluence/component/dashboard.dart';
 import 'package:techfluence/component/homepage.dart';
 import 'package:techfluence/data/data.dart';
 
@@ -19,7 +20,7 @@ class _AuthCheckerState extends State<AuthChecker> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           globalEmail = FirebaseAuth.instance.currentUser!.email!;
-          return const Homepage();
+          return const EquipmentMaintenanceApp();
         }
         return const LoginPage();
       },

@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/component/jobspage.dart';
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -198,17 +200,72 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   }
 
   Widget _buildMainContent() {
+    final searchController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Equipment Dashboard'),
+        title: Row(
+          children: [
+            const Text("Dashboard"),
+            const SizedBox(width: 20),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 1", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 2", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 3", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 4", style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {},
+              child:
+                  const Text("Page 5", style: TextStyle(color: Colors.black)),
+            ),
+          ],
+        ),
+        shadowColor: Colors.black,
+        elevation: 1,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () {},
+          Container(
+            height: double.infinity,
+            width: 350,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: TextField(
+                controller: searchController,
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: "Search",
+                ),
+              ),
+            ),
           ),
           IconButton(
-            icon: const Icon(Icons.account_circle_outlined),
             onPressed: () {},
+            icon: const Icon(CupertinoIcons.bell_fill),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.help),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.person),
           ),
         ],
       ),
@@ -260,36 +317,79 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   }
 
   Widget _buildEquipmentList() {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Equipment List',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add New'),
-                ),
-              ],
+    double cardWidth =
+        MediaQuery.of(context).size.width / 2.5; // Half of current width
+
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal, // Enables scrolling if needed
+        child: Row(
+          children: [
+            _buildEquipmentCard(cardWidth, false, context),
+            const SizedBox(width: 16),
+            // _buildEquipmentCard(cardWidth), // Added third card
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEquipmentCard(double width, bool viewAll, BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Equipment List',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            if (viewAll) {
+                              viewAll = false;
+                            } else {
+                              viewAll = true;
+                            }
+                            print(viewAll);
+                          });
+                        },
+                        icon: const Icon(Icons.clear_all_sharp),
+                        label: viewAll == true
+                            ? Text('view less')
+                            : Text('viewall'),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add New'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          ...List.generate(
-            3,
-            (index) => _buildEquipmentRow(
-              name: 'Industrial Compressor X${200 + index}',
-              status: 'Operational',
-              lastMaintenance: '2 weeks ago',
+            ...List.generate(
+              viewAll ? 5 : 3,
+              (index) => _buildEquipmentRow(
+                name: 'Industrial Compressor X${200 + index}',
+                status: 'Operational',
+                lastMaintenance: '2 weeks ago',
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -302,8 +402,8 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child:
-           const  Icon(Icons.precision_manufacturing, color: AppTheme.primaryColor),
+        child: const Icon(Icons.precision_manufacturing,
+            color: AppTheme.primaryColor),
       ),
       title: Text(
         name,
