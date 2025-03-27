@@ -41,7 +41,7 @@ class MachineryProductGridPage extends StatelessWidget {
     // Add other machinery items here...
   ];
 
-  MachineryProductGridPage({Key? key}) : super(key: key);
+  MachineryProductGridPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +113,7 @@ class MachineryProductGridPage extends StatelessWidget {
 class MachineryDetailPage extends StatelessWidget {
   final Machinery machinery;
 
-  const MachineryDetailPage({Key? key, required this.machinery}) : super(key: key);
+  const MachineryDetailPage({super.key, required this.machinery});
 
   @override
   Widget build(BuildContext context) {
