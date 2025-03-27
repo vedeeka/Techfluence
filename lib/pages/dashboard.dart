@@ -5,8 +5,251 @@ import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
 
 List<Map<String, dynamic>> inventoryItems = [], jobList = [];
+class EquipmentCard extends StatefulWidget {
+  final String name;
+  final double width;
+  final int input;
 
+  const EquipmentCard({
+    required this.name,
+    required this.width,
+    required this.input,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<EquipmentCard> createState() => _EquipmentCardState();
+}
+
+class _EquipmentCardState extends State<EquipmentCard> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: widget.width,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    widget.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          if (widget.input == 1) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AddInventoryPopUp();
+                              },
+                            );
+                          }
+                          if (widget.input == 2) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return const AddJobPopUp();
+                              },
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add New'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            if (widget.input == 1)
+              ...List.generate(
+                inventoryItems.isEmpty
+                    ? 0
+                    : inventoryItems.length > 3
+                        ? 3
+                        : inventoryItems.length,
+                (index) => _buildEquipmentRow(
+                  name: inventoryItems[index]['name'],
+                  status: inventoryItems[index]['status'],
+                  lastMaintenance: '2 weeks ago',
+                ),
+              ),
+            if (widget.input == 2)
+              ...List.generate(
+                jobList.isEmpty
+                    ? 0
+                    : jobList.length > 3
+                        ? 3
+                        : jobList.length,
+                (index) => _buildEquipmentRow(
+                  name: jobList[index]['name'],
+                  status: 'ongoing',
+                  lastMaintenance: '2 weeks ago',
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 int page = 0;
+Widget _buildEquipmentRow({
+    required String name,
+    required String status,
+    required String lastMaintenance,
+  }) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: AppTheme.primaryColor.withAlpha(25),
+        child: const Icon(Icons.precision_manufacturing,
+            color: AppTheme.primaryColor),
+      ),
+      title: Text(
+        name,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        'Last Maintenance: $lastMaintenance',
+        style: const TextStyle(color: Colors.grey),
+      ),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: status == 'available'
+              ? AppTheme.secondaryColor.withAlpha(25)
+              : Colors.red.withAlpha(25),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          status,
+          style: TextStyle(
+            color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      onTap: () {},
+    );
+  }
+
+class StatusOverview extends StatefulWidget {
+  const StatusOverview({super.key});
+
+  @override
+  State<StatusOverview> createState() => _StatusOverviewState();
+}
+
+class _StatusOverviewState extends State<StatusOverview> {
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Expanded(
+          child: _StatusCard(
+            title: 'Total Equipment',
+            value: '124',
+            color: AppTheme.primaryColor,
+            icon: Icons.devices,
+          ),
+        ),
+        Expanded(
+          child: _StatusCard(
+            title: 'Maintenance Due',
+            value: '12',
+            color: Colors.orange,
+            icon: Icons.build_circle,
+          ),
+        ),
+        Expanded(
+          child: _StatusCard(
+            title: 'Critical Assets',
+            value: '3',
+            color: Colors.red,
+            icon: Icons.warning_amber_rounded,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+  class MobileNavigation extends StatefulWidget {
+    const MobileNavigation({super.key});
+
+    @override
+    State<MobileNavigation> createState() => _MobileNavigationState();
+  }
+
+  class _MobileNavigationState extends State<MobileNavigation> {
+    int _currentIndex = 0;
+
+    @override
+    Widget build(BuildContext context) {
+      return BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        backgroundColor: Colors.white,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: AppTheme.primaryColor,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_outlined),
+            activeIcon: Icon(Icons.dashboard),
+            label: 'Dashboard',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.schedule_outlined),
+            activeIcon: Icon(Icons.schedule),
+            label: 'Schedule',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics_outlined),
+            activeIcon: Icon(Icons.analytics),
+            label: 'Analytics',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      );
+    }
+  }
+
+ Widget _buildSidebarItem(IconData icon, String label,
+      {bool isActive = false}) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isActive ? AppTheme.primaryColor : Colors.grey,
+      ),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: isActive ? AppTheme.primaryColor : Colors.grey[700],
+          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      onTap: () {},
+      selected: isActive,
+    );
+  }
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -253,7 +496,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          _buildStatusOverview(),
+                          const StatusOverview(),
                           const SizedBox(height: 16),
                           const BuildEquipmentList()
                         ],
@@ -264,92 +507,15 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: _isCompactMode ? _buildMobileNavigation() : null,
+          bottomNavigationBar: _isCompactMode ? MobileNavigation() : null,
         );
       },
     );
   }
 
-  Widget _buildSidebarItem(IconData icon, String label,
-      {bool isActive = false}) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isActive ? AppTheme.primaryColor : Colors.grey,
-      ),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: isActive ? AppTheme.primaryColor : Colors.grey[700],
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      onTap: () {},
-      selected: isActive,
-    );
-  }
 
-  Widget _buildMobileNavigation() {
-    return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: AppTheme.primaryColor,
-      unselectedItemColor: Colors.grey,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard_outlined),
-          activeIcon: Icon(Icons.dashboard),
-          label: 'Dashboard',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.schedule_outlined),
-          activeIcon: Icon(Icons.schedule),
-          label: 'Schedule',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.analytics_outlined),
-          activeIcon: Icon(Icons.analytics),
-          label: 'Analytics',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          activeIcon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-    );
-  }
 
-  Widget _buildStatusOverview() {
-    return const Row(
-      children: [
-        Expanded(
-          child: _StatusCard(
-            title: 'Total Equipment',
-            value: '124',
-            color: AppTheme.primaryColor,
-            icon: Icons.devices,
-          ),
-        ),
-        Expanded(
-          child: _StatusCard(
-            title: 'Maintenance Due',
-            value: '12',
-            color: Colors.orange,
-            icon: Icons.build_circle,
-          ),
-        ),
-        Expanded(
-          child: _StatusCard(
-            title: 'Critical Assets',
-            value: '3',
-            color: Colors.red,
-            icon: Icons.warning_amber_rounded,
-          ),
-        ),
-      ],
-    );
-  }
+  
 }
 
 class BuildEquipmentList extends StatefulWidget {
@@ -377,17 +543,15 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildEquipmentCard(
-                  "Current Job List",
-                  cardWidth,
-                  context,
-                  2,
+                EquipmentCard(
+                  name: "Current Job List",
+                  width: cardWidth,
+                  input: 2,
                 ),
-                _buildEquipmentCard(
-                  "Maintenance Machine List",
-                  cardWidth,
-                  context,
-                  3,
+                EquipmentCard(
+                  name: "Maintenance Machine List",
+                  width: cardWidth,
+                  input: 3,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -396,17 +560,16 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildEquipmentCard(
-                  "Idle Machines",
-                  cardWidth,
-                  context,
-                  1,
+                EquipmentCard(
+                  name: "Idle Machines",
+                  width: cardWidth,
+                  input: 1,
                 ),
-                _buildEquipmentCard(
-                  "New Arrivals",
-                  cardWidth,
-                  context,
-                  4,
+                EquipmentCard(
+                  name: "New Arrivals",
+                  width: cardWidth,
+                  input: 4,
+                
                 ),
                 const SizedBox(width: 16),
               ],
@@ -417,127 +580,9 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
     );
   }
 
-  Widget _buildEquipmentCard(
-      String name, double width, BuildContext context, int input) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return SizedBox(
-          width: width,
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              if (input == 1) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const AddInventoryPopUp();
-                                  },
-                                );
-                              }
-                              if (input == 2) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return const AddJobPopUp();
-                                  },
-                                );
-                              }
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add New'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                if (input == 1)
-                  ...List.generate(
-                    inventoryItems.isEmpty
-                        ? 0
-                        : inventoryItems.length > 3
-                            ? 3
-                            : inventoryItems.length,
-                    (index) => _buildEquipmentRow(
-                      name: inventoryItems[index]['name'],
-                      status: inventoryItems[index]['status'],
-                      lastMaintenance: '2 weeks ago',
-                    ),
-                  ),
-                if (input == 2)
-                  ...List.generate(
-                    jobList.isEmpty
-                        ? 0
-                        : jobList.length > 3
-                            ? 3
-                            : jobList.length,
-                    (index) => _buildEquipmentRow(
-                      name: jobList[index]['name'],
-                      status: 'ongoing',
-                      lastMaintenance: '2 weeks ago',
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+ 
 
-  Widget _buildEquipmentRow({
-    required String name,
-    required String status,
-    required String lastMaintenance,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child: const Icon(Icons.precision_manufacturing,
-            color: AppTheme.primaryColor),
-      ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        'Last Maintenance: $lastMaintenance',
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: status == 'available'
-              ? AppTheme.secondaryColor.withAlpha(25)
-              : Colors.red.withAlpha(25),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-      onTap: () {},
-    );
-  }
+  
 }
 
 // Status Card Widget
