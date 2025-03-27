@@ -76,7 +76,7 @@ class _EquipmentCardState extends State<EquipmentCard> {
                     : inventoryItems.length > 3
                         ? 3
                         : inventoryItems.length,
-                (index) => _buildEquipmentRow(
+                (index) => EquipmentRow(
                   name: inventoryItems[index]['name'],
                   status: inventoryItems[index]['status'],
                   lastMaintenance: '2 weeks ago',
@@ -89,7 +89,7 @@ class _EquipmentCardState extends State<EquipmentCard> {
                     : jobList.length > 3
                         ? 3
                         : jobList.length,
-                (index) => _buildEquipmentRow(
+                (index) => EquipmentRow(
                   name: jobList[index]['name'],
                   status: 'ongoing',
                   lastMaintenance: '2 weeks ago',
@@ -102,11 +102,25 @@ class _EquipmentCardState extends State<EquipmentCard> {
   }
 }
 int page = 0;
-Widget _buildEquipmentRow({
-    required String name,
-    required String status,
-    required String lastMaintenance,
-  }) {
+class EquipmentRow extends StatefulWidget {
+  final String name;
+  final String status;
+  final String lastMaintenance;
+
+  const EquipmentRow({
+    required this.name,
+    required this.status,
+    required this.lastMaintenance,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<EquipmentRow> createState() => _EquipmentRowState();
+}
+
+class _EquipmentRowState extends State<EquipmentRow> {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: AppTheme.primaryColor.withAlpha(25),
@@ -114,25 +128,27 @@ Widget _buildEquipmentRow({
             color: AppTheme.primaryColor),
       ),
       title: Text(
-        name,
+        widget.name,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
-        'Last Maintenance: $lastMaintenance',
+        'Last Maintenance: ${widget.lastMaintenance}',
         style: const TextStyle(color: Colors.grey),
       ),
       trailing: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: status == 'available'
+          color: widget.status == 'available'
               ? AppTheme.secondaryColor.withAlpha(25)
               : Colors.red.withAlpha(25),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
-          status,
+          widget.status,
           style: TextStyle(
-            color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
+            color: widget.status == 'available'
+                ? AppTheme.secondaryColor
+                : Colors.red,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -140,6 +156,7 @@ Widget _buildEquipmentRow({
       onTap: () {},
     );
   }
+}
 
 class StatusOverview extends StatefulWidget {
   const StatusOverview({super.key});
@@ -232,24 +249,44 @@ class _StatusOverviewState extends State<StatusOverview> {
     }
   }
 
- Widget _buildSidebarItem(IconData icon, String label,
-      {bool isActive = false}) {
+class SidebarItem extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final bool isActive;
+  final VoidCallback? onTap;
+
+  const SidebarItem({
+    required this.icon,
+    required this.label,
+    this.isActive = false,
+    this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<SidebarItem> createState() => _SidebarItemState();
+}
+
+class _SidebarItemState extends State<SidebarItem> {
+  @override
+  Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(
-        icon,
-        color: isActive ? AppTheme.primaryColor : Colors.grey,
+        widget.icon,
+        color: widget.isActive ? AppTheme.primaryColor : Colors.grey,
       ),
       title: Text(
-        label,
+        widget.label,
         style: TextStyle(
-          color: isActive ? AppTheme.primaryColor : Colors.grey[700],
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+          color: widget.isActive ? AppTheme.primaryColor : Colors.grey[700],
+          fontWeight: widget.isActive ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      onTap: () {},
-      selected: isActive,
+      onTap: widget.onTap,
+      selected: widget.isActive,
     );
   }
+}
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -402,11 +439,23 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
-                      _buildSidebarItem(Icons.dashboard, 'Dashboard',
-                          isActive: true),
-                      _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                      _buildSidebarItem(Icons.analytics, 'Analytics'),
-                      _buildSidebarItem(Icons.person, 'Profile'),
+                      SidebarItem(
+                        icon: Icons.dashboard,
+                        label: 'Dashboard',
+                        isActive: true,
+                      ),
+                      SidebarItem(
+                        icon: Icons.schedule,
+                        label: 'Maintenance',
+                      ),
+                      SidebarItem(
+                        icon: Icons.analytics,
+                        label: 'Analytics',
+                      ),
+                      SidebarItem(
+                        icon: Icons.person,
+                        label: 'Profile',
+                      ),
                       const Spacer(),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
