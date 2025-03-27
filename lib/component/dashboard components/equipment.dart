@@ -188,37 +188,122 @@ class MachineryDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(machinery['name'])),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(Icons.image),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(machinery['name'],
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text(machinery['description'],
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          // Sidebar Navigation
+          Container(
+            width: 250,
+            color: Colors.grey[100],
+            child: Column(
+              children: [
+                // Logo or Header
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  color: Colors.white,
+                  child: const Center(
+                    child: Text(
+                      'Machinery',
                       style: TextStyle(
-                          color: Colors.grey[800], fontSize: 16, height: 1.5)),
-                  _buildSpecificationTable(),
-                  ElevatedButton(
-                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Request for quote sent'))),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50)),
-                    child: const Text('Request Quote'),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
                   ),
-                ],
+                ),
+
+                // Expanded(
+                //   child: ListView(
+                //     padding: EdgeInsets.zero,
+                //     children: [
+                //       _buildNavItem(
+                //         icon: Icons.dashboard,
+                //         title: 'Dashboard',
+                //         isSelected: true,
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.list,
+                //         title: 'Machinery List',
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.add_circle_outline,
+                //         title: 'Add Machinery',
+                //         onTap: () {},
+                //       ),
+                //       _buildNavItem(
+                //         icon: Icons.settings,
+                //         title: 'Settings',
+                //         onTap: () {},
+                //       ),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+
+          // Main Content Area
+          Expanded(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(machinery['name']),
+                elevation: 1,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('image'),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            machinery['name'],
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            machinery['description'],
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 16,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildSpecificationTable(),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () =>
+                                ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Request for quote sent')),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Request Quote'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -249,7 +334,7 @@ class MachineryDetailPage extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding:const  EdgeInsets.symmetric(vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
             style: TextStyle(
