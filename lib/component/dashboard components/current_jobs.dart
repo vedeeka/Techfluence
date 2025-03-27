@@ -421,6 +421,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                         icon: Icons.timer,
                       ),
                     ],
+                    
                   ),
                 ),
               ),
