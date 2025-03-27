@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/auth/loginpage.dart';
-import 'package:techfluence/component/dashboard.dart';
-import 'package:techfluence/component/homepage.dart';
+import 'package:techfluence/pages/dashboard.dart';
+import 'package:techfluence/component/dashboard%20components/homepage.dart';
 import 'package:techfluence/data/data.dart';
 
 class AuthChecker extends StatefulWidget {

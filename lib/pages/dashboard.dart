@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:techfluence/component/jobspage.dart';
+import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
 // Enhanced Theme and Design Constants
 class AppTheme {

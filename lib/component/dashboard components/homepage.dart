@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:techfluence/component/navbar.dart';
-import 'package:techfluence/component/hero.dart';
+import 'package:techfluence/component/dashboard%20components/navbar.dart';
+import 'package:techfluence/component/dashboard%20components/hero.dart';
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
 
