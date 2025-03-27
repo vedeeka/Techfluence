@@ -357,26 +357,74 @@ class MachineryDetailPage extends StatefulWidget {
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
-  void _sendMessage() {
-    if (_controller.text.isEmpty) return;
+int s=0;
+void initializeController() {
+  if (widget.machinery.isEmpty) {
+    print("Error: Machinery data is empty.");
+    return;
+  }
 
-    setState(() {
-      _messages.add({'user': _controller.text});
+  if (_controller.text.isEmpty) {
+    _controller.text = "Failure Prediction AI request: Analyze past maintenance data to predict failures. Answer my question as per this data\n"
+        "Machinery Details:\n"
+        "Name: ${widget.machinery['name'] ?? 'N/A'}\n"
+        "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
+        "Status: ${widget.machinery['status'] ?? 'N/A'}";
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+
+      _sendMessage();
+
     });
+  }
+}
 
-    getResponse(_controller.text, (response) {
+
+
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    initializeController(); // Ensure it runs after widget build
+  });
+}
+
+
+Future<void> _sendMessage() async {
+  if (_controller.text.isEmpty) return;
+
+  final messageText = _controller.text; // Store message before clearing
+  _controller.clear(); // Clear input immediately to avoid UI lag
+
+  setState(() {
+    if (s==1){
+       _messages.add({'user': messageText});
+    }
+   s=1;
+    _messages.add({'bot': 'Typing...'}); // Show typing indicator
+  });
+
+  try {
+    final response = await getResponse(messageText, (botResponse) {
       setState(() {
+        _messages.add({'bot': botResponse});
+      });
+    });
+    if (mounted) {
+      setState(() {
+        _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
         _messages.add({'bot': response});
       });
       // ignore: body_might_complete_normally_catch_error
     }).catchError((error) {
       setState(() {
+        _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
         _messages.add({'bot': 'Error: Unable to fetch response.'});
       });
-    });
-
-    _controller.clear();
+    }
   }
+}
+
 
   static const String _baseUrl =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
@@ -397,19 +445,18 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
         }),
       );
 
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        onBotResponse(
-            jsonResponse['candidates'][0]['content']['parts'][0]['text']);
-        return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-      } else {
-        return "Error: ${response.statusCode} - ${response.body}";
-      }
-    } catch (e) {
-      print("Caught error: $e");
-      return "Error: Unable to connect to the server. $e";
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      onBotResponse(jsonResponse['candidates'][0]['content']['parts'][0]['text']);
+      return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
+    } else {
+      return "Error: ${response.statusCode} - ${response.body}";
     }
+  } catch (e) {
+    print("Caught error: $e");
+    return "Error: Unable to connect to the server. $e";
   }
+}
 
   void _openChatDialog() {
     showDialog(
