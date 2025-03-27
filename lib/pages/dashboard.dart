@@ -54,7 +54,7 @@ class _EquipmentCardState extends State<EquipmentCard> {
                             MaterialPageRoute(
                               builder: (context) {
                                 if (widget.input == 1) {
-                                  return MachineryProductGridPage();
+                                  return const MachineryProductGridPage();
                                 } else if (widget.input == 3) {
                                   return const MachineryListPage();
                                 }

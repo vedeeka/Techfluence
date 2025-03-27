@@ -30,7 +30,7 @@ Widget _buildStatusChip(String status) {
     ),
     child: Text(
       status,
-      style: TextStyle(
+      style:const  TextStyle(
         color: Colors.black87,
         fontSize: 12,
         fontWeight: FontWeight.w500,
@@ -229,15 +229,15 @@ class JobsPage extends StatelessWidget {
                         child: ListTile(
   contentPadding: EdgeInsets.zero,
   title: Card(
-    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             job['name'],
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16,
             ),

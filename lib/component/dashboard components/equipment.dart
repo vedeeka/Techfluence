@@ -249,7 +249,7 @@ class MachineryDetailPage extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding:const  EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
             style: TextStyle(
@@ -259,7 +259,7 @@ class MachineryDetailPage extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             value,
             style: TextStyle(
