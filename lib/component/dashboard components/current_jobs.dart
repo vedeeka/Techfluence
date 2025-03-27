@@ -198,68 +198,113 @@ class _MachineryListPageState extends State<MachineryListPage> {
                 itemCount: _machineryList.length,
                 itemBuilder: (context, index) {
                   final machinery = _machineryList[index];
-                  return ListTile(
-  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  shape: RoundedRectangleBorder(
+                  return Container(
+  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+  decoration: BoxDecoration(
+    color: Colors.white,
     borderRadius: BorderRadius.circular(12),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.shade200,
+        blurRadius: 4,
+        offset: Offset(0, 2),
+      ),
+    ],
   ),
-  tileColor: Colors.white,
-  leading: Container(
-    padding: EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      color: machinery.status == 'Operational' 
-        ? Colors.green.shade50 
-        : Colors.orange.shade50,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Icon(
-      machinery.status == 'Operational' 
-        ? Icons.check_circle_outline 
-        : Icons.warning_amber_rounded,
-      color: machinery.status == 'Operational' 
-        ? Colors.green 
-        : Colors.orange,
-    ),
-  ),
-  title: Text(
-    machinery.name,
-    style: TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 16,
-    ),
-  ),
-  subtitle: Text(
-    machinery.model,
-    style: TextStyle(
-      color: Colors.grey[600],
-    ),
-  ),
-  trailing: Container(
-    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-    decoration: BoxDecoration(
-      color: machinery.status == 'Operational' 
-        ? Colors.green.shade50 
-        : Colors.orange.shade50,
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      machinery.status,
-      style: TextStyle(
-        color: machinery.status == 'Operational' 
-          ? Colors.green.shade700 
-          : Colors.orange.shade700,
-        fontWeight: FontWeight.w500,
+  child: Material(
+    color: Colors.transparent,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MachineryDetailPage(machinery: machinery),
+          ),
+        );
+      },
+      child: Padding(
+        padding: EdgeInsets.all(12),
+        child: Row(
+          children: [
+            // Status Indicator
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: machinery.status == 'Operational' 
+                  ? Colors.green.shade50 
+                  : Colors.orange.shade50,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Icon(
+                  machinery.status == 'Operational' 
+                    ? Icons.check_circle 
+                    : Icons.warning_rounded,
+                  color: machinery.status == 'Operational' 
+                    ? Colors.green.shade600 
+                    : Colors.orange.shade600,
+                  size: 30,
+                ),
+              ),
+            ),
+            SizedBox(width: 12),
+            
+            // Machine Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    machinery.name,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[800],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    machinery.model,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            
+            // Status Badge
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: machinery.status == 'Operational' 
+                  ? Colors.green.shade100 
+                  : Colors.orange.shade100,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                machinery.status,
+                style: TextStyle(
+                  color: machinery.status == 'Operational' 
+                    ? Colors.green.shade800 
+                    : Colors.orange.shade800,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     ),
   ),
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MachineryDetailPage(machinery: machinery),
-      ),
-    );
-  },
 );
                 },
               ),
