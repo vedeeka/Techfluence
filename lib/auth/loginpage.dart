@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: 150,
                     ),
                     const SizedBox(height: 20),
-                    Text(
+                    const Text(
                       'TechFluence Enterprise',
                       style: TextStyle(
                         color: Colors.white,
@@ -103,8 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
                       child: Text(
                         'Secure access to your enterprise management platform',
                         textAlign: TextAlign.center,

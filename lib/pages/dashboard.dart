@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
+import 'package:techfluence/component/dashboard components/current_jobs.dart';
 
 List<Map<String, dynamic>> inventoryItems = [], jobList = [];
+
+int page = 0;
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -98,6 +101,8 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
 
   void loadData() async {
+    inventoryItems.clear();
+    jobList.clear();
     var docs = await FirebaseFirestore.instance
         .collection(backendBaseString)
         .doc(globalEmail)
@@ -120,6 +125,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     for (var d in docs2) {
       jobList.add(d.data());
     }
+    print(inventoryItems);
     setState(() {});
   }
 
@@ -128,6 +134,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     loadData();
     super.initState();
   }
+  // Define the 'page' variable
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +320,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
             children: [
               _buildStatusOverview(),
               const SizedBox(height: 16),
-              _buildEquipmentList(),
+              const BuildEquipmentList()
             ],
           ),
         ),
@@ -351,16 +358,29 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       ],
     );
   }
+}
 
-  Widget _buildEquipmentList() {
-    double cardWidth =
-        MediaQuery.of(context).size.width / 2.5; // Half of current width
+class BuildEquipmentList extends StatefulWidget {
+  const BuildEquipmentList({super.key});
 
+  @override
+  State<BuildEquipmentList> createState() => _BuildEquipmentListState();
+}
+
+class _BuildEquipmentListState extends State<BuildEquipmentList> {
+  @override
+  Widget build(BuildContext context) {
+    if (page == 1) {
+      return MachineryListPage();
+    }
+    double cardWidth = MediaQuery.of(context).size.width / 2.5;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         // Enables scrolling if needed
+        // Enables scrolling if needed
+
         child: Column(
           children: [
             Row(
