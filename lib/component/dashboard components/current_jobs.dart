@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+ final String _apiKey = "AIzaSyA6x_I6466VBoX8H34g6HkG95DAy296-Gs"; 
 void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
@@ -350,18 +352,56 @@ class MachineryDetailPage extends StatefulWidget {
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
-
   void _sendMessage() {
     if (_controller.text.isEmpty) return;
 
     setState(() {
       _messages.add({'user': _controller.text});
-      _messages.add(
-          {'bot': "You said: ${_controller.text}. I'm just a simple bot!"});
+    });
+
+    getResponse(_controller.text, (response) {
+      setState(() {
+        _messages.add({'bot': response});
+      });
+    }).catchError((error) {
+      setState(() {
+        _messages.add({'bot': 'Error: Unable to fetch response.'});
+      });
     });
 
     _controller.clear();
   }
+
+  static const String _baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+static Future<String> getResponse(
+    String prompt, Function(String) onBotResponse) async {
+  try {
+    final response = await http.post(
+      Uri.parse("$_baseUrl?key=$_apiKey"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "contents": [
+          {
+            "parts": [
+              {"text": prompt}
+            ]
+          }
+        ],
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      onBotResponse(jsonResponse['candidates'][0]['content']['parts'][0]['text']);
+      return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
+    } else {
+      return "Error: ${response.statusCode} - ${response.body}";
+    }
+  } catch (e) {
+    print("Caught error: $e");
+    return "Error: Unable to connect to the server. $e";
+  }
+}
 
   void _openChatDialog() {
     showDialog(
