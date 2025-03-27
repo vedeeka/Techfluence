@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/widgets/popups.dart';
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -388,7 +389,9 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                                 : 'View All'), // Change label dynamically
                           ),
                           TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              showDialog(context: context, builder: (context){return const AddInventoryPopUp();});
+                            },
                             icon: const Icon(Icons.add),
                             label: const Text('Add New'),
                           ),
