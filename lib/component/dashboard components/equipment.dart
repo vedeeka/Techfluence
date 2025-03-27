@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MachineryProductGridPage extends StatelessWidget {
+
+
+  
   final List<Machinery> machineryList = [
     Machinery(
       id: 'M001',
@@ -43,11 +47,83 @@ class MachineryProductGridPage extends StatelessWidget {
   ];
 
   MachineryProductGridPage({super.key});
+  final TextEditingController searchController = TextEditingController();
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Machinery Marketplace')),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+               
+                    title: Row(
+                      
+                      children: [
+                        
+                        const Text("Dashboard"),
+                        const SizedBox(width: 20),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 1",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 2",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 3",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 4",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 5",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ],
+                    ),
+                    shadowColor: Colors.black,
+                    elevation: 1,
+                    actions: [
+                      Container(
+                        height: double.infinity,
+                        width: 350,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Center(
+                          child: TextField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              hintText: "Search",
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.bell_fill),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.help),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.settings),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.person),
+                      ),
+                    ],
+                  ),
       body: GridView.builder(
         padding: const EdgeInsets.all(8),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -132,7 +208,6 @@ class MachineryProductGridPage extends StatelessWidget {
     }
   }
 }
-
 class MachineryDetailPage extends StatelessWidget {
   final Machinery machinery;
 
@@ -141,50 +216,221 @@ class MachineryDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(machinery.jobName)),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(machinery.imageUrl,
-                width: double.infinity, height: 200, fit: BoxFit.cover),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(machinery.jobName,
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text('Model: ${machinery.model}',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 16)),
-                  Text('\$${machinery.price.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24)),
-                  Text(machinery.description,
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          // Sidebar Navigation
+          Container(
+            width: 250,
+            color: Colors.grey[100],
+            child: Column(
+              children: [
+                // Logo or Header
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  color: Colors.white,
+                  child: Center(
+                    child: Text(
+                      'Machinery',
                       style: TextStyle(
-                          color: Colors.grey[800], fontSize: 16, height: 1.5)),
-                  _buildSpecificationTable(),
-                  ElevatedButton(
-                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Request for quote sent'))),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50)),
-                    child: const Text('Request Quote'),
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
                   ),
-                ],
+                ),
+                
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      _buildNavItem(
+                        icon: Icons.dashboard,
+                        title: 'Dashboard',
+                        isSelected: true,
+                        onTap: () {},
+                      ),
+                      _buildNavItem(
+                        icon: Icons.list,
+                        title: 'Machinery List',
+                        onTap: () {},
+                      ),
+                      _buildNavItem(
+                        icon: Icons.add_circle_outline,
+                        title: 'Add Machinery',
+                        onTap: () {},
+                      ),
+                      _buildNavItem(
+                        icon: Icons.settings,
+                        title: 'Settings',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Main Content Area
+          Expanded(
+            child: Scaffold(
+              appBar: AppBar(
+                title: Text(machinery.jobName),
+                elevation: 1,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      machinery.imageUrl,
+                      width: double.infinity,
+                      height: 250,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            machinery.jobName,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Model: ${machinery.model}',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            '\$${machinery.price.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            machinery.description,
+                            style: TextStyle(
+                              color: Colors.grey[800],
+                              fontSize: 16,
+                              height: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 16),
+                          _buildSpecificationTable(),
+                          SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Request for quote sent')),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Request Quote'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to create consistent navigation items
+  Widget _buildNavItem({
+    required IconData icon,
+    required String title,
+    bool isSelected = false,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: isSelected ? Colors.blue : Colors.grey[600],
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: isSelected ? Colors.blue : Colors.grey[800],
+          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      selected: isSelected,
+      selectedColor: Colors.blue,
+      onTap: onTap,
+    );
+  }
+
+  // Specification Table (assumed implementation)
+  Widget _buildSpecificationTable() {
+    return Card(
+      elevation: 1,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Table(
+          columnWidths: {
+            0: FlexColumnWidth(1),
+            1: FlexColumnWidth(2),
+          },
+          children: [
+            _buildTableRow('Status', machinery.status),
+            _buildTableRow('Model', machinery.model),
+            _buildTableRow('Price', '\$${machinery.price.toStringAsFixed(2)}'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSpecificationTable() {
+  // Helper method to create table rows
+  TableRow _buildTableRow(String label, String value) {
+    return TableRow(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8),
+          child: Text(
+            value,
+            style: TextStyle(
+              color: Colors.grey[800],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+  Widget _buildSpecificationTable(Machinery machinery) {
     return Card(
       elevation: 4,
       child: Padding(
@@ -217,7 +463,7 @@ class MachineryDetailPage extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class Machinery {
   final String id,
