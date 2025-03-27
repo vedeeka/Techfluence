@@ -322,19 +322,38 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal, // Enables scrolling if needed
-        child: Row(
+        scrollDirection: Axis.horizontal,
+         // Enables scrolling if needed
+        child: Column(
+          
           children: [
-            _buildEquipmentCard(cardWidth, false, context),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildEquipmentCard("Current Job List", cardWidth, false, context),
+            _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context),
+           
             const SizedBox(width: 16),
-            // _buildEquipmentCard(cardWidth), // Added third card
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+           crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+        
+            _buildEquipmentCard("Idle Machines", cardWidth, false, context),
+            _buildEquipmentCard("New Arrivals", cardWidth, false, context),
+            const SizedBox(width: 16),
+          ],
+        ),
           ],
         ),
       ),
     );
+    
   }
 
-  Widget _buildEquipmentCard(double width, bool viewAll, BuildContext context) {
+  Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context) {
     return StatefulBuilder(
       builder: (context, setState) {
         return SizedBox(
@@ -349,7 +368,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Equipment List',
+                        name,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       Row(
