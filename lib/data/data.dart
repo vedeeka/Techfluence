@@ -1,4 +1,5 @@
 String globalEmail = "";
+String backendBaseString = "hackathons/techfluence/companies";
 
 class InventoryClass {
   InventoryClass();

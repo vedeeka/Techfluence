@@ -123,3 +123,37 @@ class _AddInventoryPopUpState extends State<AddInventoryPopUp> {
     );
   }
 }
+
+class AddJobPopUp extends StatefulWidget {
+  const AddJobPopUp({super.key});
+
+  @override
+  State<AddJobPopUp> createState() => _AddJobPopUpState();
+}
+
+class _AddJobPopUpState extends State<AddJobPopUp> {
+  final name = TextEditingController(), des = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add Job'),
+      content: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyTextField(c: name, hint: "Job name"),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyTextField(
+              c: des,
+              hint: "Job description",
+              lineNo: 2,
+            ),
+          ),
+          MyButton(f: () {}, text: "Add New Job")
+        ],
+      ),
+    );
+  }
+}
