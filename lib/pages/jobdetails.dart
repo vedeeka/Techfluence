@@ -18,6 +18,46 @@ class _JobDetailsState extends State<JobDetails> {
   final searchController = TextEditingController();
   List<Map<String, dynamic>> items = [];
   List<String> itemId = [];
+  String risk = 'none';
+
+  void calculateDamage() async {
+    if (widget.job.containsKey('level')) {
+      if (widget.job['level'] == 'urgent') {
+        risk = 'urgent';
+        return;
+      }
+    }
+
+    int count = 0;
+    for (var i in itemId) {
+      var v = await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory/$i/maintenance')
+          .get()
+          .then((onValue) {
+        return onValue.docs;
+      });
+      for (var a in v) {
+        if (a.data()['level'] == 'high') {
+          count += 3;
+        } else if (a.data()['level'] == 'mid') {
+          count += 2;
+        } else if (a.data()['level'] == 'low') {
+          count += 1;
+        }
+      }
+    }
+    if (count >= 15) {
+      risk = "urgent";
+    } else if (count >= 10) {
+      risk = 'high';
+    } else if (count >= 5) {
+      risk = 'mid';
+    }
+    setState(() {});
+  }
+
   void dispatch() async {
     List<String> i = [];
     for (var item in items) {
@@ -105,6 +145,7 @@ class _JobDetailsState extends State<JobDetails> {
     if (widget.job['status'] == 'ongoing') {
       loadData();
     }
+    calculateDamage();
 
     super.initState();
   }
@@ -526,10 +567,11 @@ class _JobDetailsState extends State<JobDetails> {
                                                       const EdgeInsets.all(8.0),
                                                   child: MyButton(
                                                       f: () {
+                                                        calculateDamage();
                                                         items[index]['des'] =
                                                             info.text;
                                                         items[index]['level'] =
-                                                            level;
+                                                            risk;
                                                         Navigator.pop(context);
                                                       },
                                                       text: 'Add details'),

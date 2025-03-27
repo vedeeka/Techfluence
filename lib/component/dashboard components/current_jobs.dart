@@ -2,10 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-final String _apiKey = "AIzaSyA6x_I6466VBoX8H34g6HkG95DAy296-Gs";
+import 'package:techfluence/widgets/buttons.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
@@ -208,6 +205,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
                         itemCount: docs.length,
                         itemBuilder: (context, index) {
                           final machinery = docs[index].data();
+                          machinery['id'] = docs[index].id;
                           if (searchController.text.isNotEmpty &&
                               !machinery['name']
                                   .toString()
@@ -334,7 +332,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
                           );
                         },
                       );
-                    })),
+                    },),),
           ),
         ],
       ),
@@ -369,9 +367,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
           "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
           "Status: ${widget.machinery['status'] ?? 'N/A'}";
 
-      Future.delayed(const Duration(milliseconds: 100), () {
-        _sendMessage();
-      });
+      Future.delayed(const Duration(milliseconds: 100), () {});
     }
   }
 
@@ -381,75 +377,6 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       initializeController(); // Ensure it runs after widget build
     });
-  }
-
-  Future<void> _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-
-    final messageText = _controller.text; // Store message before clearing
-    _controller.clear(); // Clear input immediately to avoid UI lag
-
-    setState(() {
-      if (s == 1) {
-        _messages.add({'user': messageText});
-      }
-      s = 1;
-      _messages.add({'bot': 'Typing...'}); // Show typing indicator
-    });
-
-    try {
-      final response = await getResponse(messageText, (botResponse) {
-        setState(() {
-          _messages.add({'bot': botResponse});
-        });
-      });
-      if (mounted) {
-        setState(() {
-          _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
-          _messages.add({'bot': response});
-        });
-      }
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
-          _messages.add({'bot': 'Error: Unable to fetch response.'});
-        });
-      }
-    }
-  }
-
-  static const String _baseUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-  static Future<String> getResponse(
-      String prompt, Function(String) onBotResponse) async {
-    try {
-      final response = await http.post(
-        Uri.parse("$_baseUrl?key=$_apiKey"),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "contents": [
-            {
-              "parts": [
-                {"text": prompt}
-              ]
-            }
-          ],
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        onBotResponse(
-            jsonResponse['candidates'][0]['content']['parts'][0]['text']);
-        return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-      } else {
-        return "Error: ${response.statusCode} - ${response.body}";
-      }
-    } catch (e) {
-      print("Caught error: $e");
-      return "Error: Unable to connect to the server. $e";
-    }
   }
 
   void _openChatDialog() {
@@ -534,7 +461,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                           color: const Color(0xFF1873E8),
                           onPressed: () {
                             setState(() {
-                              _sendMessage();
+                              print('add gemini');
                             });
                             setDialogState(() {}); // Update the dialog UI
                           },
@@ -615,6 +542,38 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                   ),
                 ),
               ),
+
+              if (widget.machinery['status'] == 'maintenance')
+                MyButton(
+                    f: () async {
+                      await FirebaseFirestore.instance
+                          .collection(backendBaseString)
+                          .doc(globalEmail)
+                          .collection('inventory')
+                          .doc(widget.machinery['id'])
+                          .update({'level': 'none', 'status': 'available'});
+                      var v = await FirebaseFirestore.instance
+                          .collection(backendBaseString)
+                          .doc(globalEmail)
+                          .collection(
+                              'inventory/${widget.machinery['id']}/maintenance')
+                          .get()
+                          .then((onValue) {
+                        return onValue.docs;
+                      });
+                      for (var i in v) {
+                        await FirebaseFirestore.instance
+                            .collection(backendBaseString)
+                            .doc(globalEmail)
+                            .collection(
+                                'inventory/${widget.machinery['id']}/maintenance')
+                            .doc(i.id)
+                            .delete();
+                      }
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    },
+                    text: "Completed Maintenance"),
 
               const SizedBox(height: 20),
 
@@ -723,36 +682,6 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
   void _editMachinery() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Edit Machinery feature coming soon')),
-    );
-  }
-
-  void _reportIssue() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Report an Issue'),
-        content: const TextField(
-          decoration: InputDecoration(
-            hintText: 'Describe the issue with the machinery',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Issue reported successfully')),
-              );
-            },
-            child: const Text('Submit'),
-          ),
-        ],
-      ),
     );
   }
 }

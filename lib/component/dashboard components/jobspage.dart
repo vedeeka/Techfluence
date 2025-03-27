@@ -219,7 +219,7 @@ class JobsPage extends StatelessWidget {
                                 job: job,
                               ),
                               settings: RouteSettings(
-                                name: '/job-details',
+                                name: 'job-details',
                                 arguments: job,
                               ),
                             ),
@@ -270,7 +270,8 @@ class JobsPage extends StatelessWidget {
                                       ),
                                       IconButton(
                                         onPressed: () {
-                                          print('deletion of job and items available');
+                                          print(
+                                              'deletion of job and items available');
                                         },
                                         icon: const Icon(Icons.delete),
                                       )

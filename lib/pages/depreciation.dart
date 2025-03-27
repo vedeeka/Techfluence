@@ -1,43 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
+import 'package:techfluence/data/data.dart';
 
-class DepreciationPage extends StatelessWidget {
-  const DepreciationPage({Key? key}) : super(key: key);
+class DepreciationPage extends StatefulWidget {
+  const DepreciationPage({super.key});
 
-  // Status chip widget (helper method)
-  Widget _buildStatusChip(String status) {
-    Color chipColor;
-    switch (status.toLowerCase()) {
-      case 'active':
-        chipColor = Colors.green[100]!;
-        break;
-      case 'pending':
-        chipColor = Colors.orange[100]!;
-        break;
-      case 'completed':
-        chipColor = Colors.blue[100]!;
-        break;
-      default:
-        chipColor = Colors.grey[200]!;
-    }
+  @override
+  State<DepreciationPage> createState() => _DepreciationPageState();
+}
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: chipColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        status,
-        style: const TextStyle(
-          color: Colors.black87,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
+class _DepreciationPageState extends State<DepreciationPage> {
+  List<Map<String, dynamic>> items = [];
+
+  void loadIndividual() async {
+    
+  }
+
+  void loadData() async {
+    items.clear();
+    var v = await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('inventory')
+        .get()
+        .then(
+      (onValue) {
+        return onValue.docs;
+      },
     );
+    for (var i in v) {
+      Map<String, dynamic> m = i.data();
+      m['id'] = i.id;
+      items.add(m);
+    }
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
   }
 
   @override
@@ -162,7 +165,7 @@ class DepreciationPage extends StatelessWidget {
                           width: 400,
                           child: _buildSummaryCard(
                             title: 'Total Assets',
-                            value: '54',
+                            value: items.length.toString(),
                             icon: Icons.inventory,
                             color: Colors.blue[100]!,
                           ),
