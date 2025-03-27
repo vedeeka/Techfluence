@@ -1,6 +1,123 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/widgets/popups.dart';
+import 'package:techfluence/component/dashboard components/current_jobs.dart';
+// Removed unused import '../component/dashboard components/current_jobs.dart';
+ int page = 0;
+ Widget _buildEquipmentRow({
+    required String name,
+    required String status,
+    required String lastMaintenance,
+  }) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: AppTheme.primaryColor.withAlpha(25),
+        child: const Icon(Icons.precision_manufacturing,
+            color: AppTheme.primaryColor),
+      ),
+      title: Text(
+        name,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(
+        'Last Maintenance: $lastMaintenance',
+        style: const TextStyle(color: Colors.grey),
+      ),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: status == 'Operational'
+              ? AppTheme.secondaryColor.withAlpha(25)
+              : Colors.red.withAlpha(25),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          status,
+          style: TextStyle(
+            color:
+                status == 'Operational' ? AppTheme.secondaryColor : Colors.red,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      onTap: () {},
+    );
+  }
+
+ Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context,int p) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SizedBox(
+          width: width,
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                        
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                viewAll = !viewAll; // Toggle the viewAll state
+                              });
+                            },
+                            icon: Icon(viewAll
+                                ? Icons.expand_less
+                                : Icons.expand_more), // Change icon dynamically
+                            label: Text(viewAll
+                                ? 'View Less'
+                                : 'View All'), // Change label dynamically
+                          ),
+                          TextButton.icon(
+                            onPressed: () {
+                             setState(() {
+                               page = p;
+                               debugPrint('Current page: $page');
+                             });
+                            },
+                            icon: const Icon(Icons.view_agenda),
+                            label: const Text('view'),
+                          ),
+                             TextButton.icon(
+                            onPressed: () {
+                              showDialog(context: context, builder: (context){return const AddInventoryPopUp();});
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add New'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                ...List.generate(
+                  viewAll ? 5 : 3,
+                  (index) => _buildEquipmentRow(
+                    
+                    name: 'Industrial Compressor X${200 + index}',
+                    status: 'Operational',
+                    lastMaintenance: '2 weeks ago',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -10,7 +127,7 @@ class AppTheme {
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color surfaceColor = Colors.white;
   static const Color textColor = Color(0xFF202124);
-
+ 
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: primaryColor,
@@ -92,6 +209,7 @@ class ResponsiveDashboardScreen extends StatefulWidget {
 
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
+   // Define the 'page' variable
 
   @override
   Widget build(BuildContext context) {
@@ -277,7 +395,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
             children: [
               _buildStatusOverview(),
               const SizedBox(height: 16),
-              _buildEquipmentList(),
+              const BuildEquipmentList()
             ],
           ),
         ),
@@ -316,147 +434,64 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     );
   }
 
-  Widget _buildEquipmentList() {
-    double cardWidth =
-        MediaQuery.of(context).size.width / 2.5; // Half of current width
+// Removed unused _buildEquipmentList function
 
+Widget _buildPageContent(String text) {
+  return Center(
+    child: Text(
+      text,
+      style: Theme.of(context).textTheme.headlineMedium,
+    ),
+  );
+}
+
+ 
+}
+
+
+class BuildEquipmentList extends StatefulWidget {
+  const BuildEquipmentList({super.key});
+
+  @override
+  State<BuildEquipmentList> createState() => _BuildEquipmentListState();
+}
+
+class _BuildEquipmentListState extends State<BuildEquipmentList> {
+  @override
+  Widget build(BuildContext context) {
+    if (page == 1) {
+      return MachineryListPage();
+    }
+    double cardWidth = MediaQuery.of(context).size.width / 2.5;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-         // Enables scrolling if needed
+        scrollDirection: Axis.horizontal, // Enables scrolling if needed
         child: Column(
-          
           children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEquipmentCard("Current Job List", cardWidth, false, context),
-            _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context),
-           
-            const SizedBox(width: 16),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-        
-            _buildEquipmentCard("Idle Machines", cardWidth, false, context),
-            _buildEquipmentCard("New Arrivals", cardWidth, false, context),
-            const SizedBox(width: 16),
-          ],
-        ),
-          ],
-        ),
-      ),
-    );
-    
-  }
-
-  Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return SizedBox(
-          width: width,
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                viewAll = !viewAll; // Toggle the viewAll state
-                              });
-                            },
-                            icon: Icon(viewAll
-                                ? Icons.expand_less
-                                : Icons.expand_more), // Change icon dynamically
-                            label: Text(viewAll
-                                ? 'View Less'
-                                : 'View All'), // Change label dynamically
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              showDialog(context: context, builder: (context){return const AddInventoryPopUp();});
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add New'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                ...List.generate(
-                  viewAll ? 5 : 3,
-                  (index) => _buildEquipmentRow(
-                    name: 'Industrial Compressor X${200 + index}',
-                    status: 'Operational',
-                    lastMaintenance: '2 weeks ago',
-                  ),
-                ),
+                _buildEquipmentCard("Current Job List", cardWidth, false, context, 1),
+                _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context, 2),
+                const SizedBox(width: 16),
               ],
             ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildEquipmentRow({
-    required String name,
-    required String status,
-    required String lastMaintenance,
-  }) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child: const Icon(Icons.precision_manufacturing,
-            color: AppTheme.primaryColor),
-      ),
-      title: Text(
-        name,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
-      subtitle: Text(
-        'Last Maintenance: $lastMaintenance',
-        style: const TextStyle(color: Colors.grey),
-      ),
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: status == 'Operational'
-              ? AppTheme.secondaryColor.withAlpha(25)
-              : Colors.red.withAlpha(25),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          status,
-          style: TextStyle(
-            color:
-                status == 'Operational' ? AppTheme.secondaryColor : Colors.red,
-            fontWeight: FontWeight.w600,
-          ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEquipmentCard("Idle Machines", cardWidth, false, context, 3),
+                _buildEquipmentCard("New Arrivals", cardWidth, false, context, 4),
+                const SizedBox(width: 16),
+              ],
+            ),
+          ],
         ),
       ),
-      onTap: () {},
     );
   }
 }
-
 // Status Card Widget
 class _StatusCard extends StatelessWidget {
   final String title;
