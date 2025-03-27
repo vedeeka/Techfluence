@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/popups.dart';
-import 'package:techfluence/component/dashboard components/current_jobs.dart';
 
 List<Map<String, dynamic>> inventoryItems = [], jobList = [];
 
@@ -125,7 +124,6 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     for (var d in docs2) {
       jobList.add(d.data());
     }
-    print(inventoryItems);
     setState(() {});
   }
 
@@ -138,6 +136,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final searchController = TextEditingController();
     return LayoutBuilder(
       builder: (context, constraints) {
         _isCompactMode = constraints.maxWidth < 800;
@@ -146,49 +145,128 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
           body: Row(
             children: [
               // Sidebar Navigation
-              if (!_isCompactMode) _buildSidebar(),
+              if (!_isCompactMode)
+                Container(
+                  width: 250,
+                  color: AppTheme.surfaceColor,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Equipment Hub',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),
+                      _buildSidebarItem(Icons.dashboard, 'Dashboard',
+                          isActive: true),
+                      _buildSidebarItem(Icons.schedule, 'Maintenance'),
+                      _buildSidebarItem(Icons.analytics, 'Analytics'),
+                      _buildSidebarItem(Icons.person, 'Profile'),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add Equipment'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
               // Main Content Area
               Expanded(
-                child: _buildMainContent(),
+                child: Scaffold(
+                  appBar: AppBar(
+                    title: Row(
+                      children: [
+                        const Text("Dashboard"),
+                        const SizedBox(width: 20),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 1",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 2",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 3",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 4",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text("Page 5",
+                              style: TextStyle(color: Colors.black)),
+                        ),
+                      ],
+                    ),
+                    shadowColor: Colors.black,
+                    elevation: 1,
+                    actions: [
+                      Container(
+                        height: double.infinity,
+                        width: 350,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Center(
+                          child: TextField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              hintText: "Search",
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.bell_fill),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.help),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.settings),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.person),
+                      ),
+                    ],
+                  ),
+                  body: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildStatusOverview(),
+                          const SizedBox(height: 16),
+                          const BuildEquipmentList()
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
           bottomNavigationBar: _isCompactMode ? _buildMobileNavigation() : null,
         );
       },
-    );
-  }
-
-  Widget _buildSidebar() {
-    return Container(
-      width: 250,
-      color: AppTheme.surfaceColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Equipment Hub',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ),
-          _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
-          _buildSidebarItem(Icons.schedule, 'Maintenance'),
-          _buildSidebarItem(Icons.analytics, 'Analytics'),
-          _buildSidebarItem(Icons.person, 'Profile'),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.add),
-              label: const Text('Add Equipment'),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -242,92 +320,6 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     );
   }
 
-  Widget _buildMainContent() {
-    final searchController = TextEditingController();
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            const Text("Dashboard"),
-            const SizedBox(width: 20),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 1", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 2", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 3", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 4", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 5", style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        ),
-        shadowColor: Colors.black,
-        elevation: 1,
-        actions: [
-          Container(
-            height: double.infinity,
-            width: 350,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Center(
-              child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: "Search",
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(CupertinoIcons.bell_fill),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.help),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.person),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildStatusOverview(),
-              const SizedBox(height: 16),
-              const BuildEquipmentList()
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildStatusOverview() {
     return const Row(
       children: [
@@ -369,15 +361,17 @@ class BuildEquipmentList extends StatefulWidget {
 
 class _BuildEquipmentListState extends State<BuildEquipmentList> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width / 2.5;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        // Enables scrolling if needed
-        // Enables scrolling if needed
-
         child: Column(
           children: [
             Row(
@@ -387,13 +381,13 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   "Current Job List",
                   cardWidth,
                   context,
-                  0,
+                  2,
                 ),
                 _buildEquipmentCard(
                   "Maintenance Machine List",
                   cardWidth,
                   context,
-                  0,
+                  3,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -412,7 +406,7 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   "New Arrivals",
                   cardWidth,
                   context,
-                  0,
+                  4,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -455,6 +449,14 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                                   },
                                 );
                               }
+                              if (input == 2) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const AddJobPopUp();
+                                  },
+                                );
+                              }
                             },
                             icon: const Icon(Icons.add),
                             label: const Text('Add New'),
@@ -466,7 +468,11 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                 ),
                 if (input == 1)
                   ...List.generate(
-                    inventoryItems.isEmpty ? 0 : 3,
+                    inventoryItems.isEmpty
+                        ? 0
+                        : inventoryItems.length > 3
+                            ? 3
+                            : inventoryItems.length,
                     (index) => _buildEquipmentRow(
                       name: inventoryItems[index]['name'],
                       status: inventoryItems[index]['status'],
@@ -475,10 +481,14 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   ),
                 if (input == 2)
                   ...List.generate(
-                    jobList.isEmpty ? 0 : 3,
+                    jobList.isEmpty
+                        ? 0
+                        : jobList.length > 3
+                            ? 3
+                            : jobList.length,
                     (index) => _buildEquipmentRow(
                       name: jobList[index]['name'],
-                      status: jobList[index]['status'],
+                      status: 'ongoing',
                       lastMaintenance: '2 weeks ago',
                     ),
                   ),
