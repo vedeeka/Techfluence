@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
@@ -180,6 +179,7 @@ class MachineryProductGridPage extends StatelessWidget {
     }
   }
 }
+
 class MachineryDetailPage extends StatelessWidget {
   final Map<String, dynamic> machinery;
 
@@ -224,29 +224,6 @@ class MachineryDetailPage extends StatelessWidget {
   }
 
   // Helper method to create consistent navigation items
-  Widget _buildNavItem({
-    required IconData icon,
-    required String title,
-    bool isSelected = false,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? Colors.blue : Colors.grey[600],
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: isSelected ? Colors.blue : Colors.grey[800],
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-      selected: isSelected,
-      selectedColor: Colors.blue,
-      onTap: onTap,
-    );
-  }
 
   // Specification Table (assumed implementation)
   Widget _buildSpecificationTable() {
@@ -255,14 +232,12 @@ class MachineryDetailPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Table(
-          columnWidths: {
+          columnWidths: const {
             0: FlexColumnWidth(1),
             1: FlexColumnWidth(2),
           },
           children: [
-            _buildTableRow('Status', machinery.status),
-            _buildTableRow('Model', machinery.model),
-            _buildTableRow('Price', '\$${machinery.price.toStringAsFixed(2)}'),
+            _buildTableRow('Status', machinery['status']),
           ],
         ),
       ),
@@ -295,61 +270,4 @@ class MachineryDetailPage extends StatelessWidget {
       ],
     );
   }
-}
-
-  Widget _buildSpecificationTable(Machinery machinery) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Specifications',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _buildSpecRow('Status', machinery['status']),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpecRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-          Text(value, style: TextStyle(color: Colors.grey[800])),
-        ],
-      ),
-    );
-  }
-
-
-class Machinery {
-  final String id,
-      jobName,
-      model,
-      serialNumber,
-      location,
-      status,
-      description,
-      imageUrl;
-  final DateTime purchaseDate;
-  final double price;
-
-  Machinery({
-    required this.id,
-    required this.jobName,
-    required this.model,
-    required this.serialNumber,
-    required this.purchaseDate,
-    required this.location,
-    required this.status,
-    required this.price,
-    required this.description,
-    required this.imageUrl,
-  });
 }
