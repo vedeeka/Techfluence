@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
- final String _apiKey = "AIzaSyA6x_I6466VBoX8H34g6HkG95DAy296-Gs"; 
+
+final String _apiKey = "AIzaSyA6x_I6466VBoX8H34g6HkG95DAy296-Gs";
 void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
@@ -373,36 +374,38 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
     _controller.clear();
   }
 
-  static const String _baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-static Future<String> getResponse(
-    String prompt, Function(String) onBotResponse) async {
-  try {
-    final response = await http.post(
-      Uri.parse("$_baseUrl?key=$_apiKey"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "contents": [
-          {
-            "parts": [
-              {"text": prompt}
-            ]
-          }
-        ],
-      }),
-    );
+  static const String _baseUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+  static Future<String> getResponse(
+      String prompt, Function(String) onBotResponse) async {
+    try {
+      final response = await http.post(
+        Uri.parse("$_baseUrl?key=$_apiKey"),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "contents": [
+            {
+              "parts": [
+                {"text": prompt}
+              ]
+            }
+          ],
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      onBotResponse(jsonResponse['candidates'][0]['content']['parts'][0]['text']);
-      return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-    } else {
-      return "Error: ${response.statusCode} - ${response.body}";
+      if (response.statusCode == 200) {
+        final jsonResponse = jsonDecode(response.body);
+        onBotResponse(
+            jsonResponse['candidates'][0]['content']['parts'][0]['text']);
+        return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
+      } else {
+        return "Error: ${response.statusCode} - ${response.body}";
+      }
+    } catch (e) {
+      print("Caught error: $e");
+      return "Error: Unable to connect to the server. $e";
     }
-  } catch (e) {
-    print("Caught error: $e");
-    return "Error: Unable to connect to the server. $e";
   }
-}
 
   void _openChatDialog() {
     showDialog(
