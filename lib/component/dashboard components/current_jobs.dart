@@ -353,29 +353,74 @@ class MachineryDetailPage extends StatefulWidget {
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
-  void _sendMessage() {
-    if (_controller.text.isEmpty) return;
-
-    setState(() {
-      _messages.add({'user': _controller.text});
-    });
-
-    getResponse(_controller.text, (response) {
-      setState(() {
-        _messages.add({'bot': response});
-      });
-    }).catchError((error) {
-      setState(() {
-        _messages.add({'bot': 'Error: Unable to fetch response.'});
-      });
-    });
-
-    _controller.clear();
+int s=0;
+void initializeController() {
+  if (widget.machinery == null || widget.machinery.isEmpty) {
+    print("Error: Machinery data is null or empty.");
+    return;
   }
 
+  if (_controller.text.isEmpty) {
+    _controller.text = "Failure Prediction AI request: Analyze past maintenance data to predict failures. Answer my question as per this data\n"
+        "Machinery Details:\n"
+        "Name: ${widget.machinery['name'] ?? 'N/A'}\n"
+        "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
+        "Status: ${widget.machinery['status'] ?? 'N/A'}";
+
+    Future.delayed(const Duration(milliseconds: 100), () {
+
+      _sendMessage();
+
+    });
+  }
+}
+
+
+
+@override
+void initState() {
+  super.initState();
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    initializeController(); // Ensure it runs after widget build
+  });
+}
+
+
+Future<void> _sendMessage() async {
+  if (_controller.text.isEmpty) return;
+
+  final messageText = _controller.text; // Store message before clearing
+  _controller.clear(); // Clear input immediately to avoid UI lag
+
+  setState(() {
+    if (s==1){
+       _messages.add({'user': messageText});
+    }
+   s=1;
+    _messages.add({'bot': 'Typing...'}); // Show typing indicator
+  });
+
+  try {
+    final response = await getResponse(messageText);
+    if (mounted) {
+      setState(() {
+        _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
+        _messages.add({'bot': response});
+      });
+    }
+  } catch (error) {
+    if (mounted) {
+      setState(() {
+        _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
+        _messages.add({'bot': 'Error: Unable to fetch response.'});
+      });
+    }
+  }
+}
+
+
   static const String _baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-static Future<String> getResponse(
-    String prompt, Function(String) onBotResponse) async {
+static Future<String> getResponse(String prompt) async {
   try {
     final response = await http.post(
       Uri.parse("$_baseUrl?key=$_apiKey"),
@@ -393,7 +438,6 @@ static Future<String> getResponse(
 
     if (response.statusCode == 200) {
       final jsonResponse = jsonDecode(response.body);
-      onBotResponse(jsonResponse['candidates'][0]['content']['parts'][0]['text']);
       return jsonResponse['candidates'][0]['content']['parts'][0]['text'];
     } else {
       return "Error: ${response.statusCode} - ${response.body}";
