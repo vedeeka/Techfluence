@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class JobDetails extends StatefulWidget {
-  const JobDetails({super.key});
+  final Map<String,dynamic>job;
+  const JobDetails({super.key,required this.job});
 
   @override
   State<JobDetails> createState() => _JobDetailsState();

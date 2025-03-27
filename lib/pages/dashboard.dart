@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
+import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 import 'package:techfluence/data/data.dart';
-import 'package:techfluence/pages/jobdetails.dart';
 import 'package:techfluence/widgets/popups.dart';
 
 class EquipmentCard extends StatefulWidget {
@@ -52,7 +52,9 @@ class _EquipmentCardState extends State<EquipmentCard> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const MachineryListPage();
+                                return widget.input % 2 == 1
+                                    ? const MachineryListPage()
+                                    : const JobsPage();
                               },
                             ),
                           );
