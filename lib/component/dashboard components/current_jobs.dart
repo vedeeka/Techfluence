@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -55,9 +56,12 @@ class _MachineryListPageState extends State<MachineryListPage> {
     ),
   ];
 
+  final TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Row(
         children: [
           // Permanent Sidebar
@@ -85,7 +89,6 @@ class _MachineryListPageState extends State<MachineryListPage> {
                     ],
                   ),
                 ),
-                
                 // Sidebar Menu Items
                 Expanded(
                   child: ListView(
@@ -113,9 +116,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
                         title: const Text('Settings'),
                         onTap: () {},
                       ),
-                    
                     ],
-                    
                   ),
                 ),
               ],
@@ -126,6 +127,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
           Expanded(
             child: Scaffold(
               appBar:AppBar(
+                backgroundColor: Colors.white,
                     title: Row(
                       children: [
                         const Text("Dashboard"),
@@ -166,7 +168,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Center(
                           child: TextField(
-                            
+                            controller: searchController,
                             decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.search),
                               hintText: "Search",
@@ -174,7 +176,10 @@ class _MachineryListPageState extends State<MachineryListPage> {
                           ),
                         ),
                       ),
-                   
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(CupertinoIcons.bell_fill),
+                      ),
                       IconButton(
                         onPressed: () {},
                         icon: const Icon(Icons.help),
@@ -194,26 +199,68 @@ class _MachineryListPageState extends State<MachineryListPage> {
                 itemBuilder: (context, index) {
                   final machinery = _machineryList[index];
                   return ListTile(
-                    title: Text(machinery.name),
-                    subtitle: Text(machinery.model),
-                    trailing: Text(
-                      machinery.status,
-                      style: TextStyle(
-                        color: machinery.status == 'Operational'
-                            ? Colors.green
-                            : Colors.orange,
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MachineryDetailPage(machinery: machinery),
-                        ),
-                      );
-                    },
-                  );
+  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12),
+  ),
+  tileColor: Colors.white,
+  leading: Container(
+    padding: EdgeInsets.all(8),
+    decoration: BoxDecoration(
+      color: machinery.status == 'Operational' 
+        ? Colors.green.shade50 
+        : Colors.orange.shade50,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Icon(
+      machinery.status == 'Operational' 
+        ? Icons.check_circle_outline 
+        : Icons.warning_amber_rounded,
+      color: machinery.status == 'Operational' 
+        ? Colors.green 
+        : Colors.orange,
+    ),
+  ),
+  title: Text(
+    machinery.name,
+    style: TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    ),
+  ),
+  subtitle: Text(
+    machinery.model,
+    style: TextStyle(
+      color: Colors.grey[600],
+    ),
+  ),
+  trailing: Container(
+    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    decoration: BoxDecoration(
+      color: machinery.status == 'Operational' 
+        ? Colors.green.shade50 
+        : Colors.orange.shade50,
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Text(
+      machinery.status,
+      style: TextStyle(
+        color: machinery.status == 'Operational' 
+          ? Colors.green.shade700 
+          : Colors.orange.shade700,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+  ),
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MachineryDetailPage(machinery: machinery),
+      ),
+    );
+  },
+);
                 },
               ),
             ),
@@ -396,14 +443,14 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
   }
 
   void _editMachinery() {
-    // TODO: Implement edit machinery functionality
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Edit Machinery feature coming soon')),
     );
   }
 
   void _reportIssue() {
-    // TODO: Implement issue reporting functionality
+ 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -421,7 +468,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: Submit issue logic
+           
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Issue reported successfully')),
