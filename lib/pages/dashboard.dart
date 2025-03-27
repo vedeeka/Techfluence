@@ -370,9 +370,6 @@ class BuildEquipmentList extends StatefulWidget {
 class _BuildEquipmentListState extends State<BuildEquipmentList> {
   @override
   Widget build(BuildContext context) {
-    if (page == 1) {
-      return MachineryListPage();
-    }
     double cardWidth = MediaQuery.of(context).size.width / 2.5;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
@@ -452,10 +449,11 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                             onPressed: () {
                               if (input == 1) {
                                 showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const AddInventoryPopUp();
-                                    });
+                                  context: context,
+                                  builder: (context) {
+                                    return const AddInventoryPopUp();
+                                  },
+                                );
                               }
                             },
                             icon: const Icon(Icons.add),
