@@ -78,41 +78,43 @@ class MachineryProductGridPage extends StatelessWidget {
             ),
           ),
           SizedBox(
-              width: MediaQuery.of(context).size.width * 4 / 5.1,
-              child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection(backendBaseString)
-                      .doc(globalEmail)
-                      .collection('inventory')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    var docs = snapshot.data!.docs;
-                    if (docs.isEmpty) {
-                      return const Center(
-                        child: Text("No Items"),
-                      );
-                    }
-                    return GridView.builder(
-                        padding: const EdgeInsets.all(8),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 2.6,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 3,
-                        ),
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) {
-                          Map<String, dynamic> m = docs[index].data();
-                          m['id'] = docs[index].id;
-                          return _buildProductCard(context, m);
-                        });
-                  })),
+            width: MediaQuery.of(context).size.width * 4 / 5.1,
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection(backendBaseString)
+                  .doc(globalEmail)
+                  .collection('inventory')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                var docs = snapshot.data!.docs;
+                if (docs.isEmpty) {
+                  return const Center(
+                    child: Text("No Items"),
+                  );
+                }
+                return GridView.builder(
+                  padding: const EdgeInsets.all(8),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 2.6,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 3,
+                  ),
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    Map<String, dynamic> m = docs[index].data();
+                    m['id'] = docs[index].id;
+                    return _buildProductCard(context, m);
+                  },
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -213,7 +215,6 @@ class MachineryDetailPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                
 
                 // Expanded(
                 //   child: ListView(
