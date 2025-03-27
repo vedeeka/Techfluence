@@ -6,7 +6,8 @@ import 'package:techfluence/widgets/buttons.dart';
 import 'package:techfluence/widgets/textfields.dart';
 
 class AddInventoryPopUp extends StatefulWidget {
-  const AddInventoryPopUp({super.key});
+  final Function(Map<String, dynamic>) f;
+  const AddInventoryPopUp({super.key, required this.f});
 
   @override
   State<AddInventoryPopUp> createState() => _AddInventoryPopUpState();
@@ -28,6 +29,7 @@ class _AddInventoryPopUpState extends State<AddInventoryPopUp> {
         .collection('hackathons/techfluence/companies/$globalEmail/inventory')
         .doc()
         .set(i.inventory);
+    widget.f(i.inventory);
   }
 
   @override
@@ -125,7 +127,8 @@ class _AddInventoryPopUpState extends State<AddInventoryPopUp> {
 }
 
 class AddJobPopUp extends StatefulWidget {
-  const AddJobPopUp({super.key});
+  final Function(Map<String, dynamic>) f;
+  const AddJobPopUp({super.key, required this.f});
 
   @override
   State<AddJobPopUp> createState() => _AddJobPopUpState();
@@ -140,6 +143,12 @@ class _AddJobPopUpState extends State<AddJobPopUp> {
         .collection('jobs')
         .doc()
         .set({
+      'name': name.text.trim(),
+      'description': des.text.trim(),
+      'date': DateTime.now(),
+      'status': 'upcoming'
+    });
+    widget.f({
       'name': name.text.trim(),
       'description': des.text.trim(),
       'date': DateTime.now(),
