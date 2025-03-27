@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class JobDetails extends StatefulWidget {
-  const JobDetails({super.key});
+  final Map<String, dynamic> job;
+  const JobDetails({super.key, required this.job});
 
   @override
   State<JobDetails> createState() => _JobDetailsState();
@@ -176,16 +177,16 @@ class _JobDetailsState extends State<JobDetails> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: Colors.grey.withAlpha(78),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
-                              child: const Text(
-                                "Job Name",
-                                style: TextStyle(
+                              child: Text(
+                                widget.job['name'],
+                                style: const TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
@@ -202,16 +203,16 @@ class _JobDetailsState extends State<JobDetails> {
                                 color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.3),
+                                    color: Colors.grey.withAlpha(78),
                                     spreadRadius: 2,
                                     blurRadius: 5,
                                     offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
-                              child: const Text(
-                                'Job Description',
-                                style: TextStyle(
+                              child: Text(
+                                widget.job['description'],
+                                style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.black87,
                                 ),
@@ -258,7 +259,7 @@ class _JobDetailsState extends State<JobDetails> {
                             color: Colors.white,
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.3),
+                                color: Colors.grey.withAlpha(78),
                                 spreadRadius: 2,
                                 blurRadius: 5,
                                 offset: const Offset(0, 3),
