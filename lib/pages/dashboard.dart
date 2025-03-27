@@ -353,62 +353,63 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     
   }
 
-  Widget _buildEquipmentCard(double width, bool viewAll, BuildContext context) {
-    return SizedBox(
-      width: width,
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Equipment List',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+  Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return SizedBox(
+          width: width,
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            if (viewAll) {
-                              viewAll = false;
-                            } else {
-                              viewAll = true;
-                            }
-                            print(viewAll);
-                          });
-                        },
-                        icon: const Icon(Icons.clear_all_sharp),
-                        label: viewAll == true
-                            ? Text('view less')
-                            : Text('viewall'),
+                      Text(
+                        name,
+                        style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add),
-                        label: const Text('Add New'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                viewAll = !viewAll; // Toggle the viewAll state
+                              });
+                            },
+                            icon: Icon(viewAll
+                                ? Icons.expand_less
+                                : Icons.expand_more), // Change icon dynamically
+                            label: Text(viewAll
+                                ? 'View Less'
+                                : 'View All'), // Change label dynamically
+                          ),
+                          TextButton.icon(
+                            onPressed: () {},
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add New'),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                ...List.generate(
+                  viewAll ? 5 : 3,
+                  (index) => _buildEquipmentRow(
+                    name: 'Industrial Compressor X${200 + index}',
+                    status: 'Operational',
+                    lastMaintenance: '2 weeks ago',
+                  ),
+                ),
+              ],
             ),
-            ...List.generate(
-              viewAll ? 5 : 3,
-              (index) => _buildEquipmentRow(
-                name: 'Industrial Compressor X${200 + index}',
-                status: 'Operational',
-                lastMaintenance: '2 weeks ago',
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
