@@ -5,6 +5,7 @@ import 'package:techfluence/pages/jobdetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+
 Widget _buildStatusChip(String status) {
   Color chipColor;
   switch (status.toLowerCase()) {
@@ -264,6 +265,10 @@ class JobsPage extends StatelessWidget {
                   fontSize: 12,
                 ),
               ),
+              IconButton(
+    onPressed: () {},
+    icon: const Icon(Icons.delete),
+  )
             ],
           ),
         ],

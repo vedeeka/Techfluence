@@ -29,6 +29,7 @@ class _JobDetailsState extends State<JobDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Material(
+                      color: Colors.white,
                       child: Text(
                         'Equipment Hub',
                         style: TextStyle(
