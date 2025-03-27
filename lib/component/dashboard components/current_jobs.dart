@@ -348,6 +348,143 @@ class MachineryDetailPage extends StatefulWidget {
 }
 
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, String>> _messages = [];
+
+  void _sendMessage() {
+    if (_controller.text.isEmpty) return;
+
+    setState(() {
+      _messages.add({'user': _controller.text});
+      _messages.add(
+          {'bot': "You said: ${_controller.text}. I'm just a simple bot!"});
+    });
+
+    _controller.clear();
+  }
+
+  void _openChatDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              title: const Text(
+                'Chatbot Help',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF1873E8),
+                ),
+              ),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _messages.length,
+                        itemBuilder: (context, index) {
+                          final message = _messages[index];
+                          final isUser = message.keys.first == 'user';
+                          return Align(
+                            alignment: isUser
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: isUser
+                                    ? const Color(0xFF1873E8).withOpacity(0.1)
+                                    : Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                message.values.first,
+                                style: TextStyle(
+                                  color: isUser
+                                      ? const Color(0xFF1873E8)
+                                      : Colors.grey[800],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            maxLines: 3,
+                            controller: _controller,
+                            decoration: InputDecoration(
+                              hintText: 'Type your message...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF1873E8),
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.send),
+                          color: const Color(0xFF1873E8),
+                          onPressed: () {
+                            setState(() {
+                              _sendMessage();
+                            });
+                            setDialogState(() {}); // Update the dialog UI
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 80,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color(0xFF1873E8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -437,9 +574,8 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _reportIssue,
-        backgroundColor: Colors.red[600],
-        child: const Icon(Icons.report_problem),
+        onPressed: _openChatDialog,
+        child: const Icon(Icons.chat),
       ),
     );
   }

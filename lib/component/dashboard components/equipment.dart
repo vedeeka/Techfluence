@@ -227,9 +227,9 @@ class MachineryDetailPage extends StatelessWidget {
               children: [
                 // Logo or Header
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   color: Colors.white,
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       'Machinery',
                       style: TextStyle(
@@ -303,7 +303,7 @@ class MachineryDetailPage extends StatelessWidget {
                               color: Colors.grey[800],
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             'Model: ${machinery.model}',
                             style: TextStyle(
@@ -311,16 +311,16 @@ class MachineryDetailPage extends StatelessWidget {
                               fontSize: 16,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             '\$${machinery.price.toStringAsFixed(2)}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
                               fontSize: 24,
                             ),
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           Text(
                             machinery.description,
                             style: TextStyle(
@@ -329,9 +329,9 @@ class MachineryDetailPage extends StatelessWidget {
                               height: 1.5,
                             ),
                           ),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           _buildSpecificationTable(),
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                           ElevatedButton(
                             onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Request for quote sent')),
@@ -388,7 +388,7 @@ class MachineryDetailPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Table(
-          columnWidths: {
+          columnWidths: const {
             0: FlexColumnWidth(1),
             1: FlexColumnWidth(2),
           },
@@ -407,7 +407,7 @@ class MachineryDetailPage extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
             style: TextStyle(
@@ -417,7 +417,7 @@ class MachineryDetailPage extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             value,
             style: TextStyle(
