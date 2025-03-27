@@ -54,7 +54,8 @@ class DepreciationPage extends StatelessWidget {
               children: [
                 // Sidebar Header
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -113,18 +114,18 @@ class DepreciationPage extends StatelessWidget {
                     const SizedBox(width: 20),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Overview", 
-                        style: TextStyle(color: Colors.black)),
+                      child: const Text("Overview",
+                          style: TextStyle(color: Colors.black)),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Reports", 
-                        style: TextStyle(color: Colors.black)),
+                      child: const Text("Reports",
+                          style: TextStyle(color: Colors.black)),
                     ),
                     TextButton(
                       onPressed: () {},
-                      child: const Text("Trends", 
-                        style: TextStyle(color: Colors.black)),
+                      child: const Text("Trends",
+                          style: TextStyle(color: Colors.black)),
                     ),
                   ],
                 ),
@@ -153,9 +154,9 @@ class DepreciationPage extends StatelessWidget {
                 children: [
                   // Depreciation Summary Cards
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(20),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildSummaryCard(
                           title: 'Total Assets',
@@ -287,9 +288,9 @@ class DepreciationPage extends StatelessWidget {
 
   // Depreciation Table Row Builder
   DataRow _buildDepreciationTableRow(
-    String assetName, 
-    String category, 
-    String depreciationAmount, 
+    String assetName,
+    String category,
+    String depreciationAmount,
     String date,
   ) {
     return DataRow(
