@@ -5,6 +5,8 @@ import 'package:techfluence/data/data.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:techfluence/widgets/buttons.dart';
+
 final String _apiKey = "AIzaSyA6x_I6466VBoX8H34g6HkG95DAy296-Gs";
 void main() => runApp(const MyApp());
 
@@ -208,6 +210,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
                         itemCount: docs.length,
                         itemBuilder: (context, index) {
                           final machinery = docs[index].data();
+                          machinery['id'] = docs[index].id;
                           if (searchController.text.isNotEmpty &&
                               !machinery['name']
                                   .toString()
@@ -365,6 +368,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
       setState(() {
         _messages.add({'bot': response});
       });
+      // ignore: body_might_complete_normally_catch_error
     }).catchError((error) {
       setState(() {
         _messages.add({'bot': 'Error: Unable to fetch response.'});
@@ -571,6 +575,38 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                 ),
               ),
 
+              if (widget.machinery['status'] == 'maintenance')
+                MyButton(
+                    f: () async {
+                      await FirebaseFirestore.instance
+                          .collection(backendBaseString)
+                          .doc(globalEmail)
+                          .collection('inventory')
+                          .doc(widget.machinery['id'])
+                          .update({'level': 'none', 'status': 'available'});
+                      var v = await FirebaseFirestore.instance
+                          .collection(backendBaseString)
+                          .doc(globalEmail)
+                          .collection(
+                              'inventory/${widget.machinery['id']}/maintenance')
+                          .get()
+                          .then((onValue) {
+                        return onValue.docs;
+                      });
+                      for (var i in v) {
+                        await FirebaseFirestore.instance
+                            .collection(backendBaseString)
+                            .doc(globalEmail)
+                            .collection(
+                                'inventory/${widget.machinery['id']}/maintenance')
+                            .doc(i.id)
+                            .delete();
+                      }
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    },
+                    text: "Completed Maintenance"),
+
               const SizedBox(height: 20),
 
               // Additional Details Section
@@ -678,36 +714,6 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
   void _editMachinery() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Edit Machinery feature coming soon')),
-    );
-  }
-
-  void _reportIssue() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Report an Issue'),
-        content: const TextField(
-          decoration: InputDecoration(
-            hintText: 'Describe the issue with the machinery',
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Issue reported successfully')),
-              );
-            },
-            child: const Text('Submit'),
-          ),
-        ],
-      ),
     );
   }
 }

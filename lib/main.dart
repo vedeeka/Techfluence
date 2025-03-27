@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:techfluence/pages/depreciation.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 import 'component/dashboard components/homepage.dart';
 
 void main() async {
+  Gemini.init(
+      apiKey: "AIzaSyD-5p-hGCOVtgH2WnLWgQBDNuwUl2QZn3g", enableDebugging: true);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DepreciationPage(),
+      home: const Homepage(),
     );
   }
 }

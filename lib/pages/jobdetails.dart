@@ -18,6 +18,20 @@ class _JobDetailsState extends State<JobDetails> {
   final searchController = TextEditingController();
   List<Map<String, dynamic>> items = [];
   List<String> itemId = [];
+
+  void calculateDamage() async {
+    for (var i in itemId) {
+      var v = await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory/$i/maintenance')
+          .get()
+          .then((onValue) {
+        return onValue.docs;
+      });
+    }
+  }
+
   void dispatch() async {
     List<String> i = [];
     for (var item in items) {

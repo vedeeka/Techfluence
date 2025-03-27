@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/pages/dashboard.dart';
+import 'package:techfluence/widgets/buttons.dart';
 
 Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
   return ListTile(
@@ -212,6 +213,7 @@ class MachineryDetailPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                
 
                 // Expanded(
                 //   child: ListView(
