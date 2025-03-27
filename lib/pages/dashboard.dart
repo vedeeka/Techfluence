@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/jobdetails.dart';
 import 'package:techfluence/widgets/popups.dart';
 
 class EquipmentCard extends StatefulWidget {
@@ -23,6 +25,7 @@ class EquipmentCard extends StatefulWidget {
 }
 
 class _EquipmentCardState extends State<EquipmentCard> {
+//1=available 2=upcoming 3=maintenance machine 4=ongoing jobs
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -43,31 +46,53 @@ class _EquipmentCardState extends State<EquipmentCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      widget.input < 3
-                          ? TextButton.icon(
-                              onPressed: () {
-                                if (widget.input == 1) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const AddInventoryPopUp();
-                                    },
-                                  );
-                                }
-                                if (widget.input == 2) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return const AddJobPopUp();
-                                    },
-                                  );
-                                }
+                      TextButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return const MachineryListPage();
                               },
-                              icon: const Icon(Icons.add),
-                              label: const Text('Add New'),
-                            )
-                          : TextButton.icon(
-                              onPressed: () {}, label: const Text('')),
+                            ),
+                          );
+                        },
+                        label: const Text("View"),
+                        icon: const Icon(Icons.remove_red_eye),
+                      ),
+                      if (widget.input < 3)
+                        TextButton.icon(
+                          onPressed: () {
+                            if (widget.input == 1) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AddInventoryPopUp(
+                                    f: (p0) {
+                                      widget.items.add(p0);
+                                      setState(() {});
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                            if (widget.input == 2) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AddJobPopUp(
+                                    f: (p0) {
+                                      widget.items.add(p0);
+                                      setState(() {});
+                                    },
+                                  );
+                                },
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add New'),
+                        ),
                     ],
                   ),
                 ],
@@ -139,7 +164,12 @@ Widget _buildEquipmentRow({
 }
 
 class StatusOverview extends StatefulWidget {
-  const StatusOverview({super.key});
+  final int totalEquipments, maintenance, critical;
+  const StatusOverview(
+      {super.key,
+      required this.critical,
+      required this.maintenance,
+      required this.totalEquipments});
 
   @override
   State<StatusOverview> createState() => _StatusOverviewState();
@@ -148,12 +178,12 @@ class StatusOverview extends StatefulWidget {
 class _StatusOverviewState extends State<StatusOverview> {
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Expanded(
           child: _StatusCard(
             title: 'Total Equipment',
-            value: '124',
+            value: widget.totalEquipments.toString(),
             color: AppTheme.primaryColor,
             icon: Icons.devices,
           ),
@@ -161,7 +191,7 @@ class _StatusOverviewState extends State<StatusOverview> {
         Expanded(
           child: _StatusCard(
             title: 'Maintenance Due',
-            value: '12',
+            value: widget.maintenance.toString(),
             color: Colors.orange,
             icon: Icons.build_circle,
           ),
@@ -169,7 +199,7 @@ class _StatusOverviewState extends State<StatusOverview> {
         Expanded(
           child: _StatusCard(
             title: 'Critical Assets',
-            value: '3',
+            value: widget.critical.toString(),
             color: Colors.red,
             icon: Icons.warning_amber_rounded,
           ),
@@ -336,8 +366,9 @@ class ResponsiveDashboardScreen extends StatefulWidget {
 
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
-  List<Map<String, dynamic>> inventoryItems = [], jobList = [];
-  List<Map<String, dynamic>> ongoingJobs = [],
+  List<Map<String, dynamic>> inventoryItems = [],
+      jobList = [],
+      ongoingJobs = [],
       idleMachines = [],
       maintenanceMachine = [],
       upcomingJobs = [];
@@ -377,18 +408,24 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       return onValue.docs;
     });
     for (var d in docs) {
-      inventoryItems.add(d.data());
+      Map<String, dynamic> i = d.data();
+      i['id'] = d.id;
+      inventoryItems.add(i);
     }
     var docs2 = await FirebaseFirestore.instance
         .collection(backendBaseString)
         .doc(globalEmail)
         .collection('jobs')
         .get()
-        .then((onValue) {
-      return onValue.docs;
-    });
+        .then(
+      (onValue) {
+        return onValue.docs;
+      },
+    );
     for (var d in docs2) {
-      jobList.add(d.data());
+      Map<String, dynamic> i = d.data();
+      i['id'] = d.id;
+      jobList.add(i);
     }
     segregate();
     setState(() {});
@@ -517,7 +554,11 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const StatusOverview(),
+                          StatusOverview(
+                            totalEquipments: inventoryItems.length,
+                            critical: 0,
+                            maintenance: maintenanceMachine.length,
+                          ),
                           const SizedBox(height: 16),
                           BuildEquipmentList(
                             aItems: idleMachines,
@@ -613,7 +654,6 @@ class _StatusCard extends StatelessWidget {
   final String value;
   final Color color;
   final IconData icon;
-
   const _StatusCard({
     required this.title,
     required this.value,
