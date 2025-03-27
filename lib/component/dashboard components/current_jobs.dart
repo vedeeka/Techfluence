@@ -356,8 +356,8 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final List<Map<String, String>> _messages = [];
 int s=0;
 void initializeController() {
-  if (widget.machinery == null || widget.machinery.isEmpty) {
-    print("Error: Machinery data is null or empty.");
+  if (widget.machinery.isEmpty) {
+    print("Error: Machinery data is empty.");
     return;
   }
 
@@ -402,7 +402,11 @@ Future<void> _sendMessage() async {
   });
 
   try {
-    final response = await getResponse(messageText);
+    final response = await getResponse(messageText, (botResponse) {
+      setState(() {
+        _messages.add({'bot': botResponse});
+      });
+    });
     if (mounted) {
       setState(() {
         _messages.removeWhere((msg) => msg['bot'] == 'Typing...');
