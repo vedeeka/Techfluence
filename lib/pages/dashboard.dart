@@ -324,95 +324,82 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-         // Enables scrolling if needed
+        // Enables scrolling if needed
         child: Column(
-          
           children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEquipmentCard("Current Job List", cardWidth, false, context),
-            _buildEquipmentCard("Maintenance Machine List", cardWidth, false, context),
-           
-            const SizedBox(width: 16),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-        
-            _buildEquipmentCard("Idle Machines", cardWidth, false, context),
-            _buildEquipmentCard("New Arrivals", cardWidth, false, context),
-            const SizedBox(width: 16),
-          ],
-        ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEquipmentCard("Current Job List", cardWidth),
+                _buildEquipmentCard("Maintenance Machine List", cardWidth),
+                const SizedBox(width: 16),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildEquipmentCard("Idle Machines", cardWidth),
+                _buildEquipmentCard("New Arrivals", cardWidth),
+                const SizedBox(width: 16),
+              ],
+            ),
           ],
         ),
       ),
     );
-    
   }
 
-  Widget _buildEquipmentCard(String name,double width, bool viewAll, BuildContext context) {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return SizedBox(
-          width: width,
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        name,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                viewAll = !viewAll; // Toggle the viewAll state
-                              });
-                            },
-                            icon: Icon(viewAll
-                                ? Icons.expand_less
-                                : Icons.expand_more), // Change icon dynamically
-                            label: Text(viewAll
-                                ? 'View Less'
-                                : 'View All'), // Change label dynamically
-                          ),
-                          TextButton.icon(
-                            onPressed: () {
-                              showDialog(context: context, builder: (context){return const AddInventoryPopUp();});
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text('Add New'),
-                          ),
-                        ],
-                      ),
-                    ],
+  Widget _buildEquipmentCard(String name, double width) {
+    return SizedBox(
+      width: width,
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    name,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                ),
-                ...List.generate(
-                  viewAll ? 5 : 3,
-                  (index) => _buildEquipmentRow(
-                    name: 'Industrial Compressor X${200 + index}',
-                    status: 'Operational',
-                    lastMaintenance: '2 weeks ago',
+                  TextButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return const AddInventoryPopUp();
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: Colors.black,
+                    ),
+                    label: const Text(
+                      'Add New',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        );
-      },
+            ...List.generate(
+              3,
+              (index) => _buildEquipmentRow(
+                name: 'Industrial Compressor X${200 + index}',
+                status: 'Operational',
+                lastMaintenance: '2 weeks ago',
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
