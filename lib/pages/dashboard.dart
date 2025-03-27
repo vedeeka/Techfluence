@@ -43,59 +43,48 @@ class _EquipmentCardState extends State<EquipmentCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton.icon(
-                        onPressed: () {
-                          if (widget.input == 1) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const AddInventoryPopUp();
+                      widget.input < 3
+                          ? TextButton.icon(
+                              onPressed: () {
+                                if (widget.input == 1) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const AddInventoryPopUp();
+                                    },
+                                  );
+                                }
+                                if (widget.input == 2) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return const AddJobPopUp();
+                                    },
+                                  );
+                                }
                               },
-                            );
-                          }
-                          if (widget.input == 2) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const AddJobPopUp();
-                              },
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text('Add New'),
-                      ),
+                              icon: const Icon(Icons.add),
+                              label: const Text('Add New'),
+                            )
+                          : TextButton.icon(
+                              onPressed: () {}, label: const Text('')),
                     ],
                   ),
                 ],
               ),
             ),
-            if (widget.input == 1)
-              ...List.generate(
-                widget.items.isEmpty
-                    ? 0
-                    : widget.items.length > 3
-                        ? 3
-                        : widget.items.length,
-                (index) => _buildEquipmentRow(
-                  name: widget.items[index]['name'],
-                  status: widget.items[index]['status'],
-                  lastMaintenance: '2 weeks ago',
-                ),
+            ...List.generate(
+              widget.items.isEmpty
+                  ? 0
+                  : widget.items.length > 3
+                      ? 3
+                      : widget.items.length,
+              (index) => _buildEquipmentRow(
+                name: widget.items[index]['name'],
+                status: widget.items[index]['status'],
+                lastMaintenance: '2 weeks ago',
               ),
-            if (widget.input == 2)
-              ...List.generate(
-                widget.items.isEmpty
-                    ? 0
-                    : widget.items.length > 3
-                        ? 3
-                        : widget.items.length,
-                (index) => _buildEquipmentRow(
-                  name: widget.items[index]['name'],
-                  status: widget.items[index]['status'],
-                  lastMaintenance: '2 weeks ago',
-                ),
-              ),
+            ),
           ],
         ),
       ),
@@ -128,13 +117,19 @@ Widget _buildEquipmentRow({
       decoration: BoxDecoration(
         color: status == 'available'
             ? AppTheme.secondaryColor.withAlpha(25)
-            : Colors.red.withAlpha(25),
+            : status == 'maintenance'
+                ? Colors.yellow.withAlpha(25)
+                : Colors.red.withAlpha(25),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         status,
         style: TextStyle(
-          color: status == 'available' ? AppTheme.secondaryColor : Colors.red,
+          color: status == 'available'
+              ? AppTheme.secondaryColor
+              : status == 'maintenance'
+                  ? const Color.fromARGB(255, 250, 218, 10)
+                  : Colors.red,
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -342,6 +337,33 @@ class ResponsiveDashboardScreen extends StatefulWidget {
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   bool _isCompactMode = false;
   List<Map<String, dynamic>> inventoryItems = [], jobList = [];
+  List<Map<String, dynamic>> ongoingJobs = [],
+      idleMachines = [],
+      maintenanceMachine = [],
+      upcomingJobs = [];
+  void segregate() {
+    ongoingJobs.clear();
+    upcomingJobs.clear();
+    idleMachines.clear();
+    maintenanceMachine.clear();
+
+    for (var i in inventoryItems) {
+      if (i['status'] == 'available') {
+        idleMachines.add(i);
+      } else if (i['status'] == 'maintenance') {
+        maintenanceMachine.add(i);
+      }
+    }
+    for (var j in jobList) {
+      if (j['status'] == 'upcoming') {
+        upcomingJobs.add(j);
+        continue;
+      } else if (j['status'] == 'ongoing') {
+        ongoingJobs.add(j);
+      }
+    }
+    setState(() {});
+  }
 
   void loadData() async {
     inventoryItems.clear();
@@ -368,6 +390,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     for (var d in docs2) {
       jobList.add(d.data());
     }
+    segregate();
     setState(() {});
   }
 
@@ -497,8 +520,10 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                           const StatusOverview(),
                           const SizedBox(height: 16),
                           BuildEquipmentList(
-                            items: inventoryItems,
-                            jobs: jobList,
+                            aItems: idleMachines,
+                            mItems: maintenanceMachine,
+                            uJobs: upcomingJobs,
+                            oJobs: ongoingJobs,
                           )
                         ],
                       ),
@@ -516,20 +541,19 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
 }
 
 class BuildEquipmentList extends StatefulWidget {
-  final List<Map<String, dynamic>> items, jobs;
+  final List<Map<String, dynamic>> aItems, mItems, uJobs, oJobs;
   const BuildEquipmentList(
-      {super.key, required this.items, required this.jobs});
+      {super.key,
+      required this.aItems,
+      required this.mItems,
+      required this.oJobs,
+      required this.uJobs});
 
   @override
   State<BuildEquipmentList> createState() => _BuildEquipmentListState();
 }
 
 class _BuildEquipmentListState extends State<BuildEquipmentList> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     double cardWidth = MediaQuery.of(context).size.width / 2.5;
@@ -543,16 +567,16 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 EquipmentCard(
-                  name: "Current Job List",
+                  name: "Ongoing Job List",
                   width: cardWidth,
-                  input: 2,
-                  items: widget.jobs,
+                  input: 4,
+                  items: widget.oJobs,
                 ),
                 EquipmentCard(
                   name: "Maintenance Machine List",
                   width: cardWidth,
                   input: 3,
-                  items: widget.items,
+                  items: widget.mItems,
                 ),
                 const SizedBox(width: 16),
               ],
@@ -565,13 +589,13 @@ class _BuildEquipmentListState extends State<BuildEquipmentList> {
                   name: "Idle Machines",
                   width: cardWidth,
                   input: 1,
-                  items: widget.items,
+                  items: widget.aItems,
                 ),
                 EquipmentCard(
-                  name: "New Arrivals",
+                  name: "Upcoming Job List",
                   width: cardWidth,
-                  input: 4,
-                  items: widget.jobs,
+                  input: 2,
+                  items: widget.uJobs,
                 ),
                 const SizedBox(width: 16),
               ],
