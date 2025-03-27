@@ -302,8 +302,8 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: AppTheme.primaryColor.withAlpha(25),
-        child:
-           const  Icon(Icons.precision_manufacturing, color: AppTheme.primaryColor),
+        child: const Icon(Icons.precision_manufacturing,
+            color: AppTheme.primaryColor),
       ),
       title: Text(
         name,
