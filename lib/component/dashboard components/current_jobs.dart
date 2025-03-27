@@ -49,6 +49,7 @@ class _MachineryListPageState extends State<MachineryListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(),
       body: Row(
         children: [
           // Permanent Sidebar
