@@ -35,7 +35,8 @@ class _MyTextFieldState extends State<MyTextField> {
       controller: widget.c,
       decoration: InputDecoration(
         hintText: widget.hint,
-        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         prefixIcon: widget.prefix,
         suffixIcon: widget.suffix,
         filled: true,

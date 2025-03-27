@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
-import 'dart:math';
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -11,12 +8,12 @@ class AppTheme {
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color surfaceColor = Colors.white;
   static const Color textColor = Color(0xFF202124);
-  
+
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: primaryColor,
       scaffoldBackgroundColor: backgroundColor,
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         color: surfaceColor,
         elevation: 1,
         centerTitle: false,
@@ -36,25 +33,25 @@ class AppTheme {
         ),
       ),
       textTheme: TextTheme(
-        headlineMedium: TextStyle(
+        headlineMedium: const TextStyle(
           color: textColor,
           fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
-        titleLarge: TextStyle(
+        titleLarge: const TextStyle(
           color: textColor,
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
         bodyLarge: TextStyle(
-          color: textColor.withOpacity(0.8),
+          color: textColor.withAlpha(200),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,
           foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -74,7 +71,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryColor, width: 2),
+          borderSide: const BorderSide(color: primaryColor, width: 2),
         ),
       ),
     );
@@ -83,8 +80,12 @@ class AppTheme {
 
 // Advanced Responsive Dashboard
 class ResponsiveDashboardScreen extends StatefulWidget {
+  const ResponsiveDashboardScreen({super.key});
+
   @override
-  _ResponsiveDashboardScreenState createState() => _ResponsiveDashboardScreenState();
+  // ignore: library_private_types_in_public_api
+  _ResponsiveDashboardScreenState createState() =>
+      _ResponsiveDashboardScreenState();
 }
 
 class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
@@ -95,23 +96,20 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     return LayoutBuilder(
       builder: (context, constraints) {
         _isCompactMode = constraints.maxWidth < 800;
-        
+
         return Scaffold(
           body: Row(
             children: [
               // Sidebar Navigation
-              if (!_isCompactMode)
-                _buildSidebar(),
-              
+              if (!_isCompactMode) _buildSidebar(),
+
               // Main Content Area
               Expanded(
                 child: _buildMainContent(),
               ),
             ],
           ),
-          bottomNavigationBar: _isCompactMode 
-            ? _buildMobileNavigation() 
-            : null,
+          bottomNavigationBar: _isCompactMode ? _buildMobileNavigation() : null,
         );
       },
     );
@@ -135,13 +133,13 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
           _buildSidebarItem(Icons.schedule, 'Maintenance'),
           _buildSidebarItem(Icons.analytics, 'Analytics'),
           _buildSidebarItem(Icons.person, 'Profile'),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton.icon(
               onPressed: () {},
-              icon: Icon(Icons.add),
-              label: Text('Add Equipment'),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Equipment'),
             ),
           ),
         ],
@@ -149,10 +147,11 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     );
   }
 
-  Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+  Widget _buildSidebarItem(IconData icon, String label,
+      {bool isActive = false}) {
     return ListTile(
       leading: Icon(
-        icon, 
+        icon,
         color: isActive ? AppTheme.primaryColor : Colors.grey,
       ),
       title: Text(
@@ -173,7 +172,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppTheme.primaryColor,
       unselectedItemColor: Colors.grey,
-      items: [
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.dashboard_outlined),
           activeIcon: Icon(Icons.dashboard),
@@ -201,14 +200,14 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   Widget _buildMainContent() {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Equipment Dashboard'),
+        title: const Text('Equipment Dashboard'),
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications_outlined),
+            icon: const Icon(Icons.notifications_outlined),
             onPressed: () {},
           ),
           IconButton(
-            icon: Icon(Icons.account_circle_outlined),
+            icon: const Icon(Icons.account_circle_outlined),
             onPressed: () {},
           ),
         ],
@@ -220,7 +219,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _buildStatusOverview(),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildEquipmentList(),
             ],
           ),
@@ -230,7 +229,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   }
 
   Widget _buildStatusOverview() {
-    return Row(
+    return const Row(
       children: [
         Expanded(
           child: _StatusCard(
@@ -276,14 +275,14 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                 ),
                 TextButton.icon(
                   onPressed: () {},
-                  icon: Icon(Icons.add),
-                  label: Text('Add New'),
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add New'),
                 ),
               ],
             ),
           ),
           ...List.generate(
-            3, 
+            3,
             (index) => _buildEquipmentRow(
               name: 'Industrial Compressor X${200 + index}',
               status: 'Operational',
@@ -296,37 +295,37 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
   }
 
   Widget _buildEquipmentRow({
-    required String name, 
-    required String status, 
+    required String name,
+    required String status,
     required String lastMaintenance,
   }) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-        child: Icon(Icons.precision_manufacturing, color: AppTheme.primaryColor),
+        backgroundColor: AppTheme.primaryColor.withAlpha(25),
+        child:
+           const  Icon(Icons.precision_manufacturing, color: AppTheme.primaryColor),
       ),
       title: Text(
         name,
-        style: TextStyle(fontWeight: FontWeight.w600),
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
         'Last Maintenance: $lastMaintenance',
-        style: TextStyle(color: Colors.grey),
+        style: const TextStyle(color: Colors.grey),
       ),
       trailing: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: status == 'Operational' 
-            ? AppTheme.secondaryColor.withOpacity(0.1) 
-            : Colors.red.withOpacity(0.1),
+          color: status == 'Operational'
+              ? AppTheme.secondaryColor.withAlpha(25)
+              : Colors.red.withAlpha(25),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           status,
           style: TextStyle(
-            color: status == 'Operational' 
-              ? AppTheme.secondaryColor 
-              : Colors.red,
+            color:
+                status == 'Operational' ? AppTheme.secondaryColor : Colors.red,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -354,7 +353,7 @@ class _StatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -364,10 +363,10 @@ class _StatusCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Icon(icon, color: color, size: 36),
-                Icon(Icons.more_vert, color: Colors.grey),
+                const Icon(Icons.more_vert, color: Colors.grey),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               title,
               style: TextStyle(
@@ -392,17 +391,19 @@ class _StatusCard extends StatelessWidget {
 
 // Main Application
 class EquipmentMaintenanceApp extends StatelessWidget {
+  const EquipmentMaintenanceApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Equipment Maintenance Hub',
       theme: AppTheme.lightTheme,
-      home: ResponsiveDashboardScreen(),
+      home: const ResponsiveDashboardScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 void main() {
-  runApp(EquipmentMaintenanceApp());
+  runApp(const EquipmentMaintenanceApp());
 }

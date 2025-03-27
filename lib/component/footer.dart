@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
+  const Footer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +63,9 @@ class Footer extends StatelessWidget {
   }
 
   Widget _buildCompanySection() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'InventoryPro',
           style: TextStyle(
@@ -100,7 +100,7 @@ class Footer extends StatelessWidget {
             ),
           ),
         ),
-        ...links.map((link) => _buildFooterLink(link)).toList(),
+        ...links.map((link) => _buildFooterLink(link)),
       ],
     );
   }

@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
             child: MyTextField(
               c: email,
               hint: "Email",
-              prefix: Icon(Icons.email),
+              prefix: const Icon(Icons.email),
             ),
           ),
           Padding(

@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 class MachineryQRDetailPage extends StatefulWidget {
   final Machinery machinery;
 
-  const MachineryQRDetailPage({Key? key, required this.machinery}) : super(key: key);
+  const MachineryQRDetailPage({super.key, required this.machinery});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MachineryQRDetailPageState createState() => _MachineryQRDetailPageState();
 }
 
@@ -201,6 +202,8 @@ class MachineryListPage extends StatelessWidget {
     ),
     // Add more machinery items
   ];
+
+  MachineryListPage({super.key});
 
 @override
 Widget build(BuildContext context) {

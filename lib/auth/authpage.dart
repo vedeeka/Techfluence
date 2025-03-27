@@ -19,7 +19,7 @@ class _AuthCheckerState extends State<AuthChecker> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           globalEmail = FirebaseAuth.instance.currentUser!.email!;
-          return Homepage();
+          return const Homepage();
         }
         return const LoginPage();
       },

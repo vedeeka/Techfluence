@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class InventoryHomePage extends StatelessWidget {
+  const InventoryHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,12 +42,8 @@ class InventoryHomePage extends StatelessWidget {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 80, 
-        horizontal: isMobile ? 20 : 20
-      ),
-      child: isMobile 
-        ? _buildMobileHeroContent() 
-        : _buildDesktopHeroContent(),
+          vertical: isMobile ? 40 : 80, horizontal: isMobile ? 20 : 20),
+      child: isMobile ? _buildMobileHeroContent() : _buildDesktopHeroContent(),
     );
   }
 
@@ -57,7 +55,7 @@ class InventoryHomePage extends StatelessWidget {
         Expanded(
           child: Container(
             height: 500,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/heroimg.png'),
                 fit: BoxFit.contain,
@@ -74,10 +72,10 @@ class InventoryHomePage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildHeroTextColumn(isMobile: true),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Container(
           height: 250,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/heroimg.png'),
               fit: BoxFit.contain,
@@ -97,13 +95,13 @@ class InventoryHomePage extends StatelessWidget {
           style: TextStyle(
             fontSize: isMobile ? 32 : 48,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1A3B4A),
+            color: const Color(0xFF1A3B4A),
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             'Revolutionize your business with our cutting-edge inventory tracking solution. Real-time insights, automated alerts, and seamless integration.',
             style: TextStyle(
@@ -114,23 +112,23 @@ class InventoryHomePage extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(height: 30),
-        isMobile 
-          ? Column(
-              children: [
-                _buildStartFreeTrialButton(isMobile: true),
-                SizedBox(height: 10),
-                _buildWatchDemoButton(isMobile: true),
-              ],
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildStartFreeTrialButton(),
-                SizedBox(width: 20),
-                _buildWatchDemoButton(),
-              ],
-            ),
+        const SizedBox(height: 30),
+        isMobile
+            ? Column(
+                children: [
+                  _buildStartFreeTrialButton(isMobile: true),
+                  const SizedBox(height: 10),
+                  _buildWatchDemoButton(isMobile: true),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildStartFreeTrialButton(),
+                  const SizedBox(width: 20),
+                  _buildWatchDemoButton(),
+                ],
+              ),
       ],
     );
   }
@@ -139,7 +137,7 @@ class InventoryHomePage extends StatelessWidget {
     return ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xFF2B6C76),
+        backgroundColor: const Color(0xFF2B6C76),
         padding: EdgeInsets.symmetric(
           horizontal: isMobile ? 30 : 40,
           vertical: isMobile ? 12 : 15,
@@ -162,8 +160,8 @@ class InventoryHomePage extends StatelessWidget {
     return OutlinedButton(
       onPressed: () {},
       style: OutlinedButton.styleFrom(
-        foregroundColor: Color(0xFF2B6C76),
-        side: BorderSide(
+        foregroundColor: const Color(0xFF2B6C76),
+        side: const BorderSide(
           color: Color(0xFF2B6C76),
         ),
         padding: EdgeInsets.symmetric(
@@ -186,11 +184,9 @@ class InventoryHomePage extends StatelessWidget {
 
   Widget _buildFeaturesSection({bool isMobile = false}) {
     return Container(
-      color: Color(0xFFF5F7FA),
+      color: const Color(0xFFF5F7FA),
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 80, 
-        horizontal: isMobile ? 10 : 20
-      ),
+          vertical: isMobile ? 40 : 80, horizontal: isMobile ? 10 : 20),
       child: Column(
         children: [
           Text(
@@ -198,68 +194,68 @@ class InventoryHomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: isMobile ? 28 : 36,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A3B4A),
+              color: const Color(0xFF1A3B4A),
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 20),
-          isMobile 
-            ? Column(
-                children: [
-                  _buildFeatureCard(
-                    Icons.cloud_sync,
-                    'Real-time Tracking',
-                    'Monitor inventory levels instantly across multiple locations.',
-                  ),
-                  SizedBox(height: 15),
-                  _buildFeatureCard(
-                    Icons.analytics,
-                    'Advanced Analytics',
-                    'Gain insights with comprehensive reporting and forecasting.',
-                  ),
-                  SizedBox(height: 15),
-                  _buildFeatureCard(
-                    Icons.notifications,
-                    'Automated Alerts',
-                    'Receive instant notifications for low stock and restocking.',
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildFeatureCard(
-                    Icons.cloud_sync,
-                    'Real-time Tracking',
-                    'Monitor inventory levels instantly across multiple locations.',
-                  ),
-                  SizedBox(width: 20),
-                  _buildFeatureCard(
-                    Icons.analytics,
-                    'Advanced Analytics',
-                    'Gain insights with comprehensive reporting and forecasting.',
-                  ),
-                  SizedBox(width: 20),
-                  _buildFeatureCard(
-                    Icons.notifications,
-                    'Automated Alerts',
-                    'Receive instant notifications for low stock and restocking.',
-                  ),
-                ],
-              ),
+          const SizedBox(height: 20),
+          isMobile
+              ? Column(
+                  children: [
+                    _buildFeatureCard(
+                      Icons.cloud_sync,
+                      'Real-time Tracking',
+                      'Monitor inventory levels instantly across multiple locations.',
+                    ),
+                    const SizedBox(height: 15),
+                    _buildFeatureCard(
+                      Icons.analytics,
+                      'Advanced Analytics',
+                      'Gain insights with comprehensive reporting and forecasting.',
+                    ),
+                    const SizedBox(height: 15),
+                    _buildFeatureCard(
+                      Icons.notifications,
+                      'Automated Alerts',
+                      'Receive instant notifications for low stock and restocking.',
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildFeatureCard(
+                      Icons.cloud_sync,
+                      'Real-time Tracking',
+                      'Monitor inventory levels instantly across multiple locations.',
+                    ),
+                    const SizedBox(width: 20),
+                    _buildFeatureCard(
+                      Icons.analytics,
+                      'Advanced Analytics',
+                      'Gain insights with comprehensive reporting and forecasting.',
+                    ),
+                    const SizedBox(width: 20),
+                    _buildFeatureCard(
+                      Icons.notifications,
+                      'Automated Alerts',
+                      'Receive instant notifications for low stock and restocking.',
+                    ),
+                  ],
+                ),
         ],
       ),
     );
   }
 
-    Widget _buildFeatureCard(IconData icon, String title, String description) {
+  Widget _buildFeatureCard(IconData icon, String title, String description) {
     return Container(
       width: 300,
-      padding: EdgeInsets.all(30),
+      padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 20,
@@ -272,22 +268,22 @@ class InventoryHomePage extends StatelessWidget {
           Icon(
             icon,
             size: 60,
-            color: Color(0xFF2B6C76),
+            color: const Color(0xFF2B6C76),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Color(0xFF1A3B4A),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             description,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black54,
             ),
           ),
@@ -300,43 +296,41 @@ class InventoryHomePage extends StatelessWidget {
     return Container(
       color: Colors.white,
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 80, 
-        horizontal: isMobile ? 10 : 20
-      ),
-      child: isMobile 
-        ? Column(
-            children: [
-              Container(
-                height: 300,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/benefits_illustration.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              _buildMobileBenefitsContent(),
-            ],
-          )
-        : Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 500,
-                  decoration: BoxDecoration(
+          vertical: isMobile ? 40 : 80, horizontal: isMobile ? 10 : 20),
+      child: isMobile
+          ? Column(
+              children: [
+                Container(
+                  height: 300,
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/benefits_illustration.png'),
                       fit: BoxFit.contain,
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: _buildMobileBenefitsContent(),
-              ),
-            ],
-          ),
+                const SizedBox(height: 20),
+                _buildMobileBenefitsContent(),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 500,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/benefits_illustration.png'),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: _buildMobileBenefitsContent(),
+                ),
+              ],
+            ),
     );
   }
 
@@ -344,7 +338,7 @@ class InventoryHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Why Choose InventoryPro?',
           style: TextStyle(
             fontSize: 28,
@@ -353,7 +347,7 @@ class InventoryHomePage extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         _buildBenefitItem(
           'Seamless Integration',
           'Connect with your existing systems effortlessly.',
@@ -369,23 +363,24 @@ class InventoryHomePage extends StatelessWidget {
       ],
     );
   }
- Widget _buildBenefitItem(String title, String description) {
+
+  Widget _buildBenefitItem(String title, String description) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle,
             color: Color(0xFF2B6C76),
             size: 30,
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF1A3B4A),
@@ -393,7 +388,7 @@ class InventoryHomePage extends StatelessWidget {
               ),
               Text(
                 description,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black54,
                 ),
               ),
@@ -408,11 +403,9 @@ class InventoryHomePage extends StatelessWidget {
 
   Widget _buildPricingSection({bool isMobile = false}) {
     return Container(
-      color: Color(0xFFF5F7FA),
+      color: const Color(0xFFF5F7FA),
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 80, 
-        horizontal: isMobile ? 10 : 20
-      ),
+          vertical: isMobile ? 40 : 80, horizontal: isMobile ? 10 : 20),
       child: Column(
         children: [
           Text(
@@ -420,89 +413,89 @@ class InventoryHomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: isMobile ? 28 : 36,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A3B4A),
+              color: const Color(0xFF1A3B4A),
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 40),
-          isMobile 
-            ? Column(
-                children: [
-                  _buildPricingCard(
-                    'Starter',
-                    '\$29',
-                    'Per Month',
-                    [
-                      'Up to 100 Products',
-                      'Basic Reporting',
-                      'Email Support',
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  _buildPricingCard(
-                    'Professional',
-                    '\$99',
-                    'Per Month',
-                    [
-                      'Unlimited Products',
-                      'Advanced Analytics',
-                      'Priority Support',
-                      'Multiple Location Tracking',
-                    ],
-                    isPrimary: true,
-                  ),
-                  SizedBox(height: 15),
-                  _buildPricingCard(
-                    'Enterprise',
-                    'Custom',
-                    'Pricing',
-                    [
-                      'Fully Customized Solution',
-                      '24/7 Dedicated Support',
-                      'Unlimited Integrations',
-                    ],
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildPricingCard(
-                    'Starter',
-                    '\$29',
-                    'Per Month',
-                    [
-                      'Up to 100 Products',
-                      'Basic Reporting',
-                      'Email Support',
-                    ],
-                  ),
-                  SizedBox(width: 20),
-                  _buildPricingCard(
-                    'Professional',
-                    '\$99',
-                    'Per Month',
-                    [
-                      'Unlimited Products',
-                      'Advanced Analytics',
-                      'Priority Support',
-                      'Multiple Location Tracking',
-                    ],
-                    isPrimary: true,
-                  ),
-                  SizedBox(width: 20),
-                  _buildPricingCard(
-                    'Enterprise',
-                    'Custom',
-                    'Pricing',
-                    [
-                      'Fully Customized Solution',
-                      '24/7 Dedicated Support',
-                      'Unlimited Integrations',
-                    ],
-                  ),
-                ],
-              ),
+          const SizedBox(height: 40),
+          isMobile
+              ? Column(
+                  children: [
+                    _buildPricingCard(
+                      'Starter',
+                      '\$29',
+                      'Per Month',
+                      [
+                        'Up to 100 Products',
+                        'Basic Reporting',
+                        'Email Support',
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    _buildPricingCard(
+                      'Professional',
+                      '\$99',
+                      'Per Month',
+                      [
+                        'Unlimited Products',
+                        'Advanced Analytics',
+                        'Priority Support',
+                        'Multiple Location Tracking',
+                      ],
+                      isPrimary: true,
+                    ),
+                    const SizedBox(height: 15),
+                    _buildPricingCard(
+                      'Enterprise',
+                      'Custom',
+                      'Pricing',
+                      [
+                        'Fully Customized Solution',
+                        '24/7 Dedicated Support',
+                        'Unlimited Integrations',
+                      ],
+                    ),
+                  ],
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildPricingCard(
+                      'Starter',
+                      '\$29',
+                      'Per Month',
+                      [
+                        'Up to 100 Products',
+                        'Basic Reporting',
+                        'Email Support',
+                      ],
+                    ),
+                    const SizedBox(width: 20),
+                    _buildPricingCard(
+                      'Professional',
+                      '\$99',
+                      'Per Month',
+                      [
+                        'Unlimited Products',
+                        'Advanced Analytics',
+                        'Priority Support',
+                        'Multiple Location Tracking',
+                      ],
+                      isPrimary: true,
+                    ),
+                    const SizedBox(width: 20),
+                    _buildPricingCard(
+                      'Enterprise',
+                      'Custom',
+                      'Pricing',
+                      [
+                        'Fully Customized Solution',
+                        '24/7 Dedicated Support',
+                        'Unlimited Integrations',
+                      ],
+                    ),
+                  ],
+                ),
         ],
       ),
     );
@@ -510,17 +503,13 @@ class InventoryHomePage extends StatelessWidget {
 
   Widget _buildFooter({bool isMobile = false}) {
     return Container(
-      color: Color(0xFF1A3B4A),
+      color: const Color(0xFF1A3B4A),
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 30 : 50, 
-        horizontal: isMobile ? 10 : 20
-      ),
+          vertical: isMobile ? 30 : 50, horizontal: isMobile ? 10 : 20),
       child: Column(
         children: [
-          isMobile 
-            ? _buildMobileFooterContent() 
-            : _buildDesktopFooterContent(),
-          Divider(
+          isMobile ? _buildMobileFooterContent() : _buildDesktopFooterContent(),
+          const Divider(
             color: Colors.white24,
             height: 30,
           ),
@@ -536,7 +525,8 @@ class InventoryHomePage extends StatelessWidget {
       ),
     );
   }
- Widget _buildPricingCard(
+
+  Widget _buildPricingCard(
     String title,
     String price,
     String priceSubtitle,
@@ -545,11 +535,11 @@ class InventoryHomePage extends StatelessWidget {
   }) {
     return Container(
       width: 300,
-      padding: EdgeInsets.all(30),
+      padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: isPrimary ? Color(0xFF2B6C76) : Colors.white,
+        color: isPrimary ? const Color(0xFF2B6C76) : Colors.white,
         borderRadius: BorderRadius.circular(15),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 20,
@@ -564,16 +554,16 @@ class InventoryHomePage extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: isPrimary ? Colors.white : Color(0xFF1A3B4A),
+              color: isPrimary ? Colors.white : const Color(0xFF1A3B4A),
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Text(
             price,
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
-              color: isPrimary ? Colors.white : Color(0xFF2B6C76),
+              color: isPrimary ? Colors.white : const Color(0xFF2B6C76),
             ),
           ),
           Text(
@@ -582,7 +572,7 @@ class InventoryHomePage extends StatelessWidget {
               color: isPrimary ? Colors.white70 : Colors.black54,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Column(
             children: features.map((feature) {
               return Padding(
@@ -591,10 +581,10 @@ class InventoryHomePage extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.check,
-                      color: isPrimary ? Colors.white : Color(0xFF2B6C76),
+                      color: isPrimary ? Colors.white : const Color(0xFF2B6C76),
                       size: 20,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Text(
                       feature,
                       style: TextStyle(
@@ -606,28 +596,31 @@ class InventoryHomePage extends StatelessWidget {
               );
             }).toList(),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: isPrimary ? Colors.white : Color(0xFF2B6C76),
-              foregroundColor: isPrimary ? Color(0xFF2B6C76) : Colors.white,
-              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+              backgroundColor:
+                  isPrimary ? Colors.white : const Color(0xFF2B6C76),
+              foregroundColor:
+                  isPrimary ? const Color(0xFF2B6C76) : Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            child: Text('Choose Plan'),
+            child: const Text('Choose Plan'),
           ),
         ],
       ),
     );
   }
+
   Widget _buildDesktopFooterContent() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -682,7 +675,7 @@ class InventoryHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
+        const Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -704,7 +697,7 @@ class InventoryHomePage extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Wrap(
           spacing: 20,
           runSpacing: 10,
@@ -727,7 +720,7 @@ class InventoryHomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white70,
         ),
       ),

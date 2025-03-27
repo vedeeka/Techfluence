@@ -19,7 +19,7 @@ class _MyButtonState extends State<MyButton> {
         widget.f();
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
         decoration: BoxDecoration(color: widget.color,borderRadius: BorderRadius.circular(8),),child: Text(widget.text),
       ),
     );
