@@ -388,39 +388,36 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
         return Scaffold(
           body: Row(
             children: [
-              // Sidebar Navigation
-              if (!_isCompactMode)
-                Container(
-                  width: 250,
-                  color: AppTheme.surfaceColor,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Equipment Hub',
-                          style: Theme.of(context).textTheme.headlineMedium,
-                        ),
+              Container(
+                width: 250,
+                color: AppTheme.surfaceColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Equipment Hub',
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      _buildSidebarItem(Icons.dashboard, 'Dashboard',
-                          isActive: true),
-                      _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                      _buildSidebarItem(Icons.analytics, 'Analytics'),
-                      _buildSidebarItem(Icons.person, 'Profile'),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Equipment'),
-                        ),
+                    ),
+                    _buildSidebarItem(Icons.dashboard, 'Dashboard',
+                        isActive: true),
+                    _buildSidebarItem(Icons.schedule, 'Maintenance'),
+                    _buildSidebarItem(Icons.analytics, 'Analytics'),
+                    _buildSidebarItem(Icons.person, 'Profile'),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.add),
+                        label: const Text('Add Equipment'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-
+              ),
               // Main Content Area
               Expanded(
                 child: Scaffold(
