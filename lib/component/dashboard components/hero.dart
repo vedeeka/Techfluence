@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techfluence/auth/authpage.dart';
 
 class InventoryHomePage extends StatelessWidget {
   const InventoryHomePage({super.key});
@@ -43,15 +44,15 @@ class InventoryHomePage extends StatelessWidget {
       color: Colors.white,
       padding: EdgeInsets.symmetric(
           vertical: isMobile ? 40 : 80, horizontal: isMobile ? 20 : 20),
-      child: isMobile ? _buildMobileHeroContent() : _buildDesktopHeroContent(),
+      child: isMobile ? _buildMobileHeroContent(context) : _buildDesktopHeroContent(context),
     );
   }
 
-  Widget _buildDesktopHeroContent() {
+  Widget _buildDesktopHeroContent(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(child: _buildHeroTextColumn()),
+        Expanded(child: _buildHeroTextColumn(context: context)),
         Expanded(
           child: Container(
             height: 500,
@@ -67,11 +68,11 @@ class InventoryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileHeroContent() {
+  Widget _buildMobileHeroContent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _buildHeroTextColumn(isMobile: true),
+        _buildHeroTextColumn(isMobile: true,context: context),
         const SizedBox(height: 20),
         Container(
           height: 250,
@@ -86,7 +87,7 @@ class InventoryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroTextColumn({bool isMobile = false}) {
+  Widget _buildHeroTextColumn({bool isMobile = false, required BuildContext context}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -116,7 +117,7 @@ class InventoryHomePage extends StatelessWidget {
         isMobile
             ? Column(
                 children: [
-                  _buildStartFreeTrialButton(isMobile: true),
+                  _buildStartFreeTrialButton(isMobile: true,context: context),
                   const SizedBox(height: 10),
                   _buildWatchDemoButton(isMobile: true),
                 ],
@@ -124,7 +125,7 @@ class InventoryHomePage extends StatelessWidget {
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _buildStartFreeTrialButton(),
+                  _buildStartFreeTrialButton(context: context),
                   const SizedBox(width: 20),
                   _buildWatchDemoButton(),
                 ],
@@ -133,11 +134,16 @@ class InventoryHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildStartFreeTrialButton({bool isMobile = false}) {
+  Widget _buildStartFreeTrialButton({bool isMobile = false, required BuildContext context}) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+         Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => AuthChecker()),
+                              );
+      },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF2B6C76),
+        backgroundColor: const Color(0xFFC9F7F7),
         padding: EdgeInsets.symmetric(
           horizontal: isMobile ? 30 : 40,
           vertical: isMobile ? 12 : 15,
