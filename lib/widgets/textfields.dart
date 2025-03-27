@@ -3,7 +3,7 @@ import 'package:techfluence/data/themes.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatefulWidget {
-  final Function(String)? onEnter;
+  final Function(String)? onEnter,onChange;
   final TextEditingController c;
   final double radius;
   final Color color;
@@ -21,7 +21,7 @@ class MyTextField extends StatefulWidget {
       this.suffix,
       this.visible = true,
       this.lineNo = 1,
-      this.onEnter});
+      this.onEnter,this.onChange});
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -51,6 +51,11 @@ class _MyTextFieldState extends State<MyTextField> {
       onSubmitted: (value) {
         if (widget.onEnter != null) {
           widget.onEnter!(value);
+        }
+      },
+      onChanged: (value) {
+        if(widget.onChange !=null){
+          widget.onChange!(value);
         }
       },
     );

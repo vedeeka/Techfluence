@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/data/data.dart';
+import 'package:techfluence/widgets/buttons.dart';
+import 'package:techfluence/widgets/selectinventory.dart';
+import 'package:techfluence/widgets/textfields.dart';
 
 class JobDetails extends StatefulWidget {
   final Map<String, dynamic> job;
@@ -11,6 +16,99 @@ class JobDetails extends StatefulWidget {
 
 class _JobDetailsState extends State<JobDetails> {
   final searchController = TextEditingController();
+  List<Map<String, dynamic>> items = [];
+  List<String> itemId = [];
+  void dispatch() async {
+    List<String> i = [];
+    for (var item in items) {
+      i.add(item['id']);
+      await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory')
+          .doc(item['id'])
+          .update({'status': 'unavailable'});
+    }
+    await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('jobs')
+        .doc(widget.job['id'])
+        .update({'status': 'ongoing', 'inventory': i});
+    loadData();
+  }
+
+  void loadData() async {
+    itemId.clear();
+    var v = await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('jobs')
+        .doc(widget.job['id'])
+        .get()
+        .then((onValue) {
+      return onValue.data() ?? {};
+    });
+    if (v.containsKey('inventory')) {
+      itemId = List.from(v['inventory']);
+    }
+
+    for (var i in itemId) {
+      Map<String, dynamic> v = await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory')
+          .doc(i)
+          .get()
+          .then((onValue) {
+        return onValue.data() ?? {};
+      });
+      v['id'] = i;
+      items.add(v);
+    }
+    setState(() {});
+  }
+
+  void completeOrder() async {
+    for (var i in items) {
+      await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory')
+          .doc(i['id'])
+          .update({'status': i['status'], 'level': i['level']});
+
+      await FirebaseFirestore.instance
+          .collection(backendBaseString)
+          .doc(globalEmail)
+          .collection('inventory/${i['id']}/maintenance')
+          .doc()
+          .set({
+        'job': widget.job['name'],
+        'level': i['level'],
+        'description': i['des']
+      });
+    }
+
+    await FirebaseFirestore.instance
+        .collection(backendBaseString)
+        .doc(globalEmail)
+        .collection('jobs')
+        .doc(widget.job['id'])
+        .update({'status': 'complete'});
+    widget.job['status'] = 'complete';
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    if (widget.job['status'] == 'ongoing') {
+      loadData();
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF1873E8);
@@ -42,6 +140,7 @@ class _JobDetailsState extends State<JobDetails> {
                 ),
               ),
               // Sidebar Menu Items
+
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -158,6 +257,7 @@ class _JobDetailsState extends State<JobDetails> {
             body: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,122 +341,214 @@ class _JobDetailsState extends State<JobDetails> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: 3,
-                      itemBuilder: (context, index) {
-                        final machineNames = [
-                          'Machine 1',
-                          'Machine 2',
-                          'Machine 3'
-                        ];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12),
-                          height: 70,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withAlpha(78),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      machineNames[index],
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    const Text("Machine Description"),
-                                  ],
-                                ),
-                                IconButton(
-                                  icon: const Icon(
-                                    Icons.info_outline,
-                                    size: 32,
-                                  ),
-                                  onPressed: () {
-                                    // Show machine details directly
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        title: Text(
-                                          '${machineNames[index]} Details',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF1873E8),
-                                          ),
-                                        ),
-                                        content: const Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Status: Operational',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                            SizedBox(height: 8),
-                                            Text(
-                                              'Last Maintenance: 2 days ago',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              backgroundColor:
-                                                  const Color(0xFF1873E8),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                              ),
-                                            ),
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: const Text('Close'),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                  Text(
+                    'Status: ${widget.job['status']}',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  if (widget.job['status'] == 'upcoming')
+                    Column(
+                      children: [
+                        MyButton(
+                            f: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return SelectInventoryPage(items: (list) {
+                                      items.clear();
+                                      for (var i in list) {
+                                        items.add(i);
+                                      }
+                                      setState(() {});
+                                    });
                                   },
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+                              );
+                            },
+                            text: 'Add Inventory'),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            return Text(
+                              items[index]['name'],
+                              style: const TextStyle(fontSize: 17),
+                            );
+                          },
+                        ),
+                        MyButton(
+                            f: () {
+                              dispatch();
+                              widget.job['status'] = 'ongoing';
+                              setState(() {});
+                            },
+                            text: "Dispatch For Job")
+                      ],
                     ),
-                  ),
+                  if (widget.job['status'] == 'ongoing')
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ListView.builder(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: items.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final info = TextEditingController();
+                            String level = 'none';
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12),
+                              height: 70,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withAlpha(78),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          items[index]['name'],
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        Icons.info_outline,
+                                        size: 32,
+                                      ),
+                                      onPressed: () {
+                                        // Show machine details directly
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            title: Text(
+                                              '${items[index]['name']} Details',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFF1873E8),
+                                              ),
+                                            ),
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  'Status: Operational',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black87,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                const Text(
+                                                  'Last Maintenance: 2 days ago',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black87,
+                                                  ),
+                                                ),
+                                                DropdownButton(
+                                                  hint: const Text(
+                                                      "Damage Level"),
+                                                  items: const [
+                                                    DropdownMenuItem(
+                                                      value: 'none',
+                                                      child: Text("None"),
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      value: 'low',
+                                                      child: Text("Low"),
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      value: 'mid',
+                                                      child: Text("Medium"),
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      value: 'high',
+                                                      child: Text("High"),
+                                                    ),
+                                                    DropdownMenuItem(
+                                                      value: 'urgent',
+                                                      child: Text("Urgent"),
+                                                    ),
+                                                  ],
+                                                  onChanged: ((val) {
+                                                    if (val == 'urgent') {
+                                                      items[index]['status'] =
+                                                          'maintenance';
+                                                    } else {
+                                                      items[index]['status'] =
+                                                          'available';
+                                                    }
+                                                    level = val!;
+                                                  }),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: MyTextField(
+                                                      c: info,
+                                                      hint: 'additional info'),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: MyButton(
+                                                      f: () {
+                                                        items[index]['des'] =
+                                                            info.text;
+                                                        items[index]['level'] =
+                                                            level;
+                                                        Navigator.pop(context);
+                                                      },
+                                                      text: 'Add details'),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        MyButton(f: completeOrder, text: 'Complete order')
+                      ],
+                    ),
                 ],
               ),
             ),
