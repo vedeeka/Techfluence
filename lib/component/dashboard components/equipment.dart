@@ -15,7 +15,7 @@ class MachineryProductGridPage extends StatelessWidget {
       description: 'High-precision CNC milling machine.',
       imageUrl: 'assets/images/heroimg.png',
     ),
-     Machinery(
+    Machinery(
       id: 'M001',
       jobName: 'CNC Milling Machine',
       model: 'XR-500',
@@ -26,7 +26,8 @@ class MachineryProductGridPage extends StatelessWidget {
       price: 45000.00,
       description: 'High-precision CNC milling machine.',
       imageUrl: 'assets/images/heroimg.png',
-    ),     Machinery(
+    ),
+    Machinery(
       id: 'M001',
       jobName: 'CNC Milling Machine',
       model: 'XR-500',
@@ -49,12 +50,15 @@ class MachineryProductGridPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Machinery Marketplace')),
       body: GridView.builder(
         padding: const EdgeInsets.all(8),
-        
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, childAspectRatio: 3, crossAxisSpacing: 12, mainAxisSpacing: 3,
+          crossAxisCount: 2,
+          childAspectRatio: 3,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 3,
         ),
         itemCount: machineryList.length,
-        itemBuilder: (context, index) => _buildProductCard(context, machineryList[index]),
+        itemBuilder: (context, index) =>
+            _buildProductCard(context, machineryList[index]),
       ),
     );
   }
@@ -63,34 +67,50 @@ class MachineryProductGridPage extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MachineryDetailPage(machinery: machinery)),
+        MaterialPageRoute(
+            builder: (context) => MachineryDetailPage(machinery: machinery)),
       ),
       child: Card(
-        
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.asset(machinery.imageUrl, height: 80, width: double.infinity, fit: BoxFit.cover),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
+              child: Image.asset(machinery.imageUrl,
+                  height: 80, width: double.infinity, fit: BoxFit.cover),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(machinery.jobName, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text(machinery.model, style: TextStyle(color: Colors.grey[600], fontSize: 14)),
-                  Text('\$${machinery.price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(machinery.jobName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(machinery.model,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 14)),
+                  Text('\$${machinery.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18)),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(machinery.status).withOpacity(0.2),
+                      color: _getStatusColor(machinery.status).withAlpha(55),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Text(machinery.status, style: TextStyle(color: _getStatusColor(machinery.status), fontWeight: FontWeight.bold, fontSize: 12)),
+                    child: Text(machinery.status,
+                        style: TextStyle(
+                            color: _getStatusColor(machinery.status),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12)),
                   ),
                 ],
               ),
@@ -103,9 +123,12 @@ class MachineryProductGridPage extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'operational': return Colors.green;
-      case 'under maintenance': return Colors.orange;
-      default: return Colors.grey;
+      case 'operational':
+        return Colors.green;
+      case 'under maintenance':
+        return Colors.orange;
+      default:
+        return Colors.grey;
     }
   }
 }
@@ -123,20 +146,33 @@ class MachineryDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(machinery.imageUrl, width: double.infinity, height: 200, fit: BoxFit.cover),
+            Image.asset(machinery.imageUrl,
+                width: double.infinity, height: 200, fit: BoxFit.cover),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(machinery.jobName, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                  Text('Model: ${machinery.model}', style: TextStyle(color: Colors.grey[600], fontSize: 16)),
-                  Text('\$${machinery.price.toStringAsFixed(2)}', style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 24)),
-                  Text(machinery.description, style: TextStyle(color: Colors.grey[800], fontSize: 16, height: 1.5)),
+                  Text(machinery.jobName,
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold)),
+                  Text('Model: ${machinery.model}',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16)),
+                  Text('\$${machinery.price.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24)),
+                  Text(machinery.description,
+                      style: TextStyle(
+                          color: Colors.grey[800], fontSize: 16, height: 1.5)),
                   _buildSpecificationTable(),
                   ElevatedButton(
-                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Request for quote sent'))),
-                    style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+                    onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Request for quote sent'))),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50)),
                     child: const Text('Request Quote'),
                   ),
                 ],
@@ -156,10 +192,12 @@ class MachineryDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Specifications', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Specifications',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             _buildSpecRow('Serial Number', machinery.serialNumber),
             _buildSpecRow('Location', machinery.location),
-            _buildSpecRow('Purchase Date', DateFormat('dd MMM yyyy').format(machinery.purchaseDate)),
+            _buildSpecRow('Purchase Date',
+                DateFormat('dd MMM yyyy').format(machinery.purchaseDate)),
             _buildSpecRow('Status', machinery.status),
           ],
         ),
@@ -182,7 +220,14 @@ class MachineryDetailPage extends StatelessWidget {
 }
 
 class Machinery {
-  final String id, jobName, model, serialNumber, location, status, description, imageUrl;
+  final String id,
+      jobName,
+      model,
+      serialNumber,
+      location,
+      status,
+      description,
+      imageUrl;
   final DateTime purchaseDate;
   final double price;
 

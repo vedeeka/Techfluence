@@ -5,6 +5,7 @@ class MachineryListPage extends StatefulWidget {
   const MachineryListPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MachineryListPageState createState() => _MachineryListPageState();
 }
 
