@@ -3,6 +3,7 @@ import 'package:techfluence/data/themes.dart';
 
 // ignore: must_be_immutable
 class MyTextField extends StatefulWidget {
+  final Function(String)? onEnter;
   final TextEditingController c;
   final double radius;
   final Color color;
@@ -19,7 +20,8 @@ class MyTextField extends StatefulWidget {
       this.prefix,
       this.suffix,
       this.visible = true,
-      this.lineNo = 1});
+      this.lineNo = 1,
+      this.onEnter});
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -46,6 +48,11 @@ class _MyTextFieldState extends State<MyTextField> {
           borderRadius: BorderRadius.circular(widget.radius),
         ),
       ),
+      onSubmitted: (value) {
+        if (widget.onEnter != null) {
+          widget.onEnter!(value);
+        }
+      },
     );
   }
 }

@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MachineryListPage extends StatefulWidget {
-  const MachineryListPage({Key? key}) : super(key: key);
+  const MachineryListPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MachineryListPageState createState() => _MachineryListPageState();
 }
 
@@ -194,7 +195,7 @@ Widget _buildInfoBox(String title, String value, IconData icon) {
 class MachineryDetailPage extends StatelessWidget {
   final Machinery machinery;
 
-  const MachineryDetailPage({Key? key, required this.machinery}) : super(key: key);
+  const MachineryDetailPage({super.key, required this.machinery});
 
   @override
   Widget build(BuildContext context) {

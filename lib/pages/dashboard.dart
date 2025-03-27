@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
 // Enhanced Theme and Design Constants
 class AppTheme {
@@ -320,7 +319,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
     double cardWidth =
         MediaQuery.of(context).size.width / 2.5; // Half of current width
 
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal, // Enables scrolling if needed
@@ -362,13 +361,12 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                             } else {
                               viewAll = true;
                             }
-                            print(viewAll);
                           });
                         },
                         icon: const Icon(Icons.clear_all_sharp),
                         label: viewAll == true
-                            ? Text('view less')
-                            : Text('viewall'),
+                            ? const Text('view less')
+                            : const Text('viewall'),
                       ),
                       TextButton.icon(
                         onPressed: () {},
