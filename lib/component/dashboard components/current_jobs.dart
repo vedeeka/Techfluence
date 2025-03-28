@@ -15,7 +15,7 @@ void main() {
   runApp(const MyApp());
 }
 
-const apiKey = 'AIzaSyBtfDLk9Sb3HvvZ7ZLXdlBRK9BKREy-j5g';
+const apiKey = 'kry';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
