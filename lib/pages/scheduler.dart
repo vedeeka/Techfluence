@@ -4,14 +4,14 @@ import 'package:techfluence/data/data.dart';
 
 // Define AppTheme with primaryColor
 class AppTheme {
-  static const Color primaryColor = Color(0xFF1976D2); // Example color
+  static const Color primaryColor = Color.fromARGB(255, 0, 0, 0); // Example color
 }
 
 Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
   return ListTile(
     leading: Icon(
       icon,
-      color: isActive ? AppTheme.primaryColor : Colors.grey,
+      color: isActive ? const Color.fromARGB(255, 120, 122, 154) : Colors.grey,
     ),
     title: Text(
       label,
@@ -38,6 +38,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
   final TextEditingController _equipmentController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _selectedDate;
+
 
   void _addMaintenanceTask() {
     if (_formKey.currentState!.validate() && _selectedDate != null) {
@@ -108,224 +109,238 @@ class _SchedulerPageState extends State<SchedulerPage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: Row(children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 5.1,
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    appBar: AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context); // Navigate to the previous page
+        },
+      ),
+      title: const Text('Maintenance Scheduler'),
+      backgroundColor: const Color.fromARGB(255, 235, 230, 230),
+      elevation: 0,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.info_outline),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Maintenance Scheduler'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+    body: Row(
+      children: [
+        // Sidebar
+        Container(
+          width: MediaQuery.of(context).size.width / 5.1,
+          color: const Color.fromARGB(255, 250, 250, 250),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'Equipment Hub',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
+              _buildSidebarItem(Icons.schedule, 'Maintenance'),
+              _buildSidebarItem(Icons.analytics, 'Ongoing Jobs'),
+              _buildSidebarItem(Icons.person, 'Scheduler'),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add Equipment'),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Main Content
+        Expanded(
+          child: SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Equipment Hub',
-                    style: Theme.of(context).textTheme.headlineMedium,
+                // Task Input Section
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade300,
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                    border: Border.all(color: Colors.blue.shade100, width: 1),
+                  ),
+                  margin: const EdgeInsets.all(16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Equipment Name Field
+                        TextFormField(
+                          controller: _equipmentController,
+                          decoration: InputDecoration(
+                            labelText: "Equipment Name",
+                            prefixIcon: const Icon(Icons.construction),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter equipment name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Description Field
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                            labelText: "Maintenance Description",
+                            prefixIcon: const Icon(Icons.description),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                          ),
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Date Selection
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                child: Text(
+                                  _selectedDate == null
+                                      ? "Select Maintenance Date"
+                                      : "Scheduled: ${DateFormat('dd MMM yyyy').format(_selectedDate!)}",
+                                  key: ValueKey(_selectedDate),
+                                  style: TextStyle(
+                                    color: _selectedDate == null
+                                        ? Colors.grey[600]
+                                        : Colors.blue[700],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              onPressed: () => _selectDate(context),
+                              icon: const Icon(Icons.calendar_today),
+                              label: const Text("Choose Date"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[700],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Add Task Button
+                        TweenAnimationBuilder<double>(
+                          duration: const Duration(milliseconds: 300),
+                          tween: Tween(begin: 0.9, end: 1.0),
+                          builder: (context, scale, child) {
+                            return Transform.scale(
+                              scale: scale,
+                              child: ElevatedButton(
+                                onPressed: _addMaintenanceTask,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 144, 206, 229),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Schedule Maintenance Task",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
-                _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                _buildSidebarItem(Icons.analytics, 'Ongoing Jobs'),
-                _buildSidebarItem(Icons.person, 'Schedular'),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Equipment'),
+
+                // Tasks List Section
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeOutQuad,
+                    switchOutCurve: Curves.easeInQuad,
+                    child: maintenanceTasks.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.builder(
+                            key: const ValueKey('task-list'),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            itemCount: maintenanceTasks.length,
+                            itemBuilder: (context, index) {
+                              final task = maintenanceTasks[index];
+                              return AnimatedOpacity(
+                                duration: const Duration(milliseconds: 300),
+                                opacity: 1.0,
+                                child: _buildTaskCard(task, index),
+                              );
+                            },
+                          ),
                   ),
                 ),
               ],
             ),
           ),
-        ]),
-        backgroundColor: Colors.blue[700],
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline),
-            onPressed: () {
-              // TODO: Implement help or info dialog
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Maintenance Scheduler'),
-                  content: const Text(
-                      'Track and manage your equipment maintenance tasks efficiently.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Close'),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Task Input Section
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 15,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-                border: Border.all(color: Colors.blue.shade100, width: 1),
-              ),
-              margin: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Equipment Name Field
-                    TextFormField(
-                      controller: _equipmentController,
-                      decoration: InputDecoration(
-                        labelText: "Equipment Name",
-                        prefixIcon: const Icon(Icons.construction),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter equipment name';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Description Field
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        labelText: "Maintenance Description",
-                        prefixIcon: const Icon(Icons.description),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey[100],
-                      ),
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Date Selection
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 300),
-                            child: Text(
-                              _selectedDate == null
-                                  ? "Select Maintenance Date"
-                                  : "Scheduled: ${DateFormat('dd MMM yyyy').format(_selectedDate!)}",
-                              key: ValueKey(_selectedDate),
-                              style: TextStyle(
-                                color: _selectedDate == null
-                                    ? Colors.grey[600]
-                                    : Colors.blue[700],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () => _selectDate(context),
-                          icon: const Icon(Icons.calendar_today),
-                          label: const Text("Choose Date"),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[700],
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Add Task Button
-                    TweenAnimationBuilder<double>(
-                      duration: const Duration(milliseconds: 300),
-                      tween: Tween(begin: 0.9, end: 1.0),
-                      builder: (context, scale, child) {
-                        return Transform.scale(
-                          scale: scale,
-                          child: ElevatedButton(
-                            onPressed: _addMaintenanceTask,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green[600],
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text(
-                              "Schedule Maintenance Task",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Tasks List Section
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                switchInCurve: Curves.easeOutQuad,
-                switchOutCurve: Curves.easeInQuad,
-                child: maintenanceTasks.isEmpty
-                    ? _buildEmptyState()
-                    : ListView.builder(
-                        key: const ValueKey('task-list'),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: maintenanceTasks.length,
-                        itemBuilder: (context, index) {
-                          final task = maintenanceTasks[index];
-                          return AnimatedOpacity(
-                            duration: const Duration(milliseconds: 300),
-                            opacity: 1.0,
-                            child: _buildTaskCard(task, index),
-                          );
-                        },
-                      ),
-              ),
-            ),
-          ],
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
+
 
   Widget _buildEmptyState() {
     return Center(
@@ -338,7 +353,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
             Icon(
               Icons.event_note_outlined,
               size: 120,
-              color: Colors.grey[400],
+              color: const Color.fromARGB(255, 255, 255, 255),
             ),
             const SizedBox(height: 24),
             Text(
