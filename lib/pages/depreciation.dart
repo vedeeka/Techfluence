@@ -121,11 +121,7 @@ class _DepreciationPageState extends State<DepreciationPage> {
                           );
                         },
                       ),
-                      ListTile(
-                        leading: const Icon(Icons.settings),
-                        title: const Text('Profile'),
-                        onTap: () {},
-                      ),
+                
                     ],
                   ),
                 ),

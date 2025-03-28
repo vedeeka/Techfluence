@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/pages/dashboard.dart';
 import 'package:techfluence/widgets/buttons.dart';
+import 'package:techfluence/pages/dashboard.dart';
+import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
+import 'package:techfluence/component/dashboard%20components/equipment.dart';
+import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
-Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+Widget _buildSidebarItem({required BuildContext context, required IconData icon, required Widget page, required String label, bool isActive = false}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -17,7 +21,16 @@ Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
         fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
       ),
     ),
-    onTap: () {},
+    onTap: () {
+
+
+           Navigator.push(
+             context,
+             MaterialPageRoute(
+               builder: (context) => page,
+             ),
+           );
+    },
     selected: isActive,
   );
 }
@@ -40,12 +53,28 @@ class MachineryProductGridPage extends StatelessWidget {
             width: MediaQuery.of(context).size.width / 5.1,
             child: Column(
               children: [
-                _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
-                _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                _buildSidebarItem(Icons.analytics, 'Analytics'),
-                _buildSidebarItem(Icons.person, 'Profile'),
-              ],
-            ),
+          
+                _buildSidebarItem(
+                  context: context,
+                  icon: Icons.dashboard,
+                  page: EquipmentMaintenanceApp(),
+                  label: 'Dashboard',
+                  isActive: true,
+                ),
+                _buildSidebarItem(
+                  context: context,
+                  icon: Icons.schedule,
+                  page: MachineryProductGridPage(),
+                  label: 'Maintenance',
+                ),
+                _buildSidebarItem(
+                  context: context,
+                  icon: Icons.analytics,
+                  page: MachineryListPage(),
+                  label: 'Ongoing Jobs',
+                ),
+           
+        ]),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 4 / 5.1,
@@ -92,6 +121,21 @@ class MachineryProductGridPage extends StatelessWidget {
 
   Widget _buildProductCard(
       BuildContext context, Map<String, dynamic> machinery) {
+    var container = Container(
+                  padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                  color: _getStatusColor(machinery['status']).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                  machinery['status'],
+                  style: TextStyle(
+                    color: _getStatusColor(machinery['status']),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12),
+                  ),
+                );
     return GestureDetector(
       onTap: () {},
       child: Card(
@@ -131,6 +175,18 @@ class MachineryProductGridPage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           machinery['name'],
+                         
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(
+                          machinery['description'],
+                         
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -143,21 +199,7 @@ class MachineryProductGridPage extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(machinery['status']).withAlpha(55),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    machinery['status'],
-                    style: TextStyle(
-                        color: _getStatusColor(machinery['status']),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12),
-                  ),
-                ),
+                child: container,
               ),
             ),
           ],
@@ -168,12 +210,12 @@ class MachineryProductGridPage extends StatelessWidget {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'operational':
+      case 'available':
         return Colors.green;
-      case 'under maintenance':
-        return Colors.orange;
+      case 'unavailable':
+        return const Color.fromARGB(255, 255, 0, 0);
       default:
-        return Colors.grey;
+        return Colors.orange;;
     }
   }
 }
