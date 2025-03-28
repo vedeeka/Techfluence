@@ -322,14 +322,7 @@ class _JobDetailsState extends State<JobDetails> {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withAlpha(78),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
+                              
                               ),
                               child: Text(
                                 widget.job['name'],
@@ -348,14 +341,7 @@ class _JobDetailsState extends State<JobDetails> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withAlpha(78),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 3),
-                                  ),
-                                ],
+                           
                               ),
                               child: Text(
                                 widget.job['description'],

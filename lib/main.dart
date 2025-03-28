@@ -5,14 +5,14 @@ import 'component/dashboard components/homepage.dart';
 
 void main() async {
   Gemini.init(
-      apiKey: "AIzaSyD-5p-hGCOVtgH2WnLWgQBDNuwUl2QZn3g", enableDebugging: true);
+      apiKey: "key", enableDebugging: true);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyBjani-88rouvTvZGGWcJnlZgDED85F-iU",
-      appId: "1:617792526078:android:cc737ca9b7ec975260b7af",
-      messagingSenderId: "617792526078",
-      projectId: "student-app-8fa25",
+      apiKey: "key",
+      appId: "key",
+      messagingSenderId: "key",
+      projectId: "skey",
     ),
   );
   runApp(const MyApp());
