@@ -236,7 +236,7 @@ class _StatusOverviewState extends State<StatusOverview> {
             },
             child: _StatusCard(
               title: 'Maintenance Schedule',
-              value: widget.critical.toString(),
+              value: maintenanceTasks.length.toString(),
               color: Colors.yellow,
               icon: Icons.alarm,
             ),
@@ -299,16 +299,6 @@ class _MobileNavigationState extends State<MobileNavigation> {
           activeIcon: Icon(Icons.schedule),
           label: 'Schedule',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.analytics_outlined),
-          activeIcon: Icon(Icons.analytics),
-          label: 'Analytics',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          activeIcon: Icon(Icons.person),
-          label: 'Profile',
-        ),
       ],
     );
   }
@@ -329,9 +319,36 @@ Widget _buildSidebarItem(IconData icon, String label, BuildContext context,
       ),
     ),
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return const MachineryListPage();
-      }));
+      if (label == 'Maintenance') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const MachineryListPage();
+            },
+          ),
+        );
+      }
+      if (label == 'Ongoing Jobs') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const JobsPage();
+            },
+          ),
+        );
+      }
+      if (label == 'Schedular') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const SchedulerPage();
+            },
+          ),
+        );
+      }
     },
     selected: isActive,
   );
@@ -525,8 +542,8 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     _buildSidebarItem(Icons.dashboard, 'Dashboard', context,
                         isActive: true),
                     _buildSidebarItem(Icons.schedule, 'Maintenance', context),
-                    _buildSidebarItem(Icons.analytics, 'Analytics', context),
-                    _buildSidebarItem(Icons.person, 'Profile', context),
+                    _buildSidebarItem(Icons.schedule, 'Ongoing Jobs', context),
+                    _buildSidebarItem(Icons.schedule, 'Schedular', context),
                   ],
                 ),
               ),
@@ -537,38 +554,6 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     title: const Text("Dashboard"),
                     shadowColor: Colors.black,
                     elevation: 1,
-                    actions: [
-                      Container(
-                        height: double.infinity,
-                        width: 350,
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Center(
-                          child: TextField(
-                            controller: searchController,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.search),
-                              hintText: "Search",
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(CupertinoIcons.bell_fill),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.help),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.settings),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.person),
-                      ),
-                    ],
                   ),
                   body: SingleChildScrollView(
                     child: Padding(
