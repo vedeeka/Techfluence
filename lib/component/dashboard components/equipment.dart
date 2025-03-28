@@ -8,7 +8,12 @@ import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
-Widget _buildSidebarItem({required BuildContext context, required IconData icon, required Widget page, required String label, bool isActive = false}) {
+Widget _buildSidebarItem(
+    {required BuildContext context,
+    required IconData icon,
+    required Widget page,
+    required String label,
+    bool isActive = false}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -22,14 +27,12 @@ Widget _buildSidebarItem({required BuildContext context, required IconData icon,
       ),
     ),
     onTap: () {
-
-
-           Navigator.push(
-             context,
-             MaterialPageRoute(
-               builder: (context) => page,
-             ),
-           );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => page,
+        ),
+      );
     },
     selected: isActive,
   );
@@ -51,30 +54,27 @@ class MachineryProductGridPage extends StatelessWidget {
           Container(
             color: Colors.white,
             width: MediaQuery.of(context).size.width / 5.1,
-            child: Column(
-              children: [
-          
-                _buildSidebarItem(
-                  context: context,
-                  icon: Icons.dashboard,
-                  page: EquipmentMaintenanceApp(),
-                  label: 'Dashboard',
-                  isActive: true,
-                ),
-                _buildSidebarItem(
-                  context: context,
-                  icon: Icons.schedule,
-                  page: MachineryProductGridPage(),
-                  label: 'Maintenance',
-                ),
-                _buildSidebarItem(
-                  context: context,
-                  icon: Icons.analytics,
-                  page: MachineryListPage(),
-                  label: 'Ongoing Jobs',
-                ),
-           
-        ]),
+            child: Column(children: [
+              _buildSidebarItem(
+                context: context,
+                icon: Icons.dashboard,
+                page: EquipmentMaintenanceApp(),
+                label: 'Dashboard',
+                isActive: true,
+              ),
+              _buildSidebarItem(
+                context: context,
+                icon: Icons.schedule,
+                page: MachineryProductGridPage(),
+                label: 'Maintenance',
+              ),
+              _buildSidebarItem(
+                context: context,
+                icon: Icons.analytics,
+                page: MachineryListPage(),
+                label: 'Ongoing Jobs',
+              ),
+            ]),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width * 4 / 5.1,
@@ -96,6 +96,14 @@ class MachineryProductGridPage extends StatelessWidget {
                     child: Text("No Items"),
                   );
                 }
+                List<Map<String, dynamic>> availableItems = [];
+                for (var doc in docs) {
+                  if (doc.data()['status'] == 'available') {
+                    var v = doc.data();
+                    v['id'] = doc.id;
+                    availableItems.add(v);
+                  }
+                }
                 return GridView.builder(
                   padding: const EdgeInsets.all(8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -104,11 +112,10 @@ class MachineryProductGridPage extends StatelessWidget {
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 3,
                   ),
-                  itemCount: docs.length,
+                  itemCount: availableItems.length,
                   itemBuilder: (context, index) {
-                    Map<String, dynamic> m = docs[index].data();
-                    m['id'] = docs[index].id;
-                    return _buildProductCard(context, m);
+                    availableItems[index]['id'] = docs[index].id;
+                    return _buildProductCard(context, availableItems[index]);
                   },
                 );
               },
@@ -122,20 +129,19 @@ class MachineryProductGridPage extends StatelessWidget {
   Widget _buildProductCard(
       BuildContext context, Map<String, dynamic> machinery) {
     var container = Container(
-                  padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                  color: _getStatusColor(machinery['status']).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                  machinery['status'],
-                  style: TextStyle(
-                    color: _getStatusColor(machinery['status']),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12),
-                  ),
-                );
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: _getStatusColor(machinery['status']).withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        machinery['status'],
+        style: TextStyle(
+            color: _getStatusColor(machinery['status']),
+            fontWeight: FontWeight.bold,
+            fontSize: 12),
+      ),
+    );
     return GestureDetector(
       onTap: () {},
       child: Card(
@@ -175,7 +181,6 @@ class MachineryProductGridPage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           machinery['name'],
-                         
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -186,7 +191,6 @@ class MachineryProductGridPage extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           machinery['description'],
-                         
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -215,7 +219,8 @@ class MachineryProductGridPage extends StatelessWidget {
       case 'unavailable':
         return const Color.fromARGB(255, 255, 0, 0);
       default:
-        return Colors.orange;;
+        return Colors.orange;
+        ;
     }
   }
 }

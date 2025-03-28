@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:techfluence/data/data.dart';
 
 // Define AppTheme with primaryColor
 class AppTheme {
@@ -37,8 +38,6 @@ class _SchedulerPageState extends State<SchedulerPage> {
   final TextEditingController _equipmentController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   DateTime? _selectedDate;
-
-  List<MaintenanceTask> maintenanceTasks = [];
 
   void _addMaintenanceTask() {
     if (_formKey.currentState!.validate() && _selectedDate != null) {
@@ -116,7 +115,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
       appBar: AppBar(
         title: Row(children: [
           Container(
-            width: 250,
+            width: MediaQuery.of(context).size.width / 5.1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -129,8 +128,8 @@ class _SchedulerPageState extends State<SchedulerPage> {
                 ),
                 _buildSidebarItem(Icons.dashboard, 'Dashboard', isActive: true),
                 _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                _buildSidebarItem(Icons.analytics, 'Analytics'),
-                _buildSidebarItem(Icons.person, 'Profile'),
+                _buildSidebarItem(Icons.analytics, 'Ongoing Jobs'),
+                _buildSidebarItem(Icons.person, 'Schedular'),
                 const Spacer(),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
