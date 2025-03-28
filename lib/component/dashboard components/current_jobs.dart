@@ -3,15 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/buttons.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
+void main() {
+  Gemini.init(apiKey: apiKey, enableDebugging: true);
 
-void main() => runApp(const MyApp());
+
+
+  runApp(const MyApp());
+}
+const apiKey = 'AIzaSyBtfDLk9Sb3HvvZ7ZLXdlBRK9BKREy-j5g';
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+
+
+  const MyApp(
+    
+    {super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -317,10 +331,31 @@ class MachineryDetailPage extends StatefulWidget {
   State<MachineryDetailPage> createState() => _MachineryDetailPageState();
 }
 
+
+
+
+
+
+
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
   int s = 0;
+  String _generateQRData() {
+    return '''
+Machinery Details
+-----------------
+ID:${widget.machinery['name']}
+Model: ${widget.machinery['model']}
+Status: ${widget.machinery['status']}
+''';
+  }
+  void addMessage(String sender, String message) {
+    setState(() {
+      _messages.add({sender: message} as Map<String, String>);
+    });
+  }
+  
   void initializeController() {
     if (widget.machinery.isEmpty) {
       print("Error: Machinery data is empty.");
@@ -328,23 +363,29 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
     }
 
     if (_controller.text.isEmpty) {
-      _controller.text =
+       String prompt =
           "Failure Prediction AI request: Analyze past maintenance data to predict failures. Answer my question as per this data\n"
           "Machinery Details:\n"
           "Name: ${widget.machinery['name'] ?? 'N/A'}\n"
           "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
           "Status: ${widget.machinery['status'] ?? 'N/A'}";
-
-      Future.delayed(const Duration(milliseconds: 100), () {});
+     
+      Gemini.instance.prompt(parts: [
+        Part.text(prompt),
+      ]).then((value) {
+        addMessage('bot', value?.output ?? 'No response received.');
+      });
     }
+    setState(() {
+      
+    });
   }
 
   @override
   void initState() {
+    initializeController(); // Directly execute during initialization
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initializeController(); // Ensure it runs after widget build
-    });
+    
   }
 
   void _openChatDialog() {
@@ -428,8 +469,19 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                           icon: const Icon(Icons.send),
                           color: const Color(0xFF1873E8),
                           onPressed: () {
-                            setState(() {
-                              print('add gemini');
+                            Gemini.instance.prompt(parts: [
+                              Part.text(_controller.text),
+                            ]).then((value) {
+                              if(s!=0){
+                                 setState(() {
+                                _messages.add({'user': _controller.text});
+                                
+                                  });
+                              }
+                              s=1;
+                              addMessage('bot', value?.output ?? 'No response received.');
+                              _controller.clear();
+                              setDialogState(() {}); // Update the dialog UI
                             });
                             setDialogState(() {}); // Update the dialog UI
                           },
@@ -487,6 +539,47 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+            Center(
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                // Large QR Code with decorative background
+                Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                    Colors.blue.shade50,
+                    Colors.blue.shade100,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: QrImageView(
+                  data: _generateQRData(),
+                  version: QrVersions.auto,
+                  size: 250.0,
+                  gapless: false,
+                  embeddedImage: const AssetImage('assets/logo.png'),
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                    size: Size(50, 50),
+                  ),
+                  ),
+                ),
+                ],
+              ),
+              ),
+            ),
+            ),
               // Machine Overview Card
               Card(
                 elevation: 4,
@@ -498,6 +591,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      
                       _buildDetailRow(
                         icon: Icons.power,
                         label: 'Status',
