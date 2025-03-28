@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/dashboard.dart';
+import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
+import 'package:techfluence/component/dashboard%20components/equipment.dart';
+import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
 class DepreciationPage extends StatefulWidget {
   const DepreciationPage({super.key});
@@ -82,21 +86,44 @@ class _DepreciationPageState extends State<DepreciationPage> {
                         title: const Text('Dashboard'),
                         selected: true,
                         selectedColor: Colors.blue,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const EquipmentMaintenanceApp(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.list),
-                        title: const Text('Asset List'),
-                        onTap: () {},
+                        title: const Text('Maintenance'),
+                        onTap: () {
+                              Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MachineryProductGridPage(),
+                            ),
+                          );
+
+
+                        },
                       ),
-                      ListTile(
-                        leading: const Icon(Icons.calculate),
-                        title: const Text('Depreciation Calculator'),
-                        onTap: () {},
+                          ListTile(
+                        leading: const Icon(Icons.settings),
+                        title: const Text('Ongoing Jobs'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MachineryListPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
+                        title: const Text('Profile'),
                         onTap: () {},
                       ),
                     ],
@@ -113,23 +140,10 @@ class _DepreciationPageState extends State<DepreciationPage> {
                 backgroundColor: Colors.white,
                 title: Row(
                   children: [
-                    const Text("Depreciation Dashboard"),
+                    const Text("Depreciation "),
                     const SizedBox(width: 20),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Overview",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Reports",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Trends",
-                          style: TextStyle(color: Colors.black)),
-                    ),
+                   
+                 
                   ],
                 ),
                 shadowColor: Colors.black,
@@ -162,7 +176,7 @@ class _DepreciationPageState extends State<DepreciationPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(
-                          width: 400,
+                          width: 300,
                           child: _buildSummaryCard(
                             title: 'Total Assets',
                             value: items.length.toString(),
@@ -171,19 +185,19 @@ class _DepreciationPageState extends State<DepreciationPage> {
                           ),
                         ),
                         SizedBox(
-                          width: 400,
+                          width: 300,
                           child: _buildSummaryCard(
                             title: 'Total Depreciation',
-                            value: '\$124,500',
+                            value: '\RS. 124,500',
                             icon: Icons.trending_down,
                             color: Colors.green[100]!,
                           ),
                         ),
                         SizedBox(
-                          width: 400,
+                          width: 300,
                           child: _buildSummaryCard(
                             title: 'Asset Value',
-                            value: '\$456,200',
+                            value: '\RS. 456,200',
                             icon: Icons.monetization_on,
                             color: Colors.orange[100]!,
                           ),
@@ -220,19 +234,19 @@ class _DepreciationPageState extends State<DepreciationPage> {
                                 _buildDepreciationTableRow(
                                   'Server Rack',
                                   'IT Equipment',
-                                  '\$2,500',
+                                  '\RS. 2,500',
                                   '03/15/2025',
                                 ),
                                 _buildDepreciationTableRow(
                                   'Company Truck',
                                   'Vehicle',
-                                  '\$3,200',
+                                  '\RS. 3,200',
                                   '03/10/2025',
                                 ),
                                 _buildDepreciationTableRow(
                                   'Office Furniture',
                                   'Furniture',
-                                  '\$1,800',
+                                  '\RS. 1,800',
                                   '03/05/2025',
                                 ),
                               ],

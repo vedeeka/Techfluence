@@ -5,6 +5,7 @@ import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/scheduler.dart';
 import 'package:techfluence/widgets/popups.dart';
 import 'package:techfluence/pages/depreciation.dart';
 
@@ -229,15 +230,15 @@ class _StatusOverviewState extends State<StatusOverview> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ResponsiveDashboardScreen(),
+                  builder: (context) => const SchedulerPage(),
                 ),
               );
             },
             child: _StatusCard(
-              title: 'Critical Assets',
+              title: 'Maintenance Schedule',
               value: widget.critical.toString(),
-              color: Colors.red,
-              icon: Icons.warning_amber_rounded,
+              color: Colors.yellow,
+              icon: Icons.alarm,
             ),
           ),
         ),
@@ -313,7 +314,8 @@ class _MobileNavigationState extends State<MobileNavigation> {
   }
 }
 
-Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+Widget _buildSidebarItem(IconData icon, String label, BuildContext context,
+    {bool isActive = false}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -326,7 +328,11 @@ Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
         fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
       ),
     ),
-    onTap: () {},
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const MachineryListPage();
+      }));
+    },
     selected: isActive,
   );
 }
@@ -516,11 +522,11 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
-                    _buildSidebarItem(Icons.dashboard, 'Dashboard',
+                    _buildSidebarItem(Icons.dashboard, 'Dashboard', context,
                         isActive: true),
-                    _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                    _buildSidebarItem(Icons.analytics, 'Analytics'),
-                    _buildSidebarItem(Icons.person, 'Profile'),
+                    _buildSidebarItem(Icons.schedule, 'Maintenance', context),
+                    _buildSidebarItem(Icons.analytics, 'Analytics', context),
+                    _buildSidebarItem(Icons.person, 'Profile', context),
                   ],
                 ),
               ),
