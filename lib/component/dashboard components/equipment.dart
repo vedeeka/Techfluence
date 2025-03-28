@@ -93,52 +93,71 @@ class MachineryProductGridPage extends StatelessWidget {
   Widget _buildProductCard(
       BuildContext context, Map<String, dynamic> machinery) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MachineryDetailPage(machinery: machinery)),
-      ),
+      onTap: () {},
       child: Card(
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+            ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(12)),
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.image,
-                    size: 40,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Expanded(
+                    flex:
+                        1, // Reduced flex value for the image to balance the layout
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Center(
+                        child: Image.network(
+                          'https://t4.ftcdn.net/jpg/00/44/71/01/360_F_44710125_h5BZVCNCLcvnCVylyxhw9oHfgYTBqg6O.jpg',
+                          height:
+                              100, // Adjusted height to match the combined height of "Job Name" and "Job Description"
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
                 )),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    machinery['name'],
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+              child: Center(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(
+                          machinery['name'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                    ]),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(machinery['status']).withAlpha(55),
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(machinery['status']).withAlpha(55),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(machinery['status'],
-                        style: TextStyle(
-                            color: _getStatusColor(machinery['status']),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12)),
+                  child: Text(
+                    machinery['status'],
+                    style: TextStyle(
+                        color: _getStatusColor(machinery['status']),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12),
                   ),
-                ],
+                ),
               ),
             ),
           ],

@@ -17,7 +17,6 @@ class InventoryHomePage extends StatelessWidget {
                   _buildHeroSection(context, isMobile: true),
                   _buildFeaturesSection(isMobile: true),
                   _buildBenefitsSection(isMobile: true),
-                  _buildPricingSection(isMobile: true),
                   _buildFooter(isMobile: true),
                 ],
               );
@@ -28,7 +27,6 @@ class InventoryHomePage extends StatelessWidget {
                   _buildHeroSection(context),
                   _buildFeaturesSection(),
                   _buildBenefitsSection(),
-                  _buildPricingSection(),
                   _buildFooter(),
                 ],
               );
@@ -407,106 +405,6 @@ Widget _buildBenefitItem(String title, String description) {
 }
 
 // Other methods remain the same: _buildFeatureCard, _buildBenefitItem
-
-Widget _buildPricingSection({bool isMobile = false}) {
-  return Container(
-    color: const Color(0xFFF5F7FA),
-    padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 80, horizontal: isMobile ? 10 : 20),
-    child: Column(
-      children: [
-        Text(
-          'Simple, Transparent Pricing',
-          style: TextStyle(
-            fontSize: isMobile ? 28 : 36,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF1A3B4A),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 40),
-        isMobile
-            ? Column(
-                children: [
-                  _buildPricingCard(
-                    'Starter',
-                    '\$29',
-                    'Per Month',
-                    [
-                      'Up to 100 Products',
-                      'Basic Reporting',
-                      'Email Support',
-                    ],
-                  ),
-                  const SizedBox(height: 15),
-                  _buildPricingCard(
-                    'Professional',
-                    '\$99',
-                    'Per Month',
-                    [
-                      'Unlimited Products',
-                      'Advanced Analytics',
-                      'Priority Support',
-                      'Multiple Location Tracking',
-                    ],
-                    isPrimary: true,
-                  ),
-                  const SizedBox(height: 15),
-                  _buildPricingCard(
-                    'Enterprise',
-                    'Custom',
-                    'Pricing',
-                    [
-                      'Fully Customized Solution',
-                      '24/7 Dedicated Support',
-                      'Unlimited Integrations',
-                    ],
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildPricingCard(
-                    'Starter',
-                    '\$29',
-                    'Per Month',
-                    [
-                      'Up to 100 Products',
-                      'Basic Reporting',
-                      'Email Support',
-                    ],
-                  ),
-                  const SizedBox(width: 20),
-                  _buildPricingCard(
-                    'Professional',
-                    '\$99',
-                    'Per Month',
-                    [
-                      'Unlimited Products',
-                      'Advanced Analytics',
-                      'Priority Support',
-                      'Multiple Location Tracking',
-                    ],
-                    isPrimary: true,
-                  ),
-                  const SizedBox(width: 20),
-                  _buildPricingCard(
-                    'Enterprise',
-                    'Custom',
-                    'Pricing',
-                    [
-                      'Fully Customized Solution',
-                      '24/7 Dedicated Support',
-                      'Unlimited Integrations',
-                    ],
-                  ),
-                ],
-              ),
-      ],
-    ),
-  );
-}
 
 Widget _buildFooter({bool isMobile = false}) {
   return Container(
