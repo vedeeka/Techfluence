@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/buttons.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
 void main() {
   Gemini.init(apiKey: apiKey, enableDebugging: true);
 
@@ -329,11 +331,25 @@ class MachineryDetailPage extends StatefulWidget {
   State<MachineryDetailPage> createState() => _MachineryDetailPageState();
 }
 
+
+
+
+
+
+
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
   int s = 0;
-
+  String _generateQRData() {
+    return '''
+Machinery Details
+-----------------
+ID:${widget.machinery['name']}
+Model: ${widget.machinery['model']}
+Status: ${widget.machinery['status']}
+''';
+  }
   void addMessage(String sender, String message) {
     setState(() {
       _messages.add({sender: message} as Map<String, String>);
@@ -523,6 +539,47 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+            Center(
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                // Large QR Code with decorative background
+                Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                    Colors.blue.shade50,
+                    Colors.blue.shade100,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: QrImageView(
+                  data: _generateQRData(),
+                  version: QrVersions.auto,
+                  size: 250.0,
+                  gapless: false,
+                  embeddedImage: const AssetImage('assets/logo.png'),
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                    size: Size(50, 50),
+                  ),
+                  ),
+                ),
+                ],
+              ),
+              ),
+            ),
+            ),
               // Machine Overview Card
               Card(
                 elevation: 4,
@@ -534,6 +591,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      
                       _buildDetailRow(
                         icon: Icons.power,
                         label: 'Status',
