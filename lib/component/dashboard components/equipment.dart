@@ -29,36 +29,6 @@ class MachineryProductGridPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Machinery Marketplace'), actions: [
-        Row(
-          children: [
-            const SizedBox(width: 20),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 1", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 2", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 3", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 4", style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {},
-              child:
-                  const Text("Page 5", style: TextStyle(color: Colors.black)),
-            ),
-          ],
-        ),
         SizedBox(
           width: MediaQuery.of(context).size.width / 1.8,
         ),
@@ -136,7 +106,13 @@ class MachineryProductGridPage extends StatelessWidget {
           children: [
             const ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                child: Icon(Icons.image)),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.image,
+                    size: 40,
+                  ),
+                )),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(

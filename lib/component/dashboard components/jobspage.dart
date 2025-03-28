@@ -84,17 +84,17 @@ class JobsPage extends StatelessWidget {
                       ),
                       ListTile(
                         leading: const Icon(Icons.list),
-                        title: const Text('Machinery List'),
+                        title: const Text('Maintenance'),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.add_circle_outline),
-                        title: const Text('Add Machinery'),
+                        title: const Text('Analytics'),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
+                        title: const Text('Profile'),
                         onTap: () {},
                       ),
                     ],
@@ -109,37 +109,7 @@ class JobsPage extends StatelessWidget {
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                title: Row(
-                  children: [
-                    const Text("Dashboard"),
-                    const SizedBox(width: 20),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Page 1",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Page 2",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Page 3",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Page 4",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text("Page 5",
-                          style: TextStyle(color: Colors.black)),
-                    ),
-                  ],
-                ),
+                title: const Text("Dashboard"),
                 shadowColor: Colors.black,
                 elevation: 1,
                 actions: [
