@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/qr_page.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/data/themes.dart';
 import 'package:techfluence/pages/dashboard.dart';
 import 'package:techfluence/pages/scheduler.dart';
 import 'package:techfluence/widgets/buttons.dart';
@@ -394,34 +395,51 @@ class _JobDetailsState extends State<JobDetails> {
                   const SizedBox(height: 20),
                   if (widget.job['status'] == 'upcoming')
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        MyButton(
-                            f: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return SelectInventoryPage(items: (list) {
-                                      items.clear();
-                                      for (var i in list) {
-                                        items.add(i);
-                                      }
-                                      setState(() {});
-                                    });
-                                  },
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: MyButton(
+                              f: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return SelectInventoryPage(items: (list) {
+                                        items.clear();
+                                        for (var i in list) {
+                                          items.add(i);
+                                        }
+                                        setState(() {});
+                                      });
+                                    },
+                                  ),
+                                );
+                              },
+                              text: 'Add Inventory'),
+                        ),
+                        SizedBox(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width - 20,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                margin: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: lightGrey,
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: Text(
+                                  items[index]['name'],
+                                  style: const TextStyle(fontSize: 17),
                                 ),
                               );
                             },
-                            text: 'Add Inventory'),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return Text(
-                              items[index]['name'],
-                              style: const TextStyle(fontSize: 17),
-                            );
-                          },
+                          ),
                         ),
                         MyButton(
                             f: () {

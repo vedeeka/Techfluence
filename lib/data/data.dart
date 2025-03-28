@@ -10,6 +10,7 @@ class InventoryClass {
     'description': '',
     'tags': [],
     'status': 'available',
+    'rank':0
   };
 }
 

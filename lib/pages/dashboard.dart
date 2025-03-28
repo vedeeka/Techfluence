@@ -4,6 +4,7 @@ import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/rankingpage.dart';
 import 'package:techfluence/pages/scheduler.dart';
 import 'package:techfluence/widgets/popups.dart';
 import 'package:techfluence/pages/depreciation.dart';
@@ -252,7 +253,7 @@ class _StatusOverviewState extends State<StatusOverview> {
               );
             },
             child: _StatusCard(
-              title: 'depretiation',
+              title: 'Depretiation',
               value: widget.critical.toString(),
               color: Colors.red,
               icon: Icons.warning_amber_rounded,
@@ -344,6 +345,16 @@ Widget _buildSidebarItem(IconData icon, String label, BuildContext context,
           MaterialPageRoute(
             builder: (context) {
               return const SchedulerPage();
+            },
+          ),
+        );
+      }
+      if(label == 'Maintenance Priority'){
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const RankingPage();
             },
           ),
         );
@@ -543,6 +554,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     _buildSidebarItem(Icons.list, 'Maintenance', context),
                     _buildSidebarItem(Icons.settings, 'Ongoing Jobs', context),
                     _buildSidebarItem(Icons.schedule, 'Schedular', context),
+                    _buildSidebarItem(Icons.schedule, 'Maintenance Priority', context),
                   ],
                 ),
               ),
