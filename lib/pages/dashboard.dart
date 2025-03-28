@@ -313,7 +313,8 @@ class _MobileNavigationState extends State<MobileNavigation> {
   }
 }
 
-Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
+Widget _buildSidebarItem(IconData icon, String label, BuildContext context,
+    {bool isActive = false}) {
   return ListTile(
     leading: Icon(
       icon,
@@ -326,7 +327,11 @@ Widget _buildSidebarItem(IconData icon, String label, {bool isActive = false}) {
         fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
       ),
     ),
-    onTap: () {},
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return const MachineryListPage();
+      }));
+    },
     selected: isActive,
   );
 }
@@ -516,11 +521,11 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                     ),
-                    _buildSidebarItem(Icons.dashboard, 'Dashboard',
+                    _buildSidebarItem(Icons.dashboard, 'Dashboard', context,
                         isActive: true),
-                    _buildSidebarItem(Icons.schedule, 'Maintenance'),
-                    _buildSidebarItem(Icons.analytics, 'Analytics'),
-                    _buildSidebarItem(Icons.person, 'Profile'),
+                    _buildSidebarItem(Icons.schedule, 'Maintenance', context),
+                    _buildSidebarItem(Icons.analytics, 'Analytics', context),
+                    _buildSidebarItem(Icons.person, 'Profile', context),
                   ],
                 ),
               ),
