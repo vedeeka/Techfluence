@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/dashboard.dart';
 import 'package:techfluence/pages/jobdetails.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
+import 'package:techfluence/pages/scheduler.dart';
 
 Widget _buildStatusChip(String status) {
   Color chipColor;
@@ -80,22 +83,51 @@ class JobsPage extends StatelessWidget {
                         title: const Text('Dashboard'),
                         selected: true,
                         selectedColor: Colors.blue,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) =>
+                                  const EquipmentMaintenanceApp(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.list),
                         title: const Text('Maintenance'),
-                        onTap: () {},
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.add_circle_outline),
-                        title: const Text('Analytics'),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => const MachineryListPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Profile'),
-                        onTap: () {},
+                        title: const Text('Ongoing Jobs'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => const JobsPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.access_time),
+                        title: const Text('Schedular'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => const SchedulerPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

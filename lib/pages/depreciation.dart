@@ -5,7 +5,7 @@ import 'package:techfluence/data/data.dart';
 import 'package:techfluence/pages/dashboard.dart';
 import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
-import 'package:techfluence/component/dashboard%20components/jobspage.dart';
+import 'package:techfluence/pages/scheduler.dart';
 
 class DepreciationPage extends StatefulWidget {
   const DepreciationPage({super.key});
@@ -17,9 +17,7 @@ class DepreciationPage extends StatefulWidget {
 class _DepreciationPageState extends State<DepreciationPage> {
   List<Map<String, dynamic>> items = [];
 
-  void loadIndividual() async {
-    
-  }
+  void loadIndividual() async {}
 
   void loadData() async {
     items.clear();
@@ -90,7 +88,8 @@ class _DepreciationPageState extends State<DepreciationPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const EquipmentMaintenanceApp(),
+                              builder: (context) =>
+                                  const EquipmentMaintenanceApp(),
                             ),
                           );
                         },
@@ -99,17 +98,16 @@ class _DepreciationPageState extends State<DepreciationPage> {
                         leading: const Icon(Icons.list),
                         title: const Text('Maintenance'),
                         onTap: () {
-                              Navigator.push(
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const MachineryProductGridPage(),
+                              builder: (context) =>
+                                  const MachineryProductGridPage(),
                             ),
                           );
-
-
                         },
                       ),
-                          ListTile(
+                      ListTile(
                         leading: const Icon(Icons.settings),
                         title: const Text('Ongoing Jobs'),
                         onTap: () {
@@ -121,7 +119,18 @@ class _DepreciationPageState extends State<DepreciationPage> {
                           );
                         },
                       ),
-                
+                      ListTile(
+                        leading: const Icon(Icons.access_time),
+                        title: const Text('Schedular'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SchedulerPage(),
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -134,12 +143,10 @@ class _DepreciationPageState extends State<DepreciationPage> {
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                title: Row(
+                title: const Row(
                   children: [
-                    const Text("Depreciation "),
-                    const SizedBox(width: 20),
-                   
-                 
+                    Text("Depreciation "),
+                    SizedBox(width: 20),
                   ],
                 ),
                 shadowColor: Colors.black,

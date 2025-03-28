@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
-import 'package:techfluence/pages/dashboard.dart';
-import 'package:techfluence/widgets/buttons.dart';
+import 'package:techfluence/pages/dashboard.dart' as dashboard;
+import 'package:techfluence/pages/scheduler.dart' as scheduler;
 import 'package:techfluence/pages/dashboard.dart';
 import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
-import 'package:techfluence/component/dashboard%20components/equipment.dart';
-import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 
 Widget _buildSidebarItem(
     {required BuildContext context,
@@ -17,7 +15,7 @@ Widget _buildSidebarItem(
   return ListTile(
     leading: Icon(
       icon,
-      color: isActive ? AppTheme.primaryColor : Colors.grey,
+      color: isActive ? dashboard.AppTheme.primaryColor : Colors.grey,
     ),
     title: Text(
       label,
@@ -58,21 +56,27 @@ class MachineryProductGridPage extends StatelessWidget {
               _buildSidebarItem(
                 context: context,
                 icon: Icons.dashboard,
-                page: EquipmentMaintenanceApp(),
+                page: const EquipmentMaintenanceApp(),
                 label: 'Dashboard',
                 isActive: true,
               ),
               _buildSidebarItem(
                 context: context,
-                icon: Icons.schedule,
-                page: MachineryProductGridPage(),
+                icon: Icons.list,
+                page: const MachineryProductGridPage(),
                 label: 'Maintenance',
               ),
               _buildSidebarItem(
                 context: context,
-                icon: Icons.analytics,
-                page: MachineryListPage(),
+                icon: Icons.settings,
+                page: const MachineryListPage(),
                 label: 'Ongoing Jobs',
+              ),
+              _buildSidebarItem(
+                context: context,
+                icon: Icons.access_time,
+                page: const scheduler.SchedulerPage(),
+                label: 'Schedular',
               ),
             ]),
           ),
@@ -220,7 +224,7 @@ class MachineryProductGridPage extends StatelessWidget {
         return const Color.fromARGB(255, 255, 0, 0);
       default:
         return Colors.orange;
-        ;
+        
     }
   }
 }
@@ -379,7 +383,7 @@ class MachineryDetailPage extends StatelessWidget {
     return TableRow(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           child: Text(
             label,
             style: TextStyle(

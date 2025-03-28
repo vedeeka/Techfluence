@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';

@@ -114,7 +114,7 @@ class _SchedulerPageState extends State<SchedulerPage> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: Row(children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width / 5.1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

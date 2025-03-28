@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:techfluence/component/dashboard%20components/equipment.dart';
+import 'package:techfluence/component/dashboard%20components/qr_page.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/dashboard.dart';
+import 'package:techfluence/pages/scheduler.dart';
 import 'package:techfluence/widgets/buttons.dart';
 import 'package:techfluence/widgets/selectinventory.dart';
 import 'package:techfluence/widgets/textfields.dart';
@@ -193,31 +197,61 @@ class _JobDetailsState extends State<JobDetails> {
                         title: const Text('Dashboard'),
                         selected: true,
                         selectedColor: Colors.blue,
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const EquipmentMaintenanceApp(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     Material(
                       color: Colors.white,
                       child: ListTile(
                         leading: const Icon(Icons.list),
-                        title: const Text('Machinery List'),
-                        onTap: () {},
-                      ),
-                    ),
-                    Material(
-                      color: Colors.white,
-                      child: ListTile(
-                        leading: const Icon(Icons.add_circle_outline),
-                        title: const Text('Add Machinery'),
-                        onTap: () {},
+                        title: const Text('Maintenance'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const MachineryProductGridPage(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                     Material(
                       color: Colors.white,
                       child: ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
-                        onTap: () {},
+                        title: const Text('Ongoing Jobs'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MachineryListPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Material(
+                      color: Colors.white,
+                      child: ListTile(
+                        leading: const Icon(Icons.access_time),
+                        title: const Text('Schedular'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SchedulerPage(),
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ],
