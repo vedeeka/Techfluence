@@ -5,6 +5,7 @@ import 'package:techfluence/component/dashboard%20components/current_jobs.dart';
 import 'package:techfluence/component/dashboard%20components/equipment.dart';
 import 'package:techfluence/component/dashboard%20components/jobspage.dart';
 import 'package:techfluence/data/data.dart';
+import 'package:techfluence/pages/scheduler.dart';
 import 'package:techfluence/widgets/popups.dart';
 import 'package:techfluence/pages/depreciation.dart';
 
@@ -229,15 +230,15 @@ class _StatusOverviewState extends State<StatusOverview> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ResponsiveDashboardScreen(),
+                  builder: (context) => const SchedulerPage(),
                 ),
               );
             },
             child: _StatusCard(
-              title: 'Critical Assets',
+              title: 'Maintenance Schedule',
               value: widget.critical.toString(),
-              color: Colors.red,
-              icon: Icons.warning_amber_rounded,
+              color: Colors.yellow,
+              icon: Icons.alarm,
             ),
           ),
         ),
