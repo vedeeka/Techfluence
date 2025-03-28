@@ -541,7 +541,7 @@ class _JobDetailsState extends State<JobDetails> {
                                                         items[index]['des'] =
                                                             info.text;
                                                         items[index]['level'] =
-                                                            risk;
+                                                            level;
                                                         Navigator.pop(context);
                                                       },
                                                       text: 'Add details'),

@@ -6,26 +6,21 @@ import 'package:techfluence/widgets/buttons.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:intl/intl.dart';
+
 void main() {
   Gemini.init(apiKey: apiKey, enableDebugging: true);
 
-
-
   runApp(const MyApp());
 }
+
 const apiKey = 'AIzaSyBtfDLk9Sb3HvvZ7ZLXdlBRK9BKREy-j5g';
 
 class MyApp extends StatefulWidget {
-
-
-  const MyApp(
-    
-    {super.key});
+  const MyApp({super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
-
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -196,6 +191,12 @@ class _MachineryListPageState extends State<MachineryListPage> {
                               .contains(searchController.text)) {
                         return Container();
                       }
+                      if (searchController.text.isNotEmpty &&
+                          searchController.text.startsWith('#') &&
+                          !List.from(docs[index]['tags']).contains(
+                              searchController.text.split('x').last)) {
+                        return Container();
+                      }
                       return Container(
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 4),
@@ -234,18 +235,26 @@ class _MachineryListPageState extends State<MachineryListPage> {
                                     decoration: BoxDecoration(
                                       color: machinery['status'] == 'available'
                                           ? Colors.green.shade50
-                                          : Colors.orange.shade50,
+                                          : machinery['status'] == 'unavailable'
+                                              ? Colors.red.shade50
+                                              : Colors.orange.shade50,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Center(
                                       child: Icon(
                                         machinery['status'] == 'available'
                                             ? Icons.check_circle
-                                            : Icons.warning_rounded,
+                                            : machinery['status'] ==
+                                                    'unavailable'
+                                                ? Icons.block_rounded
+                                                : Icons.warning_rounded,
                                         color:
                                             machinery['status'] == 'available'
                                                 ? Colors.green.shade600
-                                                : Colors.orange.shade600,
+                                                : machinery['status'] ==
+                                                        'unavailable'
+                                                    ? Colors.red.shade600
+                                                    : Colors.orange.shade600,
                                         size: 30,
                                       ),
                                     ),
@@ -289,7 +298,9 @@ class _MachineryListPageState extends State<MachineryListPage> {
                                     decoration: BoxDecoration(
                                       color: machinery['status'] == 'available'
                                           ? Colors.green.shade100
-                                          : Colors.orange.shade100,
+                                          : machinery['status'] == 'unavailable'
+                                              ? Colors.red.shade100
+                                              : Colors.orange.shade100,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
@@ -298,7 +309,10 @@ class _MachineryListPageState extends State<MachineryListPage> {
                                         color:
                                             machinery['status'] == 'available'
                                                 ? Colors.green.shade800
-                                                : Colors.orange.shade800,
+                                                : machinery['status'] ==
+                                                        'unavailable'
+                                                    ? Colors.red.shade800
+                                                    : Colors.orange.shade800,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -331,12 +345,6 @@ class MachineryDetailPage extends StatefulWidget {
   State<MachineryDetailPage> createState() => _MachineryDetailPageState();
 }
 
-
-
-
-
-
-
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
@@ -350,12 +358,13 @@ Model: ${widget.machinery['model']}
 Status: ${widget.machinery['status']}
 ''';
   }
+
   void addMessage(String sender, String message) {
     setState(() {
       _messages.add({sender: message} as Map<String, String>);
     });
   }
-  
+
   void initializeController() {
     if (widget.machinery.isEmpty) {
       print("Error: Machinery data is empty.");
@@ -363,29 +372,26 @@ Status: ${widget.machinery['status']}
     }
 
     if (_controller.text.isEmpty) {
-       String prompt =
+      String prompt =
           "Failure Prediction AI request: Analyze past maintenance data to predict failures. Answer my question as per this data\n"
           "Machinery Details:\n"
           "Name: ${widget.machinery['name'] ?? 'N/A'}\n"
           "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
           "Status: ${widget.machinery['status'] ?? 'N/A'}";
-     
+
       Gemini.instance.prompt(parts: [
         Part.text(prompt),
       ]).then((value) {
         addMessage('bot', value?.output ?? 'No response received.');
       });
     }
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
   void initState() {
     initializeController(); // Directly execute during initialization
     super.initState();
-    
   }
 
   void _openChatDialog() {
@@ -472,14 +478,14 @@ Status: ${widget.machinery['status']}
                             Gemini.instance.prompt(parts: [
                               Part.text(_controller.text),
                             ]).then((value) {
-                              if(s!=0){
-                                 setState(() {
-                                _messages.add({'user': _controller.text});
-                                
-                                  });
+                              if (s != 0) {
+                                setState(() {
+                                  _messages.add({'user': _controller.text});
+                                });
                               }
-                              s=1;
-                              addMessage('bot', value?.output ?? 'No response received.');
+                              s = 1;
+                              addMessage('bot',
+                                  value?.output ?? 'No response received.');
                               _controller.clear();
                               setDialogState(() {}); // Update the dialog UI
                             });
@@ -539,47 +545,46 @@ Status: ${widget.machinery['status']}
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-            Center(
-            child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                // Large QR Code with decorative background
-                Container(
-                  decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  gradient: LinearGradient(
-                    colors: [
-                    Colors.blue.shade50,
-                    Colors.blue.shade100,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              Center(
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: QrImageView(
-                  data: _generateQRData(),
-                  version: QrVersions.auto,
-                  size: 250.0,
-                  gapless: false,
-                  embeddedImage: const AssetImage('assets/logo.png'),
-                  embeddedImageStyle: const QrEmbeddedImageStyle(
-                    size: Size(50, 50),
-                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        // Large QR Code with decorative background
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue.shade50,
+                                Colors.blue.shade100,
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: QrImageView(
+                            data: _generateQRData(),
+                            version: QrVersions.auto,
+                            size: 250.0,
+                            gapless: false,
+                            embeddedImage: const AssetImage('assets/logo.png'),
+                            embeddedImageStyle: const QrEmbeddedImageStyle(
+                              size: Size(50, 50),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                ],
               ),
-              ),
-            ),
-            ),
               // Machine Overview Card
               Card(
                 elevation: 4,
@@ -591,7 +596,6 @@ Status: ${widget.machinery['status']}
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      
                       _buildDetailRow(
                         icon: Icons.power,
                         label: 'Status',
