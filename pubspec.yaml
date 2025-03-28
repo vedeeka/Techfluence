@@ -32,7 +32,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/images/images.png
+    - assets/images/heroimg.png
 
 
 

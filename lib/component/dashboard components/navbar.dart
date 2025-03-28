@@ -52,16 +52,21 @@ List<Widget> _buildAppBarActions(BuildContext context) {
       child: const Text('Pricing', style: TextStyle(color: Colors.black87)),
     ),
     ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AuthChecker()),
+        );
+      },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF2B6C76),
+        backgroundColor: const Color(0xFFC9F7F7),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: const Text(
         'Get Started',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(fontWeight: FontWeight.bold),
       ),
     ),
     const SizedBox(width: 16),
@@ -80,18 +85,7 @@ void _showMobileMenu(BuildContext context) {
             _buildMobileMenuButton('Features', context),
             _buildMobileMenuButton('Pricing', context),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AuthChecker(),
-                  ),
-                );
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AuthChecker()),
-                );
-              },
+              onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF2B6C76),
                 shape: RoundedRectangleBorder(
