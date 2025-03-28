@@ -314,7 +314,19 @@ Widget _buildBenefitsSection({bool isMobile = false}) {
         vertical: isMobile ? 40 : 80, horizontal: isMobile ? 10 : 20),
     child: isMobile
         ? Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Expanded(
+                child: Container(
+                  height: 300,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/images.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
               Container(
                 height: 300,
                 decoration: const BoxDecoration(),
@@ -324,7 +336,19 @@ Widget _buildBenefitsSection({bool isMobile = false}) {
             ],
           )
         : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Expanded(
+                child: Container(
+                  height: 500,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/images.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
               Expanded(
                 child: Container(
                   height: 500,
