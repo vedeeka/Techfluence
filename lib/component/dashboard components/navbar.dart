@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techfluence/auth/authpage.dart';
 
 PreferredSizeWidget buildAppBar(BuildContext context) {
   return AppBar(
@@ -32,7 +33,7 @@ List<Widget> _buildAppBarActions(BuildContext context) {
   if (isMobile) {
     return [
       IconButton(
-        icon:const  Icon(Icons.menu, color: Colors.black87),
+        icon: const Icon(Icons.menu, color: Colors.black87),
         onPressed: () {
           _showMobileMenu(context);
         },
@@ -53,12 +54,15 @@ List<Widget> _buildAppBarActions(BuildContext context) {
     ElevatedButton(
       onPressed: () {},
       style: ElevatedButton.styleFrom(
-        backgroundColor:const  Color(0xFF2B6C76),
+        backgroundColor: const Color(0xFF2B6C76),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      child:const Text('Get Started'),
+      child: const Text(
+        'Get Started',
+        style: TextStyle(color: Colors.white),
+      ),
     ),
     const SizedBox(width: 16),
   ];
@@ -77,16 +81,24 @@ void _showMobileMenu(BuildContext context) {
             _buildMobileMenuButton('Pricing', context),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
-                // Add navigation or action for Get Started
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AuthChecker(),
+                  ),
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AuthChecker()),
+                );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:const  Color(0xFF2B6C76),
+                backgroundColor: const Color(0xFF2B6C76),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child:const  Text('Get Started'),
+              child: const Text('Get Started'),
             ),
           ],
         ),
@@ -100,7 +112,7 @@ Widget _buildMobileMenuButton(String text, BuildContext context) {
     title: Text(
       text,
       textAlign: TextAlign.center,
-      style:const TextStyle(color: Colors.black87),
+      style: const TextStyle(color: Colors.black87),
     ),
     onTap: () {
       Navigator.pop(context);

@@ -229,37 +229,7 @@ class _JobDetailsState extends State<JobDetails> {
         Expanded(
           child: Scaffold(
             appBar: AppBar(
-              title: Row(
-                children: [
-                  const Text("Dashboard"),
-                  const SizedBox(width: 20),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Page 1",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Page 2",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Page 3",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Page 4",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Page 5",
-                        style: TextStyle(color: Colors.black)),
-                  ),
-                ],
-              ),
+              title: const Text("Dashboard"),
               shadowColor: Colors.black,
               elevation: 1,
               actions: [

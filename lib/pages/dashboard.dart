@@ -521,15 +521,6 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
                     _buildSidebarItem(Icons.schedule, 'Maintenance'),
                     _buildSidebarItem(Icons.analytics, 'Analytics'),
                     _buildSidebarItem(Icons.person, 'Profile'),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.add),
-                        label: const Text('Add Equipment'),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -537,37 +528,7 @@ class _ResponsiveDashboardScreenState extends State<ResponsiveDashboardScreen> {
               Expanded(
                 child: Scaffold(
                   appBar: AppBar(
-                    title: Row(
-                      children: [
-                        const Text("Dashboard"),
-                        const SizedBox(width: 20),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 1",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 2",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 3",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 4",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("Page 5",
-                              style: TextStyle(color: Colors.black)),
-                        ),
-                      ],
-                    ),
+                    title: const Text("Dashboard"),
                     shadowColor: Colors.black,
                     elevation: 1,
                     actions: [

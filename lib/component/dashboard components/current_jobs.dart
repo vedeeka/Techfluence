@@ -3,14 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:techfluence/data/data.dart';
 import 'package:techfluence/widgets/buttons.dart';
-void main() => runApp(const MyApp());
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:intl/intl.dart';
+void main() {
+  Gemini.init(apiKey: apiKey, enableDebugging: true);
+
+
+
+  runApp(const MyApp());
+}
+const apiKey = 'AIzaSyBtfDLk9Sb3HvvZ7ZLXdlBRK9BKREy-j5g';
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+
+
+  const MyApp(
+    
+    {super.key});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -49,7 +64,6 @@ class _MachineryListPageState extends State<MachineryListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(),
       body: Row(
         children: [
           // Permanent Sidebar
@@ -89,17 +103,17 @@ class _MachineryListPageState extends State<MachineryListPage> {
                       ),
                       ListTile(
                         leading: const Icon(Icons.list),
-                        title: const Text('Machinery List'),
+                        title: const Text('Maintenance'),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.add_circle_outline),
-                        title: const Text('Add Machinery'),
+                        title: const Text('Analytics'),
                         onTap: () {},
                       ),
                       ListTile(
                         leading: const Icon(Icons.settings),
-                        title: const Text('Settings'),
+                        title: const Text('Profile'),
                         onTap: () {},
                       ),
                     ],
@@ -112,227 +126,195 @@ class _MachineryListPageState extends State<MachineryListPage> {
           // Main Content Area
           Expanded(
             child: Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.white,
-                  title: Row(
-                    children: [
-                      const Text("Dashboard"),
-                      const SizedBox(width: 20),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Page 1",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Page 2",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Page 3",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Page 4",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Page 5",
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                    ],
-                  ),
-                  shadowColor: Colors.black,
-                  elevation: 1,
-                  actions: [
-                    Container(
-                      height: double.infinity,
-                      width: 350,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Center(
-                        child: TextField(
-                          controller: searchController,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search),
-                            hintText: "Search",
-                          ),
-                          onChanged: (value) {
-                            setState(() {});
-                          },
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                title: const Text("Dashboard"),
+                shadowColor: Colors.black,
+                elevation: 1,
+                actions: [
+                  Container(
+                    height: double.infinity,
+                    width: 350,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Center(
+                      child: TextField(
+                        controller: searchController,
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search",
                         ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(CupertinoIcons.bell_fill),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.help),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.settings),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.person),
-                    ),
-                  ],
-                ),
-                body: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection(backendBaseString)
-                        .doc(globalEmail)
-                        .collection('inventory')
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(CupertinoIcons.bell_fill),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.help),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.person),
+                  ),
+                ],
+              ),
+              body: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection(backendBaseString)
+                    .doc(globalEmail)
+                    .collection('inventory')
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  var docs = snapshot.data!.docs;
+                  if (docs.isEmpty) {
+                    return const Center(
+                      child: Text('No Data'),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final machinery = docs[index].data();
+                      machinery['id'] = docs[index].id;
+                      if (searchController.text.isNotEmpty &&
+                          !machinery['name']
+                              .toString()
+                              .contains(searchController.text)) {
+                        return Container();
                       }
-                      var docs = snapshot.data!.docs;
-                      if (docs.isEmpty) {
-                        return const Center(
-                          child: Text('No Data'),
-                        );
-                      }
-                      return ListView.builder(
-                        itemCount: docs.length,
-                        itemBuilder: (context, index) {
-                          final machinery = docs[index].data();
-                          machinery['id'] = docs[index].id;
-                          if (searchController.text.isNotEmpty &&
-                              !machinery['name']
-                                  .toString()
-                                  .contains(searchController.text)) {
-                            return Container();
-                          }
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade200,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade200,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
                             ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(12),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MachineryDetailPage(
-                                          machinery: machinery),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(12),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MachineryDetailPage(machinery: machinery),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                children: [
+                                  // Status Indicator
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: machinery['status'] == 'available'
+                                          ? Colors.green.shade50
+                                          : Colors.orange.shade50,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Row(
-                                    children: [
-                                      // Status Indicator
-                                      Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color:
-                                              machinery['status'] == 'available'
-                                                  ? Colors.green.shade50
-                                                  : Colors.orange.shade50,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                          child: Icon(
+                                    child: Center(
+                                      child: Icon(
+                                        machinery['status'] == 'available'
+                                            ? Icons.check_circle
+                                            : Icons.warning_rounded,
+                                        color:
                                             machinery['status'] == 'available'
-                                                ? Icons.check_circle
-                                                : Icons.warning_rounded,
-                                            color: machinery['status'] ==
-                                                    'available'
                                                 ? Colors.green.shade600
                                                 : Colors.orange.shade600,
-                                            size: 30,
-                                          ),
-                                        ),
+                                        size: 30,
                                       ),
-                                      const SizedBox(width: 12),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
 
-                                      // Machine Details
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              machinery['name'],
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.grey[800],
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              machinery['description'],
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[600],
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-
-                                      // Status Badge
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
-                                        decoration: BoxDecoration(
-                                          color:
-                                              machinery['status'] == 'available'
-                                                  ? Colors.green.shade100
-                                                  : Colors.orange.shade100,
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                        ),
-                                        child: Text(
-                                          machinery['status'],
+                                  // Machine Details
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          machinery['name'],
                                           style: TextStyle(
-                                            color: machinery['status'] ==
-                                                    'available'
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.grey[800],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          machinery['description'],
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey[600],
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  // Status Badge
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: machinery['status'] == 'available'
+                                          ? Colors.green.shade100
+                                          : Colors.orange.shade100,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      machinery['status'],
+                                      style: TextStyle(
+                                        color:
+                                            machinery['status'] == 'available'
                                                 ? Colors.green.shade800
                                                 : Colors.orange.shade800,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       );
-                    },),),
+                    },
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
@@ -349,10 +331,31 @@ class MachineryDetailPage extends StatefulWidget {
   State<MachineryDetailPage> createState() => _MachineryDetailPageState();
 }
 
+
+
+
+
+
+
 class _MachineryDetailPageState extends State<MachineryDetailPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, String>> _messages = [];
   int s = 0;
+  String _generateQRData() {
+    return '''
+Machinery Details
+-----------------
+ID:${widget.machinery['name']}
+Model: ${widget.machinery['model']}
+Status: ${widget.machinery['status']}
+''';
+  }
+  void addMessage(String sender, String message) {
+    setState(() {
+      _messages.add({sender: message} as Map<String, String>);
+    });
+  }
+  
   void initializeController() {
     if (widget.machinery.isEmpty) {
       print("Error: Machinery data is empty.");
@@ -360,23 +363,29 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
     }
 
     if (_controller.text.isEmpty) {
-      _controller.text =
+       String prompt =
           "Failure Prediction AI request: Analyze past maintenance data to predict failures. Answer my question as per this data\n"
           "Machinery Details:\n"
           "Name: ${widget.machinery['name'] ?? 'N/A'}\n"
           "Model: ${widget.machinery['model'] ?? 'N/A'}\n"
           "Status: ${widget.machinery['status'] ?? 'N/A'}";
-
-      Future.delayed(const Duration(milliseconds: 100), () {});
+     
+      Gemini.instance.prompt(parts: [
+        Part.text(prompt),
+      ]).then((value) {
+        addMessage('bot', value?.output ?? 'No response received.');
+      });
     }
+    setState(() {
+      
+    });
   }
 
   @override
   void initState() {
+    initializeController(); // Directly execute during initialization
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initializeController(); // Ensure it runs after widget build
-    });
+    
   }
 
   void _openChatDialog() {
@@ -460,8 +469,19 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                           icon: const Icon(Icons.send),
                           color: const Color(0xFF1873E8),
                           onPressed: () {
-                            setState(() {
-                              print('add gemini');
+                            Gemini.instance.prompt(parts: [
+                              Part.text(_controller.text),
+                            ]).then((value) {
+                              if(s!=0){
+                                 setState(() {
+                                _messages.add({'user': _controller.text});
+                                
+                                  });
+                              }
+                              s=1;
+                              addMessage('bot', value?.output ?? 'No response received.');
+                              _controller.clear();
+                              setDialogState(() {}); // Update the dialog UI
                             });
                             setDialogState(() {}); // Update the dialog UI
                           },
@@ -519,6 +539,47 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
+            Center(
+            child: Card(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                // Large QR Code with decorative background
+                Container(
+                  decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    colors: [
+                    Colors.blue.shade50,
+                    Colors.blue.shade100,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: QrImageView(
+                  data: _generateQRData(),
+                  version: QrVersions.auto,
+                  size: 250.0,
+                  gapless: false,
+                  embeddedImage: const AssetImage('assets/logo.png'),
+                  embeddedImageStyle: const QrEmbeddedImageStyle(
+                    size: Size(50, 50),
+                  ),
+                  ),
+                ),
+                ],
+              ),
+              ),
+            ),
+            ),
               // Machine Overview Card
               Card(
                 elevation: 4,
@@ -530,6 +591,7 @@ class _MachineryDetailPageState extends State<MachineryDetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      
                       _buildDetailRow(
                         icon: Icons.power,
                         label: 'Status',
